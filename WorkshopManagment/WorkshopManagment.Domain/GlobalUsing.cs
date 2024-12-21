@@ -1,0 +1,1 @@
+﻿global using SewingFactory.Common.Domain.Base;

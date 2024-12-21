@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{D374E76D-A27B-456E-9580-BC1DB84668D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{10E44297-4AF6-4845-B62E-225D211A14D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{28B1374C-57CD-4610-83FE-002E9F24FC92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityServer", "{44FBC632-201A-43AD-A0CE-AF7F7FF789D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WorkshopManagment", "WorkshopManagment", "{C342FB49-8EC5-49D3-A3D3-0A6104CA59FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SewingFactory.Common.Domain", "SewingFactory.Domain\SewingFactory.Common.Domain.csproj", "{D58C1726-BD8F-4D69-A03A-FD5943795BC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Infrastructure", "IdentityServer\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj", "{3DBF867A-20B2-45C2-843D-1A101A5FFDA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Web", "IdentityServer\IdentityServer.Web\IdentityServer.Web.csproj", "{91E1959F-3CC5-4C43-8E44-F210D212A57D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WorkshopManagement.Domain", "WorkshopManagment\WorkshopManagment.Domain\SewingFactory.Backend.WorkshopManagement.Domain.csproj", "{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WorkshopManagement.Infrastructure", "WorkshopManagment\WorkshopManagment.Infrastructure\SewingFactory.Backend.WorkshopManagement.Infrastructure.csproj", "{EC2D3735-66D5-4AFF-BA52-FF27A4962B54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WorkshopManagement.Web", "WorkshopManagment\WorkshopManagment.Web\SewingFactory.Backend.WorkshopManagement.Web.csproj", "{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D58C1726-BD8F-4D69-A03A-FD5943795BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D58C1726-BD8F-4D69-A03A-FD5943795BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D58C1726-BD8F-4D69-A03A-FD5943795BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D58C1726-BD8F-4D69-A03A-FD5943795BC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DBF867A-20B2-45C2-843D-1A101A5FFDA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DBF867A-20B2-45C2-843D-1A101A5FFDA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DBF867A-20B2-45C2-843D-1A101A5FFDA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DBF867A-20B2-45C2-843D-1A101A5FFDA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E1959F-3CC5-4C43-8E44-F210D212A57D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E1959F-3CC5-4C43-8E44-F210D212A57D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E1959F-3CC5-4C43-8E44-F210D212A57D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E1959F-3CC5-4C43-8E44-F210D212A57D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2D3735-66D5-4AFF-BA52-FF27A4962B54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2D3735-66D5-4AFF-BA52-FF27A4962B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2D3735-66D5-4AFF-BA52-FF27A4962B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2D3735-66D5-4AFF-BA52-FF27A4962B54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{44FBC632-201A-43AD-A0CE-AF7F7FF789D1} = {10E44297-4AF6-4845-B62E-225D211A14D7}
+		{C342FB49-8EC5-49D3-A3D3-0A6104CA59FC} = {10E44297-4AF6-4845-B62E-225D211A14D7}
+		{D58C1726-BD8F-4D69-A03A-FD5943795BC2} = {D374E76D-A27B-456E-9580-BC1DB84668D8}
+		{3DBF867A-20B2-45C2-843D-1A101A5FFDA6} = {44FBC632-201A-43AD-A0CE-AF7F7FF789D1}
+		{91E1959F-3CC5-4C43-8E44-F210D212A57D} = {44FBC632-201A-43AD-A0CE-AF7F7FF789D1}
+		{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6} = {C342FB49-8EC5-49D3-A3D3-0A6104CA59FC}
+		{EC2D3735-66D5-4AFF-BA52-FF27A4962B54} = {C342FB49-8EC5-49D3-A3D3-0A6104CA59FC}
+		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23} = {C342FB49-8EC5-49D3-A3D3-0A6104CA59FC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F392439-980B-47FF-BCED-0EC58A194C90}
+	EndGlobalSection
+EndGlobal
