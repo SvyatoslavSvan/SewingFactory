@@ -21,7 +21,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Base
         /// <summary>
         /// Gets or sets the internal identifier for the employee.
         /// </summary>
-        /// <exception cref="BizSuiteArgumentNullException">Thrown when the value is null, empty, or whitespace.</exception>
+        /// <exception cref="SewingFactoryArgumentNullException">Thrown when the value is null, empty, or whitespace.</exception>
         public required string InternalId
         {
             get => _internalId;
@@ -29,7 +29,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Base
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new BizSuiteArgumentNullException(nameof(value));
+                    throw new SewingFactoryArgumentNullException(nameof(value));
                 }
                 _internalId = value;
             }

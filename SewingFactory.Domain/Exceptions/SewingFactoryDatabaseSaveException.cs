@@ -1,10 +1,10 @@
 ﻿namespace SewingFactory.Common.Domain.Exceptions;
 
-public class BizSuiteDatabaseSaveException : Exception
+public class SewingFactoryDatabaseSaveException : Exception
 {
-    public BizSuiteDatabaseSaveException(string message)
+    public SewingFactoryDatabaseSaveException(string message)
         : base($"An error occurred while saving to the database: {message}") { }
 
-    public BizSuiteDatabaseSaveException(string message, Exception innerException)
+    public SewingFactoryDatabaseSaveException(string message, Exception innerException)
         : base($"An error occurred while saving to the database: {message}", innerException) { }
 }

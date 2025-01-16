@@ -34,7 +34,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
             }
             else
             {
-                throw new BizSuiteArgumentException("Unknown department type.", nameof(department));
+                throw new SewingFactoryArgumentException("Unknown department type.", nameof(department));
             }
             return new WorkshopDocument(countOfModelsInvolved, garmentModel, tasks);
         }
@@ -48,7 +48,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
             {
                 if (value < 0)
                 {
-                    throw new BizSuiteArgumentException(nameof(CountOfModelsInvolved), "Field CountOfModelsInvolved cannot be negative");
+                    throw new SewingFactoryArgumentException(nameof(CountOfModelsInvolved), "Field CountOfModelsInvolved cannot be negative");
                 }
                 _countOfModelsInvolved = value;
             }
@@ -58,7 +58,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
         {
             get => _garmentModel;
 
-            set => _garmentModel = value ?? throw new BizSuiteArgumentNullException(nameof(GarmentModel));
+            set => _garmentModel = value ?? throw new SewingFactoryArgumentNullException(nameof(GarmentModel));
         }
 
         public DateOnly Date { get; set; }

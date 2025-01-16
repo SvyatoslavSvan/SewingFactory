@@ -15,15 +15,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WorkshopManagment", "Worksh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SewingFactory.Common.Domain", "SewingFactory.Domain\SewingFactory.Common.Domain.csproj", "{D58C1726-BD8F-4D69-A03A-FD5943795BC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Infrastructure", "IdentityServer\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj", "{3DBF867A-20B2-45C2-843D-1A101A5FFDA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Infrastructure", "IdentityServer\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj", "{3DBF867A-20B2-45C2-843D-1A101A5FFDA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Web", "IdentityServer\IdentityServer.Web\IdentityServer.Web.csproj", "{91E1959F-3CC5-4C43-8E44-F210D212A57D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Web", "IdentityServer\IdentityServer.Web\IdentityServer.Web.csproj", "{91E1959F-3CC5-4C43-8E44-F210D212A57D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WorkshopManagement.Domain", "WorkshopManagment\WorkshopManagment.Domain\SewingFactory.Backend.WorkshopManagement.Domain.csproj", "{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SewingFactory.Backend.WorkshopManagement.Domain", "WorkshopManagment\WorkshopManagment.Domain\SewingFactory.Backend.WorkshopManagement.Domain.csproj", "{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WorkshopManagement.Infrastructure", "WorkshopManagment\WorkshopManagment.Infrastructure\SewingFactory.Backend.WorkshopManagement.Infrastructure.csproj", "{EC2D3735-66D5-4AFF-BA52-FF27A4962B54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SewingFactory.Backend.WorkshopManagement.Infrastructure", "WorkshopManagment\WorkshopManagment.Infrastructure\SewingFactory.Backend.WorkshopManagement.Infrastructure.csproj", "{EC2D3735-66D5-4AFF-BA52-FF27A4962B54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WorkshopManagement.Web", "WorkshopManagment\WorkshopManagment.Web\SewingFactory.Backend.WorkshopManagement.Web.csproj", "{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SewingFactory.Backend.WorkshopManagement.Web", "WorkshopManagment\WorkshopManagment.Web\SewingFactory.Backend.WorkshopManagement.Web.csproj", "{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WarehouseManagment", "WarehouseManagment", "{18940C3F-607A-480D-B1A7-8D555D8E36AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WarehouseManagement.Domain", "SewingFactory.Backend.WarehouseManagment\SewingFactory.Backend.WarehouseManagment.Domain\SewingFactory.Backend.WarehouseManagement.Domain.csproj", "{A868414A-55A3-4882-B66C-66B5880538B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WarehouseManagment.Infrastructure", "SewingFactory.Backend.WarehouseManagment\SewingFactory.Backend.WarehouseManagment.Infrastructure\SewingFactory.Backend.WarehouseManagment.Infrastructure.csproj", "{65C761E3-FE14-4215-BBFC-51BEDDF1EF09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SewingFactory.Backend.WarehouseManagment.Web", "SewingFactory.Backend.WarehouseManagment\SewingFactory.Backend.WarehouseManagment.Web\SewingFactory.Backend.WarehouseManagment.Web.csproj", "{52A9B830-2176-4E23-9094-188F27B3EE1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +63,18 @@ Global
 		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A868414A-55A3-4882-B66C-66B5880538B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A868414A-55A3-4882-B66C-66B5880538B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A868414A-55A3-4882-B66C-66B5880538B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A868414A-55A3-4882-B66C-66B5880538B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C761E3-FE14-4215-BBFC-51BEDDF1EF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C761E3-FE14-4215-BBFC-51BEDDF1EF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C761E3-FE14-4215-BBFC-51BEDDF1EF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C761E3-FE14-4215-BBFC-51BEDDF1EF09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52A9B830-2176-4E23-9094-188F27B3EE1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52A9B830-2176-4E23-9094-188F27B3EE1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52A9B830-2176-4E23-9094-188F27B3EE1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52A9B830-2176-4E23-9094-188F27B3EE1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +88,10 @@ Global
 		{1BC30392-54C5-49E2-BBCA-955D0B1C5FA6} = {C342FB49-8EC5-49D3-A3D3-0A6104CA59FC}
 		{EC2D3735-66D5-4AFF-BA52-FF27A4962B54} = {C342FB49-8EC5-49D3-A3D3-0A6104CA59FC}
 		{CF0812E4-0C8F-4C54-94B3-C13B2A317F23} = {C342FB49-8EC5-49D3-A3D3-0A6104CA59FC}
+		{18940C3F-607A-480D-B1A7-8D555D8E36AE} = {10E44297-4AF6-4845-B62E-225D211A14D7}
+		{A868414A-55A3-4882-B66C-66B5880538B6} = {18940C3F-607A-480D-B1A7-8D555D8E36AE}
+		{65C761E3-FE14-4215-BBFC-51BEDDF1EF09} = {18940C3F-607A-480D-B1A7-8D555D8E36AE}
+		{52A9B830-2176-4E23-9094-188F27B3EE1B} = {18940C3F-607A-480D-B1A7-8D555D8E36AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4F392439-980B-47FF-BCED-0EC58A194C90}

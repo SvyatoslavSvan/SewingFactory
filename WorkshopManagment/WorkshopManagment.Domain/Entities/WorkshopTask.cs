@@ -25,13 +25,13 @@ public class WorkshopTask : Identity
     public Process Process
     {
         get => _process;
-        set => _process = value ?? throw new BizSuiteArgumentNullException(nameof(Process));
+        set => _process = value ?? throw new SewingFactoryArgumentNullException(nameof(Process));
     }
 
     public WorkshopDocument Document
     {
         get => _document;
-        set => _document = value ?? throw new BizSuiteArgumentNullException(nameof(Document));
+        set => _document = value ?? throw new SewingFactoryArgumentNullException(nameof(Document));
     }
 
     public IReadOnlyList<EmployeeTaskRepeat> EmployeeTaskRepeats => _employeeTaskRepeats;
@@ -42,12 +42,12 @@ public class WorkshopTask : Identity
     {
         if (employeeRepeat == null)
         {
-            throw new BizSuiteArgumentNullException(nameof(employeeRepeat));
+            throw new SewingFactoryArgumentNullException(nameof(employeeRepeat));
         }
 
         if (_employeeTaskRepeats.FirstOrDefault(x => x.WorkShopEmployee.Id == employeeRepeat.WorkShopEmployee.Id) != null)
         {
-            throw new BizSuiteArgumentException(nameof(employeeRepeat),
+            throw new SewingFactoryArgumentException(nameof(employeeRepeat),
                 $"The employee with ID '{employeeRepeat.WorkShopEmployee.Id}' is already assigned to this task. Duplicate assignments are not allowed");
         }
 
@@ -59,7 +59,7 @@ public class WorkshopTask : Identity
         var employeeTaskRepeat = _employeeTaskRepeats.FirstOrDefault(x => x.WorkShopEmployee.Id == employee.Id);
         if (employeeTaskRepeat == null)
         {
-            throw new BizSuiteInvalidOperationException("Cannot calculate payment for not existing in task employee");
+            throw new SewingFactoryInvalidOperationException("Cannot calculate payment for not existing in task employee");
         }
         return new Money(employeeTaskRepeat.Repeats * _process.Price.Amount);
     }

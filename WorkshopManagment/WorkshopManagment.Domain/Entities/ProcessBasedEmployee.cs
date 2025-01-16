@@ -21,7 +21,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
         /// <param name="department"></param>
         /// <param name="documents"></param>
         /// <param name="premium">The premium percentage for the employee. Defaults to 0.</param>
-        /// <exception cref="BizSuiteArgumentNullException">Thrown when <paramref name="internalId"/> is null or invalid.</exception>
+        /// <exception cref="SewingFactoryArgumentNullException">Thrown when <paramref name="internalId"/> is null or invalid.</exception>
         public ProcessBasedEmployee(string name, string internalId, Department department, List<WorkshopDocument> documents, int premium = 0) : base(name, internalId, department)
         {
             Premium = premium;
@@ -31,7 +31,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
         /// <summary>
         /// Gets or sets the premium percentage for the employee.
         /// </summary>
-        /// <exception cref="BizSuiteArgumentException">Thrown when the value is not between 0 and 100.</exception>
+        /// <exception cref="SewingFactoryArgumentException">Thrown when the value is not between 0 and 100.</exception>
         public int Premium
         {
             get => _premium;
@@ -39,7 +39,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
             {
                 if (value is < 0 or > 100)
                 {
-                    throw new BizSuiteArgumentException(nameof(value), "The premium must be between 0 and 100.");
+                    throw new SewingFactoryArgumentException(nameof(value), "The premium must be between 0 and 100.");
                 }
                 _premium = value;
             }
@@ -48,7 +48,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
         public List<WorkshopDocument> Documents
         {
             get => _documents;
-            set => _documents = value ?? throw new BizSuiteArgumentNullException(nameof(Documents));
+            set => _documents = value ?? throw new SewingFactoryArgumentNullException(nameof(Documents));
         }
 
 

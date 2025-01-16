@@ -17,13 +17,13 @@ public class EmployeeTaskRepeat : Identity
     public ProcessBasedEmployee WorkShopEmployee
     {
         get => _workShopEmployee;
-        set => _workShopEmployee = value ?? throw new BizSuiteArgumentNullException(nameof(WorkShopEmployee));
+        set => _workShopEmployee = value ?? throw new SewingFactoryArgumentNullException(nameof(WorkShopEmployee));
     }
 
     public WorkshopTask WorkshopTask
     {
         get => _workshopTask;
-        set => _workshopTask = value ?? throw new BizSuiteArgumentNullException(nameof(WorkshopTask));
+        set => _workshopTask = value ?? throw new SewingFactoryArgumentNullException(nameof(WorkshopTask));
     }
 
     public int Repeats
@@ -33,7 +33,7 @@ public class EmployeeTaskRepeat : Identity
         {
             if (value < 0)
             {
-                throw new BizSuiteArgumentException(nameof(Repeats), "Repeats cannot be negative");
+                throw new SewingFactoryArgumentException(nameof(Repeats), "Repeats cannot be negative");
             }
             _repeats = value;
         }

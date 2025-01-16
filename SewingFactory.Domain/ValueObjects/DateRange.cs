@@ -11,7 +11,7 @@ namespace SewingFactory.Common.Domain.ValueObjects
         {
             if (start > end)
             {
-                throw new BizSuiteArgumentException("Start date cannot be later than the end date.");
+                throw new SewingFactoryArgumentException("Start date cannot be later than the end date.");
             }
 
             _start = start;
@@ -25,7 +25,7 @@ namespace SewingFactory.Common.Domain.ValueObjects
             {
                 if (value > _end)
                 {
-                    throw new BizSuiteArgumentException(nameof(Start),"Start date cannot be later than the end date.");
+                    throw new SewingFactoryArgumentException(nameof(Start),"Start date cannot be later than the end date.");
                 }
                 _start = value;
             }
@@ -38,7 +38,7 @@ namespace SewingFactory.Common.Domain.ValueObjects
             {
                 if (value < _start)
                 {
-                    throw new BizSuiteArgumentException(nameof(End), "End date cannot be earlier than the start date.");
+                    throw new SewingFactoryArgumentException(nameof(End), "End date cannot be earlier than the start date.");
                 }
                 _end = value;
             }

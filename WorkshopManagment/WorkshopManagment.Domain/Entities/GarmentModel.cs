@@ -5,20 +5,27 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
 {
     public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
     {
-        private string _number = null!;
         private string _description = null!;
         private readonly List<Process> _cuttingProcesses;
         private readonly List<Process> _sewingProcesses;
         private readonly List<Process> _pressingProcesses;
+        private GarmentCategory _category = null!;
 
-        public GarmentModel(string name, List<Process> sewingProcesses, string number, string description, List<Process> cuttingProcesses, List<Process> pressingProcesses, byte[]? image = null) : base(name)
+        public GarmentModel(
+            string name,
+            List<Process> sewingProcesses,
+            string description,
+            List<Process> cuttingProcesses,
+            List<Process> pressingProcesses,
+            GarmentCategory category,
+            byte[]? image = null) : base(name)
         {
             _sewingProcesses = sewingProcesses;
-            Number = number;
             Description = description;
             _cuttingProcesses = cuttingProcesses;
             _pressingProcesses = pressingProcesses;
             Image = image ?? [];
+            Category = category;
         }
 
         public IReadOnlyList<Process> SewingProcesses => _sewingProcesses.AsReadOnly();
@@ -27,18 +34,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
 
         public IReadOnlyList<Process> PressingProcesses => _pressingProcesses;
 
-        public string Number
-        {
-            get => _number;
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new BizSuiteArgumentNullException(nameof(Number));
-                }
-                _number = value;
-            }
-        }
 
         public string Description
         {
@@ -47,20 +42,25 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new BizSuiteArgumentNullException(nameof(Number));
+                    throw new SewingFactoryArgumentNullException(nameof(Description));
                 }
                 _description = value;
             }
         }
 
-        public byte[]? Image { get; set; }
+        public GarmentCategory Category
+        {
+            get => _category;
+            set => _category = value ?? throw new SewingFactoryArgumentNullException(nameof(Category));
+        }
 
+        public byte[]? Image { get; set; }
 
         public void AddProcess(Process process)
         {
             if (process == null)
             {
-                throw new BizSuiteArgumentNullException(nameof(process));
+                throw new SewingFactoryArgumentNullException(nameof(process));
             }
             _sewingProcesses.Add(process);
         }

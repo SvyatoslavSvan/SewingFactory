@@ -16,7 +16,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport
             {
                 if (Salaries.Count == 0)
                 {
-                    throw new BizSuiteArgumentException(nameof(Salaries), "Cannot create salary report without salaries");
+                    throw new SewingFactoryArgumentException(nameof(Salaries), "Cannot create salary report without salaries");
                 }
                 _salaries = value.ToList();
             }

@@ -18,7 +18,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
             {
                 if (value is < 0 or > 100)
                 {
-                    throw new BizSuiteArgumentException(nameof(SalaryPercentage), "SalaryPercentage must be between 0 and 100");
+                    throw new SewingFactoryArgumentException(nameof(SalaryPercentage), "SalaryPercentage must be between 0 and 100");
                 }
                 _salaryPercentage = value;
             }

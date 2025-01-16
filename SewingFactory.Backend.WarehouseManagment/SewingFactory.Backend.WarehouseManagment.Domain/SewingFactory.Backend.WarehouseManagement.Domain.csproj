@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<InvariantGlobalization>false</InvariantGlobalization>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsAsErrors>enable</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\SewingFactory.Domain\SewingFactory.Common.Domain.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -10,7 +10,7 @@ public class Salary(Money payment, Money premium, ProcessBasedEmployee employee)
 
     public Money Premium { get; init; } = premium;
 
-    public ProcessBasedEmployee Employee { get; set; } = employee ?? throw new BizSuiteArgumentNullException(nameof(Employee));
+    public ProcessBasedEmployee Employee { get; set; } = employee ?? throw new SewingFactoryArgumentNullException(nameof(Employee));
 
     public Money TakeHome => Payment + Premium;
 }

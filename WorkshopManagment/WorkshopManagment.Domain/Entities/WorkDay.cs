@@ -53,7 +53,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
         public RateBasedEmployee Employee
         {
             get => _employee;
-            init => _employee = value ?? throw new BizSuiteArgumentNullException(nameof(value));
+            init => _employee = value ?? throw new SewingFactoryArgumentNullException(nameof(value));
         }
 
         /// <summary>

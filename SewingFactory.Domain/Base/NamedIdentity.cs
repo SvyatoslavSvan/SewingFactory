@@ -24,7 +24,7 @@ namespace SewingFactory.Common.Domain.Base
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new BizSuiteArgumentNullException(nameof(value));
+                    throw new SewingFactoryArgumentNullException(nameof(value));
                 }
                 _name = value;
             } 

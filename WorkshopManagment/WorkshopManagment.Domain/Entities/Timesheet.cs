@@ -32,12 +32,12 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities
         /// <param name="holidays">A list of holidays during the month.</param>
         /// <param name="leaves">A list of leaves during the month.</param>
         /// <returns>A new instance of <see cref="Timesheet"/>.</returns>
-        /// <exception cref="BizSuiteArgumentException">Thrown when the list of employees is empty.</exception>
+        /// <exception cref="SewingFactoryArgumentException">Thrown when the list of employees is empty.</exception>
         public static Timesheet CreateInstance(List<RateBasedEmployee> employees, DateOnly date)
         {
             if (employees.Count == 0)
             {
-                throw new BizSuiteArgumentException(nameof(employees), "List of employees must not be empty.");
+                throw new SewingFactoryArgumentException(nameof(employees), "List of employees must not be empty.");
             }
 
             var daysCount = DateTime.DaysInMonth(date.Year, date.Month);

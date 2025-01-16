@@ -1,11 +1,11 @@
 ﻿namespace SewingFactory.Common.Domain.Exceptions
 {
-    public class BizSuiteNotFoundException : Exception
+    public class SewingFactoryNotFoundException : Exception
     {
-        public BizSuiteNotFoundException(string message)
+        public SewingFactoryNotFoundException(string message)
             : base($"The requested item was not found: {message}") { }
 
-        public BizSuiteNotFoundException(string message, Exception innerException)
+        public SewingFactoryNotFoundException(string message, Exception innerException)
             : base($"The requested item was not found: {message}", innerException) { }
     }
 }
