@@ -24,5 +24,11 @@
         public static Money operator *(Money money, int multiplier) => new(money.Amount * multiplier);
 
         public static Money operator *(int multiplier, Money money) => new(money.Amount * multiplier);
+
+        public static Money operator *(Money money, decimal multiplier) =>
+            new(money.Amount * multiplier);
+
+        public static Money operator *(decimal multiplier, Money money) =>
+            new(money.Amount * multiplier);
     }
 }

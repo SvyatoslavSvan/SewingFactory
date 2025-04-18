@@ -15,12 +15,12 @@ public sealed class OpenIddictWorker(IServiceProvider serviceProvider) : IHosted
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
         // credentials password
-        const string client_id1 = "client-id-sts";
-        if (await manager.FindByClientIdAsync(client_id1, cancellationToken) is null)
+        const string clientId1 = "client-id-sts";
+        if (await manager.FindByClientIdAsync(clientId1, cancellationToken) is null)
         {
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                ClientId = client_id1,
+                ClientId = clientId1,
                 ClientSecret = "client-secret-sts",
                 DisplayName = "Service-To-Service demonstration",
                 Permissions =
@@ -38,14 +38,14 @@ public sealed class OpenIddictWorker(IServiceProvider serviceProvider) : IHosted
             }, cancellationToken);
         }
 
-        const string client_id2 = "client-id-code";
-        if (await manager.FindByClientIdAsync(client_id2, cancellationToken) is null)
+        const string clientId2 = "client-id-code";
+        if (await manager.FindByClientIdAsync(clientId2, cancellationToken) is null)
         {
             var url = serviceProvider.GetRequiredService<IConfiguration>().GetValue<string>("AuthServer:Url");
 
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                ClientId = client_id2,
+                ClientId = clientId2,
                 ConsentType = OpenIddictConstants.ConsentTypes.Implicit,
                 ClientSecret = "client-secret-code",
                 DisplayName = "API testing clients with Authorization Code Flow demonstration",
@@ -53,7 +53,8 @@ public sealed class OpenIddictWorker(IServiceProvider serviceProvider) : IHosted
                 {
                     new Uri("https://www.thunderclient.com/oauth/callback"), // https://www.thunderclient.com/
                     new Uri($"{url}/swagger/oauth2-redirect.html"), // https://swagger.io/
-                    new Uri("https://localhost:20001/swagger/oauth2-redirect.html") // https://swagger.io/ for Module as Example
+                    new Uri("https://localhost:20001/swagger/oauth2-redirect.html"), // https://swagger.io/ for Module as Example
+                    new Uri("https://localhost:20002/swagger/oauth2-redirect.html"),
                 },
                 Permissions =
                 {

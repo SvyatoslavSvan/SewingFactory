@@ -14,7 +14,6 @@ public static class DatabaseInitializer
         // This is should not be used when UseInMemoryDatabase()
         // await context!.Database.MigrateAsync();
 
-
         await context.SaveChangesAsync();
     }
 }

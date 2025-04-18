@@ -1,25 +1,24 @@
 ﻿using SewingFactory.Common.Domain.Exceptions;
-using SewingFactory.Common.Domain.ValueObjects;
 
-namespace SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport
+namespace SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport;
+
+public class SalaryReport
 {
-    public class SalaryReport
+    private readonly List<Salary> _salaries = null!;
+
+    public SalaryReport(List<Salary> salaries) => Salaries = salaries;
+
+    public IReadOnlyList<Salary> Salaries
     {
-        private readonly List<Salary> _salaries = null!;
-
-        public SalaryReport(List<Salary> salaries) => Salaries = salaries;
-
-        public IReadOnlyList<Salary> Salaries
+        get => _salaries;
+        init
         {
-            get => _salaries;
-            init
+            if (Salaries.Count == 0)
             {
-                if (Salaries.Count == 0)
-                {
-                    throw new SewingFactoryArgumentException(nameof(Salaries), "Cannot create salary report without salaries");
-                }
-                _salaries = value.ToList();
+                throw new SewingFactoryArgumentException(nameof(Salaries), "Cannot create salary report without salaries");
             }
+
+            _salaries = value.ToList();
         }
     }
 }

@@ -9,6 +9,12 @@ namespace SewingFactory.Common.Domain.Base
     {
         private string _name = null!;
 
+
+        /// <summary>
+        /// Default constructor for EF Core
+        /// </summary>
+        protected NamedIdentity()  {  }
+
         protected NamedIdentity(string name)
         {
             Name = name;

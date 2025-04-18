@@ -1,13 +1,17 @@
-﻿using SewingFactory.Common.Domain.Base;
-
-namespace SewingFactory.Backend.WorkshopManagement.Infrastructure;
+﻿namespace SewingFactory.Backend.WorkshopManagement.Infrastructure;
 
 /// <summary>
 ///     User permission for microservice
 /// </summary>
 public class MicroservicePermission : Auditable
 {
-    public MicroservicePermission(DateTime createdAt, string createdBy, Guid applicationUserProfileId, ApplicationUserProfile? applicationUserProfile, string policyName, string? description) : base(createdAt, createdBy)
+    /// <summary>
+    ///     Default constructor for EF Core
+    /// </summary>
+    private MicroservicePermission() { }
+
+    public MicroservicePermission(
+        DateTime createdAt, string createdBy, Guid applicationUserProfileId, ApplicationUserProfile? applicationUserProfile, string policyName, string? description) : base(createdAt, createdBy)
     {
         ApplicationUserProfileId = applicationUserProfileId;
         ApplicationUserProfile = applicationUserProfile;

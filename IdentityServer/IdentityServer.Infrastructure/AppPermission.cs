@@ -7,6 +7,11 @@ namespace IdentityServer.Infrastructure;
 /// </summary>
 public sealed class AppPermission : Auditable
 {
+    /// <summary>
+    /// Empty ctor for ORM
+    /// </summary>
+    public AppPermission() { }
+
     public AppPermission(DateTime createdAt, string createdBy, Guid applicationUserProfileId, ApplicationUserProfile? applicationUserProfile, string policyName, string description) : base(createdAt,
         createdBy)
     {

@@ -2,6 +2,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using SewingFactory.Backend.WorkshopManagement.Domain.Base;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Infrastructure;
@@ -14,6 +19,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ApplicationUserProfile> Profiles { get; set; }
 
     public DbSet<MicroservicePermission> Permissions { get; set; }
+
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<ProcessBasedEmployee> ProcessBasedEmployees { get; set; }
+    public DbSet<RateBasedEmployee> RateBasedEmployees { get; set; }
+    public DbSet<Technologist> Technologists { get; set; }
+    public DbSet<EmployeeTaskRepeat> EmployeeTaskRepeats { get; set; }
+    public DbSet<GarmentCategory> GarmentCategories { get; set; }
+    public DbSet<GarmentModel> GarmentModels { get; set; }
+    public DbSet<Process> Processes { get; set; }
+    public DbSet<Timesheet> Timesheets { get; set; }
+    public DbSet<WorkDay> WorkDays { get; set; }
+    public DbSet<WorkshopDocument> WorkshopDocuments { get; set; }
+    public DbSet<WorkshopTask> WorkshopTasks { get; set; }
 
     /// <summary>
     ///     <para>
@@ -41,6 +59,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         optionsBuilder.ConfigureWarnings(warningsConfigurationBuilderAction: x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 
         base.OnConfiguring(optionsBuilder);
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.Entity<Employee>().ToTable("Employees");
+        builder.Entity<ProcessBasedEmployee>().ToTable("ProcessBasedEmployees");
+        builder.Entity<RateBasedEmployee>().ToTable("RateBasedEmployees");
+        builder.Entity<Technologist>().ToTable("Technologists");
+
+        builder.Entity<ProcessBasedEmployee>()
+            .HasMany(navigationExpression: e => e.Documents)
+            .WithMany(navigationExpression: d => d.Employees);
     }
 }
 

@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagment.Infrastructure.Base;
 
 namespace SewingFactory.Backend.WarehouseManagment.Infrastructure
@@ -12,12 +13,24 @@ namespace SewingFactory.Backend.WarehouseManagment.Infrastructure
     public class ApplicationDbContext : DbContextBase
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
+            : base(options)
+        {
+        }
 
 
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
 
         public DbSet<MicroservicePermission> Permissions { get; set; }
+
+        public DbSet<GarmentCategory> GarmentCategories { get; set; }
+
+        public DbSet<GarmentModel> GarmentModels { get; set; }
+
+        public DbSet<Operation> Operations { get; set; }
+
+        public DbSet<PointOfSale> PointOfSales { get; set; }
+
+        public DbSet<StockItem> StockItems { get; set; }
 
         /// <summary>
         ///     <para>
@@ -46,6 +59,12 @@ namespace SewingFactory.Backend.WarehouseManagment.Infrastructure
 
             base.OnConfiguring(optionsBuilder);
         }
+
+        protected override void OnModelCreating(ModelBuilder builder) => builder.Entity<Operation>()
+            .ToTable("Operations")
+            .HasDiscriminator<string>("OperationType")
+            .HasValue<Operation>("Operation")
+            .HasValue<InternalTransferOperation>("InternalTransferOperation");
     }
 }
 

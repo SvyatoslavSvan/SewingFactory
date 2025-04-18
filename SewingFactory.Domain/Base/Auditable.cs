@@ -6,6 +6,10 @@
         private string _createdBy = null!;
         private DateTime? _updatedAt;
         private string? _updatedBy;
+        /// <summary>
+        /// Empty ctor for ORM
+        /// </summary>
+        protected Auditable() { }
 
         protected Auditable(DateTime createdAt, string createdBy)
         {

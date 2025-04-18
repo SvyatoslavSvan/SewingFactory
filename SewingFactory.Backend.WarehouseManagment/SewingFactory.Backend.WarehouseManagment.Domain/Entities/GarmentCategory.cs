@@ -1,6 +1,4 @@
-﻿using SewingFactory.Common.Domain.Base;
-
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+﻿namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 
 public class GarmentCategory(string name, List<GarmentModel> products) : NamedIdentity(name)
 {
