@@ -1,7 +1,7 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels.Base;
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.ViewModels;
 
 public abstract class EmployeeViewModel
 {

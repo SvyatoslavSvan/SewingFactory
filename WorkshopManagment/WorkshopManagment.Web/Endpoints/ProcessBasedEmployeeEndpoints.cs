@@ -5,9 +5,9 @@ using Calabonga.PagedListCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SewingFactory.Backend.WorkshopManagement.Domain.Base;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.Queries;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
 {
@@ -35,7 +35,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
             [FromBody] ProcessBasedEmployeeViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-            => await mediator.Send(new CreateProcessBasedEmployeeRequest(model,
+            => await mediator.Send(new CreateRequest<ProcessBasedEmployeeViewModel,ProcessBasedEmployee,IdentityProcessBasedEmployeeViewModel>(model,
                     context.User),
                 context.RequestAborted);
 
@@ -48,7 +48,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
             [FromBody] DeleteProcessBasedEmployeeViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-            => await mediator.Send(new DeleteProcessBasedEmployeeRequest(model,
+            => await mediator.Send(new DeleteRequest<DeleteProcessBasedEmployeeViewModel, ProcessBasedEmployee>(model,
                     context.User),
                 context.RequestAborted);
 
@@ -61,7 +61,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
             [FromBody] IdentityProcessBasedEmployeeViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-            => await mediator.Send(new UpdateProcessBasedEmployeeRequest(model,
+            => await mediator.Send(new UpdateRequest<IdentityProcessBasedEmployeeViewModel,ProcessBasedEmployee>(model,
                     context.User),
                 context.RequestAborted);
 
@@ -73,7 +73,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
         private async Task<OperationResult<IEnumerable<Employee>>> GetAllEmployees(
             [FromServices] IMediator mediator,
             HttpContext context)
-            => await mediator.Send(new GetAllEmployeesRequest(
+            => await mediator.Send(new GetAllRequest<Employee>(
                     context.User),
                 context.RequestAborted);
 
@@ -85,7 +85,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
         private async Task<OperationResult<IPagedList<Employee>>> GetPagedEmployees(
             [FromServices] IMediator mediator,
             HttpContext context, int pageIndex, int pageSize)
-            => await mediator.Send(new GetPagedEmployeesRequest(
+            => await mediator.Send(new GetPagedRequest<Employee>(
                     context.User, pageIndex, pageSize),
                 context.RequestAborted);
 
@@ -97,7 +97,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
         private async Task<OperationResult<Employee>> GetEmployeeById(
             [FromServices] IMediator mediator,
             HttpContext context, Guid id)
-            => await mediator.Send(new GetByIdEmployeeRequest(
+            => await mediator.Send(new GetByIdRequest<Employee>(
                     context.User, id),
                 context.RequestAborted);
 

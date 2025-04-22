@@ -38,6 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Application\Messaging\EmployeesMessages\ViewModels\Base\" />
 	  <Folder Include="Endpoints\Base\" />
 	</ItemGroup>
 

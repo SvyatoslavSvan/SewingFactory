@@ -2,7 +2,7 @@
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
 
-public class DeleteProcessBasedEmployeeViewModel : IdentityViewModel
+public class IdentityProcessBasedEmployeeViewModel : IdentityViewModel
 {
-    
+    public ProcessBasedEmployeeViewModel Employee { get; set; } = new();
 }
