@@ -6,9 +6,9 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.Queries;
 
-public record DeleteProcessBasedEmployeeRequest(DeleteProcessBasedEmployeeViewModel Model, ClaimsPrincipal User) : DeleteRequest<DeleteProcessBasedEmployeeViewModel, ProcessBasedEmployee>(Model, User);
+public record DeleteProcessBasedEmployeeRequest(DeleteProcessBasedEmployeeViewModel Model, ClaimsPrincipal User)
+    : DeleteRequest<DeleteProcessBasedEmployeeViewModel, ProcessBasedEmployee>(Model, User);
 
 public class DeleteProcessBasedEmployeeHandler(IUnitOfWork unitOfWork) : DeleteHandler<DeleteProcessBasedEmployeeViewModel, ProcessBasedEmployee>(unitOfWork)
 {
-   
 }

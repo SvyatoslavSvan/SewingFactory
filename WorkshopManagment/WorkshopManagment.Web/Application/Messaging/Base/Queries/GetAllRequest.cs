@@ -1,4 +1,5 @@
-﻿using Calabonga.OperationResults;
+﻿using AutoMapper;
+using Calabonga.OperationResults;
 using Calabonga.UnitOfWork;
 using MediatR;
 using SewingFactory.Common.Domain.Base;
@@ -6,13 +7,14 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
 
-public record GetAllRequest<T>(ClaimsPrincipal User) : IRequest<OperationResult<IEnumerable<T>>> where T : Identity;
+public record GetAllRequest<TEntity, TViewModel>(ClaimsPrincipal User) : IRequest<OperationResult<IEnumerable<TViewModel>>> where TEntity : Identity;
 
-public class GetAllHandler<T>(IUnitOfWork unitOfWork) : IRequestHandler<GetAllRequest<T>, OperationResult<IEnumerable<T>>> where T : Identity
+public class GetAllHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
+    : IRequestHandler<GetAllRequest<TEntity, TViewModel>, OperationResult<IEnumerable<TViewModel>>> where TEntity : Identity
 {
-    public async Task<OperationResult<IEnumerable<T>>> Handle(
-        GetAllRequest<T> request,
+    public async Task<OperationResult<IEnumerable<TViewModel>>> Handle(
+        GetAllRequest<TEntity, TViewModel> request,
         CancellationToken cancellationToken)
-        => OperationResult.CreateResult<IEnumerable<T>>(await unitOfWork.GetRepository<T>()
-            .GetAllAsync(true));
+        => OperationResult.CreateResult(mapper.Map<IEnumerable<TViewModel>>(await unitOfWork.GetRepository<TEntity>()
+            .GetAllAsync(true)));
 }

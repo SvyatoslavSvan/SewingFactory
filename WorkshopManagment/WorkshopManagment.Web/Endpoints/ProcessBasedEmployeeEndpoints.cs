@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SewingFactory.Backend.WorkshopManagement.Domain.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
@@ -16,7 +17,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
 
         public override void ConfigureApplication(WebApplication app)
         {
-            app.MapPost("/api/ProcessBasedEmployee/create", CreateProcessBasedEmployee);
+            app.MapPost("/api/Employee/create", CreateProcessBasedEmployee);
             app.MapPost("/api/ProcessBasedEmployee/delete", DeleteProcessBasedEmployee);
             app.MapPut("/api/ProcessBasedEmployee/update", UpdateProcessBasedEmployee);
             app.MapGet("/api/Employee/getAll", GetAllEmployees);
@@ -31,11 +32,11 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [FeatureGroupName(_featureGroupName)]
         //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)] //TODO: Uncomment when authentication is ready
-        private async Task<OperationResult<IdentityProcessBasedEmployeeViewModel>> CreateProcessBasedEmployee(
-            [FromBody] ProcessBasedEmployeeViewModel model,
+        private async Task<OperationResult<EmployeeReadViewModel>> CreateProcessBasedEmployee(
+            [FromBody] EmployeeCreateViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-            => await mediator.Send(new CreateRequest<ProcessBasedEmployeeViewModel,ProcessBasedEmployee,IdentityProcessBasedEmployeeViewModel>(model,
+            => await mediator.Send(new CreateEmployeeRequest(model,
                     context.User),
                 context.RequestAborted);
 
@@ -70,10 +71,10 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [FeatureGroupName(_featureGroupName)]
         //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-        private async Task<OperationResult<IEnumerable<Employee>>> GetAllEmployees(
+        private async Task<OperationResult<IEnumerable<EmployeeReadViewModel>>> GetAllEmployees(
             [FromServices] IMediator mediator,
             HttpContext context)
-            => await mediator.Send(new GetAllRequest<Employee>(
+            => await mediator.Send(new GetAllRequest<Employee,EmployeeReadViewModel>(
                     context.User),
                 context.RequestAborted);
 
@@ -82,10 +83,10 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [FeatureGroupName(_featureGroupName)]
         //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-        private async Task<OperationResult<IPagedList<Employee>>> GetPagedEmployees(
+        private async Task<OperationResult<IPagedList<EmployeeReadViewModel>>> GetPagedEmployees(
             [FromServices] IMediator mediator,
             HttpContext context, int pageIndex, int pageSize)
-            => await mediator.Send(new GetPagedRequest<Employee>(
+            => await mediator.Send(new GetPagedRequest<Employee,EmployeeReadViewModel>(
                     context.User, pageIndex, pageSize),
                 context.RequestAborted);
 
@@ -94,10 +95,10 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [FeatureGroupName(_featureGroupName)]
         //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-        private async Task<OperationResult<Employee>> GetEmployeeById(
+        private async Task<OperationResult<EmployeeReadViewModel>> GetEmployeeById(
             [FromServices] IMediator mediator,
             HttpContext context, Guid id)
-            => await mediator.Send(new GetByIdRequest<Employee>(
+            => await mediator.Send(new GetByIdRequest<Employee,EmployeeReadViewModel>(
                     context.User, id),
                 context.RequestAborted);
 

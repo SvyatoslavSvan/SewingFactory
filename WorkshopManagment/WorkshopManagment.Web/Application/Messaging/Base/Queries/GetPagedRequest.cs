@@ -1,20 +1,19 @@
-﻿using Calabonga.OperationResults;
+﻿using AutoMapper;
+using Calabonga.OperationResults;
 using Calabonga.PagedListCore;
 using Calabonga.UnitOfWork;
 using MediatR;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
+
+public record GetPagedRequest<TEntity, TViewModel>(ClaimsPrincipal User, int PageIndex, int PageSize)
+    : IRequest<OperationResult<IPagedList<TViewModel>>> where TEntity : class;
+
+public class GetPagedHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
+    : IRequestHandler<GetPagedRequest<TEntity, TViewModel>, OperationResult<IPagedList<TViewModel>>> where TEntity : class
 {
-    public record GetPagedRequest<T>(ClaimsPrincipal User, int PageIndex, int PageSize) : IRequest<OperationResult<IPagedList<T>>> where T : class;
-
-    public class GetPagedHandler<T>(IUnitOfWork unitOfWork) : IRequestHandler<GetPagedRequest<T>, OperationResult<IPagedList<T>>> where T : class
-    {
-        public async Task<OperationResult<IPagedList<T>>> Handle(
-            GetPagedRequest<T> request,
-            CancellationToken cancellationToken)
-            => OperationResult.CreateResult(await unitOfWork.GetRepository<T>()
-                .GetPagedListAsync(pageIndex: request.PageIndex, pageSize: request.PageSize, cancellationToken: cancellationToken));
-
-    }
+    public async Task<OperationResult<IPagedList<TViewModel>>> Handle(GetPagedRequest<TEntity, TViewModel> request, CancellationToken cancellationToken)
+        => OperationResult.CreateResult<IPagedList<TViewModel>>(mapper.Map<IPagedList<TViewModel>>(await unitOfWork.GetRepository<TEntity>()
+            .GetPagedListAsync(pageIndex: request.PageIndex, pageSize: request.PageSize, cancellationToken: cancellationToken)));
 }
