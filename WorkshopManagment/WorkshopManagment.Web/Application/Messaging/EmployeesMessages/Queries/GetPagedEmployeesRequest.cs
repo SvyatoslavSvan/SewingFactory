@@ -7,8 +7,8 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.Queries;
 
-public record GetPagedEmployeesRequest(ClaimsPrincipal User, int PageIndex, int PageSize) : GetPagedRequest<Employee, EmployeeReadViewModel>(User, PageIndex, PageSize);
+public sealed record GetPagedEmployeesRequest(ClaimsPrincipal User, int PageIndex, int PageSize) : GetPagedRequest<Employee, EmployeeReadViewModel>(User, PageIndex, PageSize);
 
-public class GetPagedEmployeesHandler(IUnitOfWork unitOfWork, IMapper mapper) : GetPagedHandler<Employee, EmployeeReadViewModel>(unitOfWork, mapper)
+public sealed class GetPagedEmployeesHandler(IUnitOfWork unitOfWork, IMapper mapper) : GetPagedHandler<Employee, EmployeeReadViewModel>(unitOfWork, mapper)
 {
 }

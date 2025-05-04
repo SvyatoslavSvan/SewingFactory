@@ -37,10 +37,5 @@
 		<ProjectReference Include="..\WorkshopManagment.Infrastructure\SewingFactory.Backend.WorkshopManagement.Infrastructure.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Application\Messaging\EmployeesMessages\ViewModels\Base\" />
-	  <Folder Include="Endpoints\Base\" />
-	</ItemGroup>
-
 
 </Project>

@@ -1,42 +1,27 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
-using SewingFactory.Common.Domain.Exceptions;
+﻿using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels.Base;
+using System.Text.Json.Serialization;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
 
-public class EmployeeCreateViewModel
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+[JsonDerivedType(typeof(ProcessEmployeeCreateViewModel), "process")]
+[JsonDerivedType(typeof(RateEmployeeCreateViewModel), "rate")]
+[JsonDerivedType(typeof(TechnologistCreateViewModel), "technologist")]
+public class EmployeeCreateViewModel : EmployeeViewModel
 {
-    private static readonly Dictionary<(bool hasRate, bool hasSalaryPercentage), EmployeeKind> KindMap =
-        new()
-        {
-            [(false, false)] = EmployeeKind.Process,
-            [(true, false)] = EmployeeKind.Rate,
-            [(false, true)] = EmployeeKind.Technologist
-        };
-    public string Name { get; set; } = default!;
-    public string InternalId { get; set; } = default!;
-    public Department Department { get; set; }
-    public decimal? Premium { get; set; }
-    public decimal? Rate { get; set; }
-    public int? SalaryPercentage { get; set; }
-
-    public EmployeeKind GetEmployeeKind()
-    {
-        var hasRate = Rate.GetValueOrDefault() > 0;
-        var hasSalaryPercentage = SalaryPercentage.GetValueOrDefault() > 0;
-
-        if (KindMap.TryGetValue((hasRate, hasSalaryPercentage), out var kind))
-        {
-            return kind;
-        }
-
-        throw new SewingFactoryArgumentException(
-            $"Invalid combination of Rate={Rate} and SalaryPercentage={SalaryPercentage}");
-    }
 }
 
-public enum EmployeeKind
+public class ProcessEmployeeCreateViewModel : EmployeeCreateViewModel
 {
-    Process,
-    Rate,
-    Technologist
+    public decimal Premium { get; set; }
+}
+
+public sealed class RateEmployeeCreateViewModel : ProcessEmployeeCreateViewModel
+{
+    public decimal Rate { get; set; }
+}
+
+public sealed class TechnologistCreateViewModel : EmployeeCreateViewModel
+{
+    public int SalaryPercentage { get; set; }
 }

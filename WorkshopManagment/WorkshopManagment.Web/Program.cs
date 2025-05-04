@@ -11,23 +11,18 @@ try
         .WriteTo.Console()
         .CreateLogger();
 
-    
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog(configureLogger: (context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
 
     builder.AddDefinitions(typeof(Program));
 
-    
     var app = builder.Build();
 
-    
     app.UseDefinitions();
 
-    
     app.UseSerilogRequestLogging();
 
-    
     app.Run();
 
     return 0;

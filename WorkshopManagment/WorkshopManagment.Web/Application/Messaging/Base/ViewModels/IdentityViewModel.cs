@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.ViewModels;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.ViewModels
+public interface IIdentityViewModel
 {
-    public abstract class IdentityViewModel
-    {
-        [Required(ErrorMessage = "Id is required")] public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

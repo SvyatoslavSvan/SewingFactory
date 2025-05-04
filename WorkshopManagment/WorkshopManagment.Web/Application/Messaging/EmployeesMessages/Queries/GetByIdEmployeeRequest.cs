@@ -7,8 +7,8 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.Queries;
 
-public record GetByIdEmployeeRequest(ClaimsPrincipal User, Guid Id) : GetByIdRequest<Employee, EmployeeReadViewModel>(User, Id);
+public sealed record GetByIdEmployeeRequest(ClaimsPrincipal User, Guid Id) : GetByIdRequest<Employee, EmployeeReadViewModel>(User, Id);
 
-public class GetByIdEmployeeHandler(IUnitOfWork unitOfWork, IMapper mapper) : GetByIdHandler<Employee, EmployeeReadViewModel>(unitOfWork, mapper)
+public sealed class GetByIdEmployeeHandler(IUnitOfWork unitOfWork, IMapper mapper) : GetByIdHandler<Employee, EmployeeReadViewModel>(unitOfWork, mapper)
 {
 }

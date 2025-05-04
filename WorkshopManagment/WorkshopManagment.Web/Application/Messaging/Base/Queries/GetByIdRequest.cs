@@ -9,7 +9,8 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Bas
 
 public record GetByIdRequest<TEntity, TViewModel>(ClaimsPrincipal User, Guid Id) : IRequest<OperationResult<TViewModel>> where TEntity : Identity;
 
-public class GetByIdHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<GetByIdRequest<TEntity, TViewModel>, OperationResult<TViewModel>> where TEntity : Identity
+public abstract class GetByIdHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
+    : IRequestHandler<GetByIdRequest<TEntity, TViewModel>, OperationResult<TViewModel>> where TEntity : Identity
 {
     public virtual async Task<OperationResult<TViewModel>> Handle(GetByIdRequest<TEntity, TViewModel> request, CancellationToken cancellationToken)
     {

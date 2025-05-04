@@ -10,10 +10,10 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Bas
 public record GetPagedRequest<TEntity, TViewModel>(ClaimsPrincipal User, int PageIndex, int PageSize)
     : IRequest<OperationResult<IPagedList<TViewModel>>> where TEntity : class;
 
-public class GetPagedHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
+public abstract class GetPagedHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
     : IRequestHandler<GetPagedRequest<TEntity, TViewModel>, OperationResult<IPagedList<TViewModel>>> where TEntity : class
 {
     public async Task<OperationResult<IPagedList<TViewModel>>> Handle(GetPagedRequest<TEntity, TViewModel> request, CancellationToken cancellationToken)
-        => OperationResult.CreateResult<IPagedList<TViewModel>>(mapper.Map<IPagedList<TViewModel>>(await unitOfWork.GetRepository<TEntity>()
+        => OperationResult.CreateResult(mapper.Map<IPagedList<TViewModel>>(await unitOfWork.GetRepository<TEntity>()
             .GetPagedListAsync(pageIndex: request.PageIndex, pageSize: request.PageSize, cancellationToken: cancellationToken)));
 }

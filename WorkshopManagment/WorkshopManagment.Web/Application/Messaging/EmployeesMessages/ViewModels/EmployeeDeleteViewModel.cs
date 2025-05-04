@@ -2,7 +2,7 @@
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
 
-public class DeleteProcessBasedEmployeeViewModel : IdentityViewModel
+public sealed class EmployeeDeleteViewModel : IIdentityViewModel
 {
-    
+    public Guid Id { get; set; }
 }

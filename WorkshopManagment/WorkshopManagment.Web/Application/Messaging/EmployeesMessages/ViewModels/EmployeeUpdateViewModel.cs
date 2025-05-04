@@ -5,25 +5,25 @@ using System.Text.Json.Serialization;
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
-[JsonDerivedType(typeof(ProcessEmployeeReadViewModel), "process")]
-[JsonDerivedType(typeof(RateEmployeeReadViewModel), "rate")]
-[JsonDerivedType(typeof(TechnologistReadViewModel), "technologist")]
-public class EmployeeReadViewModel : EmployeeViewModel, IIdentityViewModel
+[JsonDerivedType(typeof(ProcessEmployeeUpdateViewModel), "process")]
+[JsonDerivedType(typeof(RateEmployeeUpdateViewModel), "rate")]
+[JsonDerivedType(typeof(TechnologistUpdateViewModel), "technologist")]
+public class EmployeeUpdateViewModel : EmployeeViewModel, IIdentityViewModel
 {
     public Guid Id { get; set; }
 }
 
-public class ProcessEmployeeReadViewModel : EmployeeReadViewModel
+public class ProcessEmployeeUpdateViewModel : EmployeeUpdateViewModel
 {
     public decimal Premium { get; set; }
 }
 
-public sealed class RateEmployeeReadViewModel : ProcessEmployeeReadViewModel
+public sealed class RateEmployeeUpdateViewModel : ProcessEmployeeUpdateViewModel
 {
     public decimal Rate { get; set; }
 }
 
-public sealed class TechnologistReadViewModel : EmployeeReadViewModel
+public sealed class TechnologistUpdateViewModel : EmployeeUpdateViewModel
 {
     public int SalaryPercentage { get; set; }
 }

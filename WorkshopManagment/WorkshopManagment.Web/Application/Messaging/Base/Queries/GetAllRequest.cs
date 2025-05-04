@@ -9,7 +9,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Bas
 
 public record GetAllRequest<TEntity, TViewModel>(ClaimsPrincipal User) : IRequest<OperationResult<IEnumerable<TViewModel>>> where TEntity : Identity;
 
-public class GetAllHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
+public abstract class GetAllHandler<TEntity, TViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
     : IRequestHandler<GetAllRequest<TEntity, TViewModel>, OperationResult<IEnumerable<TViewModel>>> where TEntity : Identity
 {
     public async Task<OperationResult<IEnumerable<TViewModel>>> Handle(

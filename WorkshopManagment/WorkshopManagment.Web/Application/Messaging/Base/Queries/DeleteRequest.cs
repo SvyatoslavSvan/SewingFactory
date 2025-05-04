@@ -8,10 +8,10 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
 
-public record DeleteRequest<TViewModel, TEntity>(TViewModel Model, ClaimsPrincipal User) : IRequest<OperationResult<TViewModel>> where TEntity : Identity where TViewModel : IdentityViewModel;
+public record DeleteRequest<TViewModel, TEntity>(TViewModel Model, ClaimsPrincipal User) : IRequest<OperationResult<TViewModel>> where TEntity : Identity where TViewModel : IIdentityViewModel;
 
-public class DeleteHandler<TViewModel, TEntity>(IUnitOfWork unitOfWork)
-    : IRequestHandler<DeleteRequest<TViewModel, TEntity>, OperationResult<TViewModel>> where TEntity : Identity where TViewModel : IdentityViewModel
+public abstract class DeleteHandler<TViewModel, TEntity>(IUnitOfWork unitOfWork)
+    : IRequestHandler<DeleteRequest<TViewModel, TEntity>, OperationResult<TViewModel>> where TEntity : Identity where TViewModel : IIdentityViewModel
 {
     private const string _errorMessageFormat = "An error occurred while deleting {0} with Id {1}. Please try again.";
 

@@ -86,6 +86,8 @@ public class SwaggerDefinition : AppDefinition
                     new List<string>()
                 }
             });
+
+            options.SchemaFilter<PolymorphicSchemaFilter>();
         });
     }
 }

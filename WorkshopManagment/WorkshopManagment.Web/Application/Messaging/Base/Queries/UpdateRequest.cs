@@ -9,13 +9,13 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
 
-public record UpdateRequest<TViewModel, TEntity>(TViewModel Model, ClaimsPrincipal User) : IRequest<OperationResult<TViewModel>> where TViewModel : IdentityViewModel where TEntity : Identity;
+public record UpdateRequest<TViewModel, TEntity>(TViewModel Model, ClaimsPrincipal User) : IRequest<OperationResult<TViewModel>> where TViewModel : IIdentityViewModel where TEntity : Identity;
 
-public class UpdateHandler<TViewModel, TEntity>(
+public abstract class UpdateHandler<TViewModel, TEntity>(
     IUnitOfWork unitOfWork,
     IMapper mapper) : IRequestHandler<UpdateRequest<TViewModel, TEntity>, OperationResult<TViewModel>>
     where TEntity : Identity
-    where TViewModel : IdentityViewModel
+    where TViewModel : IIdentityViewModel
 {
     private const string _errorMessageFormat = "An error occurred while updating {0} with Id {1}.";
 
