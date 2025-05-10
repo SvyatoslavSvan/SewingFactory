@@ -8,7 +8,7 @@ using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
 
-public abstract class QueryRouter<TEntity, TReadViewModel> : AppDefinition where TEntity : Identity
+public abstract class QueryRouter<TEntity, TReadViewModel,TDetailsReadViewModel> : AppDefinition where TEntity : Identity
 {
     protected static readonly string _featureGroupName = typeof(TEntity).Name;
     protected string Prefix => "/api/" + _featureGroupName;
@@ -46,10 +46,10 @@ public abstract class QueryRouter<TEntity, TReadViewModel> : AppDefinition where
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-    protected async Task<OperationResult<TReadViewModel>> GetById(
+    protected async Task<OperationResult<TDetailsReadViewModel>> GetById(
         [FromServices] IMediator mediator,
         HttpContext context, Guid id)
-        => await mediator.Send(new GetByIdRequest<TEntity, TReadViewModel>(
+        => await mediator.Send(new GetByIdRequest<TEntity, TDetailsReadViewModel>(
                 context.User, id),
             context.RequestAborted);
 }

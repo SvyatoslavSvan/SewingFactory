@@ -6,9 +6,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 
 public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
 {
-    private readonly List<Process> _cuttingProcesses = null!;
-    private readonly List<Process> _pressingProcesses = null!;
-    private readonly List<Process> _sewingProcesses = null!;
+    private readonly List<Process> _processes = [];
     private GarmentCategory _category = null!;
     private string _description = null!;
 
@@ -19,27 +17,18 @@ public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
 
     public GarmentModel(
         string name,
-        List<Process> sewingProcesses,
         string description,
-        List<Process> cuttingProcesses,
-        List<Process> pressingProcesses,
+        List<Process> processes,
         GarmentCategory category,
         byte[]? image = null) : base(name)
     {
-        _sewingProcesses = sewingProcesses;
         Description = description;
-        _cuttingProcesses = cuttingProcesses;
-        _pressingProcesses = pressingProcesses;
-        Image = image ?? [];
+        _processes = processes;
+        Image = image;
         Category = category;
     }
 
-    public IReadOnlyList<Process> SewingProcesses => _sewingProcesses.AsReadOnly();
-
-    public IReadOnlyList<Process> CuttingProcesses => _cuttingProcesses;
-
-    public IReadOnlyList<Process> PressingProcesses => _pressingProcesses;
-
+    public IReadOnlyList<Process> Processes => _processes;
 
     public string Description
     {
@@ -63,17 +52,13 @@ public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
 
     public byte[]? Image { get; set; }
 
-    public GarmentModel Clone() => throw new NotImplementedException();
+    public GarmentModel Clone() => this;
 
-    public void AddProcess(Process process)
+    public void ReplaceProcesses(IEnumerable<Process> processes)
     {
-        if (process == null)
-        {
-            throw new SewingFactoryArgumentNullException(nameof(process));
-        }
-
-        _sewingProcesses.Add(process);
+        _processes.Clear();
+        _processes.AddRange(processes);
     }
 
-    public void RemoveProcess(Process process) => _sewingProcesses.Remove(SewingProcesses.FirstOrDefault(predicate: x => x.Id == process.Id)!);
+
 }

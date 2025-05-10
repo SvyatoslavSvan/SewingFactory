@@ -9,6 +9,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Emp
 
 public sealed record GetAllEmployeesRequest(ClaimsPrincipal User) : GetAllRequest<Employee, EmployeeReadViewModel>(User);
 
-public sealed class GetAllEmployeesHandler(IUnitOfWork unitOfWork, IMapper mapper) : GetAllHandler<Employee, EmployeeReadViewModel>(unitOfWork, mapper)
+public sealed class GetAllRequestEmployeesHandler(IUnitOfWork unitOfWork, IMapper mapper) : GetAllRequestHandler<Employee, EmployeeReadViewModel>(unitOfWork, mapper)
 {
 }

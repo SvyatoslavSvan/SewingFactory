@@ -11,32 +11,24 @@ public class EmployeeMappingConfiguration : Profile
 {
     public EmployeeMappingConfiguration()
     {
-        /* ---------- READ MAPPINGS ---------- */
-
-        // map base Employee → flat ReadViewModel
         CreateMap<Employee, EmployeeReadViewModel>(MemberList.None)
             .ForMember(destinationMember: d => d.Id, memberOptions: o => o.MapFrom(mapExpression: s => s.Id))
             .ForMember(destinationMember: d => d.Name, memberOptions: o => o.MapFrom(mapExpression: s => s.Name))
             .ForMember(destinationMember: d => d.InternalId, memberOptions: o => o.MapFrom(mapExpression: s => s.InternalId))
             .ForMember(destinationMember: d => d.Department, memberOptions: o => o.MapFrom(mapExpression: s => s.Department));
 
-        // ProcessBasedEmployee → adds Premium
         CreateMap<ProcessBasedEmployee, ProcessEmployeeReadViewModel>(MemberList.None)
             .IncludeBase<Employee, EmployeeReadViewModel>()
             .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => s.Premium.Value));
 
-        // RateBasedEmployee → adds Rate (in addition to inherited Premium)
         CreateMap<RateBasedEmployee, RateEmployeeReadViewModel>(MemberList.None)
             .IncludeBase<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
             .ForMember(destinationMember: d => d.Rate, memberOptions: o => o.MapFrom(mapExpression: s => s.Rate.Amount));
 
-        // Technologist → adds SalaryPercentage
         CreateMap<Technologist, TechnologistReadViewModel>(MemberList.None)
             .IncludeBase<Employee, EmployeeReadViewModel>()
             .ForMember(destinationMember: d => d.SalaryPercentage,
                 memberOptions: o => o.MapFrom(mapExpression: s => s.SalaryPercentage.Value));
-
-        /* ---------- CREATE MAPPINGS (unchanged) ---------- */
 
         CreateMap<EmployeeCreateViewModel, Employee>()
             .ConstructUsing(ctor: (src, ctx) => src switch
@@ -70,26 +62,20 @@ public class EmployeeMappingConfiguration : Profile
                     new Percent(src.SalaryPercentage), src.Department))
             .ForAllMembers(memberOptions: opt => opt.Ignore());
 
-        /* ---------- UPDATE MAPPINGS ---------- */
-
-        // flat Update → base Employee
         CreateMap<EmployeeUpdateViewModel, Employee>(MemberList.None)
             .ForMember(destinationMember: d => d.InternalId, memberOptions: o => o.MapFrom(mapExpression: s => s.InternalId))
             .ForMember(destinationMember: d => d.Department, memberOptions: o => o.MapFrom(mapExpression: s => s.Department));
 
-        // Process update → sets Premium
         CreateMap<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>(MemberList.None)
             .IncludeBase<EmployeeUpdateViewModel, Employee>()
             .ForMember(destinationMember: d => d.Premium,
                 memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.Premium)));
 
-        // Rate update → sets Rate
         CreateMap<RateEmployeeUpdateViewModel, RateBasedEmployee>(MemberList.None)
             .IncludeBase<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
             .ForMember(destinationMember: d => d.Rate,
                 memberOptions: o => o.MapFrom(mapExpression: s => new Money(s.Rate)));
 
-        // Technologist update → sets SalaryPercentage
         CreateMap<TechnologistUpdateViewModel, Technologist>(MemberList.None)
             .IncludeBase<EmployeeUpdateViewModel, Employee>()
             .ForMember(destinationMember: d => d.SalaryPercentage,

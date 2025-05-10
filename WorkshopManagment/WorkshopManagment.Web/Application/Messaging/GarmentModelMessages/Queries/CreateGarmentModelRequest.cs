@@ -1,0 +1,17 @@
+﻿using AutoMapper;
+using Calabonga.UnitOfWork;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WorkshopManagement.Infrastructure;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.ViewModels;
+using System.Security.Claims;
+
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Queries;
+
+public sealed record CreateGarmentModelRequest(CreateGarmentModelViewModel Model, ClaimsPrincipal User)
+    : CreateRequest<CreateGarmentModelViewModel, GarmentModel, ReadGarmentModelViewModel>(Model, User);
+
+public sealed class CreateGarmentModelHandler(IUnitOfWork<ApplicationDbContext> unitOfWork, IMapper mapper)
+    : CreateRequestHandler<CreateGarmentModelViewModel, GarmentModel, ReadGarmentModelViewModel>(unitOfWork, mapper)
+{
+}

@@ -10,6 +10,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Emp
 public sealed record UpdateProcessBasedEmployeeRequest(EmployeeUpdateViewModel Model, ClaimsPrincipal User)
     : UpdateRequest<EmployeeUpdateViewModel, Employee>(Model, User);
 
-public sealed class UpdateProcessBasedEmployeeHandler(IUnitOfWork unitOfWork, IMapper mapper) : UpdateHandler<EmployeeUpdateViewModel, Employee>(unitOfWork, mapper)
+public sealed class UpdateRequestProcessBasedEmployeeHandler(IUnitOfWork unitOfWork, IMapper mapper) : UpdateRequestHandler<EmployeeUpdateViewModel, Employee>(unitOfWork, mapper)
 {
 }

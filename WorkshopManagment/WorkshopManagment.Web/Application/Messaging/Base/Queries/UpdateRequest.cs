@@ -11,7 +11,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Bas
 
 public record UpdateRequest<TViewModel, TEntity>(TViewModel Model, ClaimsPrincipal User) : IRequest<OperationResult<TViewModel>> where TViewModel : IIdentityViewModel where TEntity : Identity;
 
-public abstract class UpdateHandler<TViewModel, TEntity>(
+public abstract class UpdateRequestHandler<TViewModel, TEntity>(
     IUnitOfWork unitOfWork,
     IMapper mapper) : IRequestHandler<UpdateRequest<TViewModel, TEntity>, OperationResult<TViewModel>>
     where TEntity : Identity
@@ -19,7 +19,7 @@ public abstract class UpdateHandler<TViewModel, TEntity>(
 {
     private const string _errorMessageFormat = "An error occurred while updating {0} with Id {1}.";
 
-    public async Task<OperationResult<TViewModel>> Handle(UpdateRequest<TViewModel, TEntity> request, CancellationToken cancellationToken)
+    public virtual async Task<OperationResult<TViewModel>> Handle(UpdateRequest<TViewModel, TEntity> request, CancellationToken cancellationToken)
     {
         var operation = OperationResult.CreateResult<TViewModel>();
         var errorMessage = string.Format(_errorMessageFormat, nameof(TEntity), request.Model.Id);

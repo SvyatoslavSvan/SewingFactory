@@ -16,11 +16,11 @@ public record CreateRequest<TCreateViewModel, TEntity, TReadViewModel>(TCreateVi
 public abstract class CreateRequestHandler<TCreateViewModel, TEntity, TReadViewModel>(IUnitOfWork unitOfWork, IMapper mapper)
     : IRequestHandler<CreateRequest<TCreateViewModel, TEntity, TReadViewModel>, OperationResult<TReadViewModel>> where TEntity : Identity
 {
-    public async Task<OperationResult<TReadViewModel>> Handle(CreateRequest<TCreateViewModel, TEntity, TReadViewModel> request, CancellationToken cancellationToken)
+    public virtual async Task<OperationResult<TReadViewModel>> Handle(CreateRequest<TCreateViewModel, TEntity, TReadViewModel> request, CancellationToken cancellationToken)
     {
         var operation = OperationResult.CreateResult<TReadViewModel>();
-        var employee = mapper.Map<TEntity>(request.Model);
-        await unitOfWork.GetRepository<TEntity>().InsertAsync(employee, cancellationToken);
+        var entity = mapper.Map<TEntity>(request.Model);
+        await unitOfWork.GetRepository<TEntity>().InsertAsync(entity, cancellationToken);
         await unitOfWork.SaveChangesAsync();
         if (!unitOfWork.LastSaveChangesResult.IsOk)
         {
@@ -30,7 +30,7 @@ public abstract class CreateRequestHandler<TCreateViewModel, TEntity, TReadViewM
             return operation;
         }
 
-        operation.Result = mapper.Map<TReadViewModel>(employee);
+        operation.Result = mapper.Map<TReadViewModel>(entity);
 
         return operation;
     }

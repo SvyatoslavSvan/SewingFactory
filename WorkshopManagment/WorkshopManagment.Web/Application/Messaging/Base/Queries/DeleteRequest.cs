@@ -10,12 +10,12 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Bas
 
 public record DeleteRequest<TViewModel, TEntity>(TViewModel Model, ClaimsPrincipal User) : IRequest<OperationResult<TViewModel>> where TEntity : Identity where TViewModel : IIdentityViewModel;
 
-public abstract class DeleteHandler<TViewModel, TEntity>(IUnitOfWork unitOfWork)
+public abstract class DeleteRequestHandler<TViewModel, TEntity>(IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteRequest<TViewModel, TEntity>, OperationResult<TViewModel>> where TEntity : Identity where TViewModel : IIdentityViewModel
 {
     private const string _errorMessageFormat = "An error occurred while deleting {0} with Id {1}. Please try again.";
 
-    public async Task<OperationResult<TViewModel>> Handle(DeleteRequest<TViewModel, TEntity> request, CancellationToken cancellationToken)
+    public virtual async Task<OperationResult<TViewModel>> Handle(DeleteRequest<TViewModel, TEntity> request, CancellationToken cancellationToken)
     {
         var operation = OperationResult.CreateResult<TViewModel>();
         var errorMessage = string.Format(_errorMessageFormat, typeof(TViewModel).Name, request.Model.Id);

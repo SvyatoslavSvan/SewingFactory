@@ -9,6 +9,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Emp
 public sealed record DeleteEmployeeRequest(EmployeeDeleteViewModel Model, ClaimsPrincipal User)
     : DeleteRequest<EmployeeDeleteViewModel, Employee>(Model, User);
 
-public sealed class DeleteEmployeeHandler(IUnitOfWork unitOfWork) : DeleteHandler<EmployeeDeleteViewModel, Employee>(unitOfWork)
+public sealed class DeleteRequestEmployeeHandler(IUnitOfWork unitOfWork) : DeleteRequestHandler<EmployeeDeleteViewModel, Employee>(unitOfWork)
 {
 }

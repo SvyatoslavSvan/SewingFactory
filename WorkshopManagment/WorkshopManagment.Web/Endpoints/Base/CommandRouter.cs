@@ -12,9 +12,9 @@ public abstract class CommandRouter
     TReadViewModel,
     TCreateViewModel,
     TUpdateViewModel,
-    TDeleteViewModel>
+    TDeleteViewModel,TDetailsReadViewModel>
     : QueryRouter<TEntity,
-        TReadViewModel>
+        TReadViewModel,TDetailsReadViewModel>
     where TEntity : Identity
     where TUpdateViewModel : IIdentityViewModel
     where TDeleteViewModel : IIdentityViewModel

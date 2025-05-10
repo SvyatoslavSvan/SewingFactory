@@ -8,14 +8,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems
 
 public sealed class WorkshopDocument : Identity
 {
-    private static readonly Dictionary<Department, Func<GarmentModel, IEnumerable<WorkshopTask>>> _departmentTaskMapping =
-        new()
-        {
-            { Department.Sewing, model => model.SewingProcesses.Select(selector: process => new WorkshopTask(process)) },
-            { Department.Cutting, model => model.CuttingProcesses.Select(selector: process => new WorkshopTask(process)) },
-            { Department.Pressing, model => model.PressingProcesses.Select(selector: process => new WorkshopTask(process)) }
-        };
-
     private readonly List<ProcessBasedEmployee> _employees;
     private readonly List<WorkshopTask> _tasks;
     private int _countOfModelsInvolved;
@@ -70,20 +62,16 @@ public sealed class WorkshopDocument : Identity
 
     public IReadOnlyList<ProcessBasedEmployee> Employees => _employees;
 
-    public static WorkshopDocument CreateInstance(int countOfModelsInvolved, GarmentModel garmentModel, Department department)
-    {
-        var tasks = new List<WorkshopTask>();
-        if (_departmentTaskMapping.TryGetValue(department, out var taskGenerator))
-        {
-            tasks.AddRange(taskGenerator(garmentModel));
-        }
-        else
-        {
-            throw new SewingFactoryArgumentException("Unknown department type.", nameof(department));
-        }
-
-        return new WorkshopDocument(countOfModelsInvolved, garmentModel, tasks);
-    }
+    public static WorkshopDocument CreateInstance(
+        int countOfModelsInvolved,
+        GarmentModel garmentModel,
+        Department department)
+        => new(countOfModelsInvolved,
+            garmentModel,
+            [
+                ..garmentModel.Processes.Where(x => x.Department == department)
+                    .Select(selector: process => new WorkshopTask(process))
+            ]);
 
     public Money CalculatePaymentForEmployee(ProcessBasedEmployee employee)
     {

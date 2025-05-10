@@ -4,6 +4,6 @@ using SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints;
 
-public sealed class EmployeeRouter : CommandRouter<Employee, EmployeeReadViewModel, EmployeeCreateViewModel, EmployeeUpdateViewModel, EmployeeDeleteViewModel>
+public sealed class EmployeeRouter : CommandRouter<Employee, EmployeeReadViewModel, EmployeeCreateViewModel, EmployeeUpdateViewModel, EmployeeDeleteViewModel, EmployeeReadViewModel>
 {
 }
