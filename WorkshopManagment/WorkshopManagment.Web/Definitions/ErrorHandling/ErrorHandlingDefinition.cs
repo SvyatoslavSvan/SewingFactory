@@ -4,48 +4,72 @@ using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using System.Net;
 using System.Security.Authentication;
+using SewingFactory.Common.Domain.Exceptions;          
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.ErrorHandling;
 
-/// <summary>
-///     Custom Error handling
-/// </summary>
-public class ErrorHandlingDefinition : AppDefinition
+public sealed class ErrorHandlingDefinition : AppDefinition
 {
     public override bool Enabled => true;
 
-    /// <summary>
-    ///     Configure application for current application
-    /// </summary>
-    /// <param name="app"></param>
     public override void ConfigureApplication(WebApplication app) =>
-        app.UseExceptionHandler(configure: error => error.Run(handler: async context =>
+        app.UseExceptionHandler(error => error.Run(async context =>
         {
-            context.Response.ContentType = "application/json";
-            var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-            if (contextFeature is not null)
+            var feature = context.Features.Get<IExceptionHandlerFeature>();
+            if (feature is null)
             {
-                // handling all another errors
-                Log.Error($"Something went wrong in the {contextFeature.Error}");
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-                if (app.Environment.IsDevelopment())
-                {
-                    await context.Response.WriteAsync($"INTERNAL SERVER ERROR: {contextFeature.Error}");
-                }
-                else
-                {
-                    await context.Response.WriteAsync("INTERNAL SERVER ERROR. PLEASE TRY AGAIN LATER");
-                }
+                return;
             }
+
+            var ex = feature.Error;
+            var status = (int)GetErrorCode(ex);
+
+            Log.Error(ex, "Unhandled exception");
+
+            context.Response.StatusCode = status;
+            context.Response.ContentType = "application/json";
+
+            object payload = app.Environment.IsDevelopment()
+                ? new
+                {
+                    status,
+                    error = ex.GetType().Name,
+                    message = ex.Message,
+                    stack = ex.StackTrace
+                }
+                : new
+                {
+                    status,
+                    message = status switch
+                    {
+                        400 => "The request contains invalid data.",
+                        403 => "Access denied.",
+                        404 => "Resource not found.",
+                        501 => "Not implemented.",
+                        _ => "Internal server error. Please try again later."
+                    }
+                };
+            await context.Response.WriteAsJsonAsync(payload);
         }));
 
-    private static HttpStatusCode GetErrorCode(Exception e)
-        => e switch
-        {
-            ValidationException _ => HttpStatusCode.BadRequest,
-            AuthenticationException _ => HttpStatusCode.Forbidden,
-            NotImplementedException _ => HttpStatusCode.NotImplemented,
-            _ => HttpStatusCode.InternalServerError
-        };
+    private static HttpStatusCode GetErrorCode(Exception e) => e switch
+    {
+        ValidationException
+            or SewingFactoryArgumentException
+            or SewingFactoryArgumentNullException
+            or SewingFactoryArgumentOutOfRangeException
+            => HttpStatusCode.BadRequest,
+
+        SewingFactoryAccessDeniedException
+            or AuthenticationException
+            => HttpStatusCode.Forbidden,
+
+        SewingFactoryNotFoundException
+            => HttpStatusCode.NotFound,
+
+        NotImplementedException
+            => HttpStatusCode.NotImplemented,
+
+        _ => HttpStatusCode.InternalServerError
+    };
 }
