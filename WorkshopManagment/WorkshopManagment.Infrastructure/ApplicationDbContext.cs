@@ -7,6 +7,7 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
+using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Infrastructure;
@@ -32,7 +33,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<WorkDay> WorkDays { get; set; }
     public DbSet<WorkshopDocument> WorkshopDocuments { get; set; }
     public DbSet<WorkshopTask> WorkshopTasks { get; set; }
-
+    public DbSet<Department> Departments { get; set; }
     /// <summary>
     ///     <para>
     ///         Override this method to configure the database (and other options) to be used for this context.

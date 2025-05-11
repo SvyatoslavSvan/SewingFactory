@@ -1,4 +1,5 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.ViewModels;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.ProcessMessages.ViewModels.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.ProcessMessages.ViewModels;
@@ -6,4 +7,5 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Pro
 public sealed class ReadProcessViewModel : ProcessViewModel, IIdentityViewModel
 {
     public Guid Id { get; set; }
+    public required ReadDepartmentViewModel DepartmentViewModel { get; set; }
 }

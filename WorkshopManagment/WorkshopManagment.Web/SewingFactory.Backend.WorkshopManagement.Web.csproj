@@ -38,6 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Application\Messaging\DepartmentMessages\Validatiors\" />
 	  <Folder Include="Application\Messaging\GarmentModelMessages\Validatiors\" />
 	</ItemGroup>
 

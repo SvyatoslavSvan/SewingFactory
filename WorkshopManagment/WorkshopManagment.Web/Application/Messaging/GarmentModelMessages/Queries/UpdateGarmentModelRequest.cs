@@ -35,8 +35,8 @@ public sealed class UpdateGarmentModelHandler(
         }
 
         _mapper.Map(request.Model, entity);
-        entity.ReplaceProcesses(StubHelper.GetProcessStubs(request.Model, unitOfWork));
-        entity.Category = StubHelper.GetGarmentCategoryStub(request.Model, unitOfWork);
+        entity.ReplaceProcesses(GarmentModelStubHelper.GetProcessStubs(request.Model, unitOfWork));
+        entity.Category = GarmentModelStubHelper.GetGarmentCategoryStub(request.Model, unitOfWork);
         unitOfWork.GetRepository<GarmentModel>().Update(entity);
         await unitOfWork.SaveChangesAsync();
         if (unitOfWork.LastSaveChangesResult.IsOk)

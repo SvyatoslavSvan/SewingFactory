@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Mapping.Converters;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.ProcessMessages.ViewModels;
@@ -28,7 +29,7 @@ public sealed class GarmentModelMappingProfile : Profile
                 Name = garmentModel.Name,
                 Category = new ReadGarmentCategoryViewModel { Id = garmentModel.Category.Id, Name = garmentModel.Category.Name },
                 Processes = garmentModel.Processes
-                    .Select(process => new ReadProcessViewModel { Id = process.Id, Department = process.Department, Name = process.Name, Price = process.Price.Amount }).ToList()
+                    .Select(process => new ReadProcessViewModel { Id = process.Id, DepartmentViewModel = new ReadDepartmentViewModel {Id = process.Id, Name = process.Name}, Name = process.Name, Price = process.Price.Amount }).ToList()
             });
     }
 }

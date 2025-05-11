@@ -4,13 +4,32 @@ using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport;
 
-public class Salary(Money payment, Money premium, ProcessBasedEmployee employee)
+public class Salary
 {
-    public Money Payment { get; init; } = payment;
+    public Salary(Money payment,
+        Money premium,
+        ProcessBasedEmployee employee)
+        : this(payment, premium, employee, new Money(0)) { }
 
-    public Money Premium { get; init; } = premium;
+    public Salary(Money payment,
+        Money premium,
+        ProcessBasedEmployee employee,
+        Money additionalPayment)
+    {
+        Payment = payment;
+        Premium = premium;
+        Employee = employee ?? throw new SewingFactoryArgumentNullException(nameof(employee));
+        AdditionalPayment = additionalPayment;
+    }
 
-    public ProcessBasedEmployee Employee { get; set; } = employee ?? throw new SewingFactoryArgumentNullException(nameof(Employee));
+
+    public Money Payment { get; init; }
+
+    public Money Premium { get; init; }
+
+    public ProcessBasedEmployee Employee { get; set; }
 
     public Money TakeHome => Payment + Premium;
+
+    public Money AdditionalPayment { get; init; }
 }

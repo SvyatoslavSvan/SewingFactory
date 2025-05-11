@@ -18,5 +18,5 @@ public sealed class Process : NamedIdentity
 
     public Money Price { get; set; } = null!;
 
-    public Department Department { get; set; }
+    public Department Department { get; set; } = null!;
 }

@@ -9,6 +9,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Emp
 [JsonDerivedType(typeof(TechnologistCreateViewModel), "technologist")]
 public class EmployeeCreateViewModel : EmployeeViewModel
 {
+    public Guid DepartmentId { get; set; }
 }
 
 public class ProcessEmployeeCreateViewModel : EmployeeCreateViewModel
@@ -21,7 +22,7 @@ public sealed class RateEmployeeCreateViewModel : ProcessEmployeeCreateViewModel
     public decimal Rate { get; set; }
 }
 
-public sealed class TechnologistCreateViewModel : EmployeeCreateViewModel
+public sealed class TechnologistCreateViewModel : ProcessEmployeeCreateViewModel
 {
     public int SalaryPercentage { get; set; }
 }

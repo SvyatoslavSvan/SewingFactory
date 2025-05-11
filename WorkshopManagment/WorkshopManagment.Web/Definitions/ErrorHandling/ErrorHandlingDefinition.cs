@@ -70,6 +70,8 @@ public sealed class ErrorHandlingDefinition : AppDefinition
         NotImplementedException
             => HttpStatusCode.NotImplemented,
 
+        BadHttpRequestException => HttpStatusCode.BadRequest,
+
         _ => HttpStatusCode.InternalServerError
     };
 }

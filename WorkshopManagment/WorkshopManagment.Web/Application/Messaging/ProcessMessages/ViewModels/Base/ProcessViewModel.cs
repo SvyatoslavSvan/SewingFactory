@@ -6,5 +6,4 @@ public abstract class ProcessViewModel
 {
     public required string Name { get; set; }
     public decimal Price { get; set; }
-    public Department Department { get; set; }
 }

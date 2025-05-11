@@ -11,7 +11,6 @@ public class RateBasedEmployeeConfiguration : IEntityTypeConfiguration<RateBased
     {
         builder.Property(propertyExpression: x => x.Name).IsRequired();
         builder.Property(propertyExpression: x => x.InternalId).IsRequired();
-        builder.Property(propertyExpression: x => x.Department).HasConversion<int>().IsRequired();
         builder.Property(propertyExpression: x => x.Premium)
             .HasConversion(convertToProviderExpression: v => v.Value, convertFromProviderExpression: v => new Percent(v))
             .IsRequired();

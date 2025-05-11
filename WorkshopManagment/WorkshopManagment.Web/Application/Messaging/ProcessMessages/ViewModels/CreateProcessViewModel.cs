@@ -4,4 +4,5 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Pro
 
 public sealed class CreateProcessViewModel : ProcessViewModel
 {
+    public Guid DepartmentId { get; set; }
 }

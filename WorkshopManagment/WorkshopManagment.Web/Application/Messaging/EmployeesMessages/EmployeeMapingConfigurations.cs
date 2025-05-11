@@ -1,84 +1,113 @@
 ﻿using AutoMapper;
 using SewingFactory.Backend.WorkshopManagement.Domain.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
+using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages;
 
-public class EmployeeMappingConfiguration : Profile
+public sealed class EmployeeMappingConfiguration : Profile
 {
     public EmployeeMappingConfiguration()
     {
-        CreateMap<Employee, EmployeeReadViewModel>(MemberList.None)
-            .ForMember(destinationMember: d => d.Id, memberOptions: o => o.MapFrom(mapExpression: s => s.Id))
-            .ForMember(destinationMember: d => d.Name, memberOptions: o => o.MapFrom(mapExpression: s => s.Name))
-            .ForMember(destinationMember: d => d.InternalId, memberOptions: o => o.MapFrom(mapExpression: s => s.InternalId))
-            .ForMember(destinationMember: d => d.Department, memberOptions: o => o.MapFrom(mapExpression: s => s.Department));
+        // ────────────────────────────────────────────
+        // READ: domain → ViewModels
+        // ────────────────────────────────────────────
+        CreateMap<Employee, EmployeeReadViewModel>()
+            .ForMember(d => d.DepartmentViewModel,
+                       o => o.MapFrom(s => new ReadDepartmentViewModel
+                       {
+                           Id = s.Department.Id,
+                           Name = s.Department.Name
+                       }));
 
-        CreateMap<ProcessBasedEmployee, ProcessEmployeeReadViewModel>(MemberList.None)
+        CreateMap<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
-            .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => s.Premium.Value));
+            .ForMember(d => d.Premium, o => o.MapFrom(s => s.Premium.Value));
 
-        CreateMap<RateBasedEmployee, RateEmployeeReadViewModel>(MemberList.None)
+        CreateMap<RateBasedEmployee, RateEmployeeReadViewModel>()
             .IncludeBase<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
-            .ForMember(destinationMember: d => d.Rate, memberOptions: o => o.MapFrom(mapExpression: s => s.Rate.Amount));
+            .ForMember(d => d.Rate, o => o.MapFrom(s => s.Rate.Amount));
 
-        CreateMap<Technologist, TechnologistReadViewModel>(MemberList.None)
+        CreateMap<Technologist, TechnologistReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
-            .ForMember(destinationMember: d => d.SalaryPercentage,
-                memberOptions: o => o.MapFrom(mapExpression: s => s.SalaryPercentage.Value));
+            .ForMember(d => d.SalaryPercentage,
+                       o => o.MapFrom(s => s.SalaryPercentage.Value));
 
+
+        // ────────────────────────────────────────────
+        // CREATE: ViewModel → domain (Department stub is set in the handler)
+        // ────────────────────────────────────────────
         CreateMap<EmployeeCreateViewModel, Employee>()
-            .ConstructUsing(ctor: (src, ctx) => src switch
+            .ConstructUsing((src, ctx) => src switch
             {
                 RateEmployeeCreateViewModel r => ctx.Mapper.Map<RateBasedEmployee>(r),
-                ProcessEmployeeCreateViewModel p => ctx.Mapper.Map<ProcessBasedEmployee>(p),
                 TechnologistCreateViewModel t => ctx.Mapper.Map<Technologist>(t),
-                _ => throw new SewingFactoryArgumentOutOfRangeException(nameof(src),
-                    $"Unknown create DTO type: {src.GetType().Name}")
-            });
+                ProcessEmployeeCreateViewModel p => ctx.Mapper.Map<ProcessBasedEmployee>(p),
+                _ => throw new SewingFactoryArgumentOutOfRangeException(
+                         nameof(src),
+                         $"Unknown create DTO type: {src.GetType().Name}")
+            })
+            .ForMember(d => d.Department, o => o.Ignore());
 
         CreateMap<ProcessEmployeeCreateViewModel, ProcessBasedEmployee>()
-            .ConstructUsing(ctor: src =>
+            .ConstructUsing((src, ctx) =>
                 new ProcessBasedEmployee(
-                    src.Name, src.InternalId, src.Department,
+                    src.Name,
+                    src.InternalId,
+                    ctx.Mapper.Map<Department>(src.DepartmentId),  // requires Guid→Department map
                     new Percent(src.Premium)))
-            .ForAllMembers(memberOptions: opt => opt.Ignore());
+            .ForAllMembers(o => o.Ignore());
 
         CreateMap<RateEmployeeCreateViewModel, RateBasedEmployee>()
-            .ConstructUsing(ctor: src =>
+            .ConstructUsing((src, ctx) =>
                 new RateBasedEmployee(
-                    src.Name, src.InternalId,
-                    new Money(src.Rate), src.Department,
+                    src.Name,
+                    src.InternalId,
+                    new Money(src.Rate),
+                    ctx.Mapper.Map<Department>(src.DepartmentId),
                     (int)src.Premium))
-            .ForAllMembers(memberOptions: opt => opt.Ignore());
+            .ForAllMembers(o => o.Ignore());
 
         CreateMap<TechnologistCreateViewModel, Technologist>()
-            .ConstructUsing(ctor: src =>
+            .ConstructUsing((src, ctx) =>
                 new Technologist(
-                    src.Name, src.InternalId,
-                    new Percent(src.SalaryPercentage), src.Department))
-            .ForAllMembers(memberOptions: opt => opt.Ignore());
+                    src.Name,
+                    src.InternalId,
+                    new Percent(src.SalaryPercentage),
+                    ctx.Mapper.Map<Department>(src.DepartmentId)))
+            .ForAllMembers(o => o.Ignore());
 
-        CreateMap<EmployeeUpdateViewModel, Employee>(MemberList.None)
-            .ForMember(destinationMember: d => d.InternalId, memberOptions: o => o.MapFrom(mapExpression: s => s.InternalId))
-            .ForMember(destinationMember: d => d.Department, memberOptions: o => o.MapFrom(mapExpression: s => s.Department));
 
-        CreateMap<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>(MemberList.None)
+        // ────────────────────────────────────────────
+        // UPDATE: map only scalar properties; navigations handled in the handler
+        // ────────────────────────────────────────────
+        CreateMap<EmployeeUpdateViewModel, Employee>()
+            .ForMember(d => d.InternalId, o => o.MapFrom(s => s.InternalId))
+            .ForMember(d => d.Department, o => o.Ignore())
+            .ForAllOtherMembers(o => o.Ignore());
+
+        CreateMap<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
             .IncludeBase<EmployeeUpdateViewModel, Employee>()
-            .ForMember(destinationMember: d => d.Premium,
-                memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.Premium)));
+            .ForMember(d => d.Premium, o => o.MapFrom(s => new Percent(s.Premium)))
+            .ForMember(d => d.Documents, o => o.Ignore())
+            .ForAllOtherMembers(o => o.Ignore());
 
-        CreateMap<RateEmployeeUpdateViewModel, RateBasedEmployee>(MemberList.None)
+        CreateMap<RateEmployeeUpdateViewModel, RateBasedEmployee>()
             .IncludeBase<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
-            .ForMember(destinationMember: d => d.Rate,
-                memberOptions: o => o.MapFrom(mapExpression: s => new Money(s.Rate)));
+            .ForMember(d => d.Rate, o => o.MapFrom(s => new Money(s.Rate)))
+            .ForMember(d => d.Documents, o => o.Ignore())
+            .ForMember(d => d.Timesheets, o => o.Ignore())
+            .ForAllOtherMembers(o => o.Ignore());
 
-        CreateMap<TechnologistUpdateViewModel, Technologist>(MemberList.None)
+        CreateMap<TechnologistUpdateViewModel, Technologist>()
             .IncludeBase<EmployeeUpdateViewModel, Employee>()
-            .ForMember(destinationMember: d => d.SalaryPercentage,
-                memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.SalaryPercentage)));
+            .ForMember(d => d.SalaryPercentage,
+                       o => o.MapFrom(s => new Percent(s.SalaryPercentage)))
+            .ForAllOtherMembers(o => o.Ignore());
     }
 }

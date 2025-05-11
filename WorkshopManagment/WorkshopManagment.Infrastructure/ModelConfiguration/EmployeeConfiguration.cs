@@ -12,6 +12,6 @@ public class EmployeeConfiguration : IdentityModelConfigurationBase<Employee>
     {
         builder.Property(propertyExpression: x => x.Name).IsRequired();
         builder.Property(propertyExpression: x => x.InternalId).IsRequired();
-        builder.Property(propertyExpression: x => x.Department).HasConversion<int>().IsRequired();
+        builder.HasOne(x => x.Department).WithMany(x => x.Employees);
     }
 }

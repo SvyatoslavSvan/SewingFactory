@@ -11,8 +11,8 @@ public sealed class CreateGarmentModelConverter(IUnitOfWork<ApplicationDbContext
     public GarmentModel Convert(CreateGarmentModelViewModel source, GarmentModel destination, ResolutionContext context) => new(
         source.Name,
         source.Description,
-        StubHelper.GetProcessStubs(source, unitOfWork),
-        StubHelper.GetGarmentCategoryStub(source, unitOfWork),
+        GarmentModelStubHelper.GetProcessStubs(source, unitOfWork),
+        GarmentModelStubHelper.GetGarmentCategoryStub(source, unitOfWork),
         source.Image
     );
 }

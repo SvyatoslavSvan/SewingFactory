@@ -12,8 +12,8 @@ public class WorkshopDocumentConfiguration : IdentityModelConfigurationBase<Work
     {
         builder.Property(propertyExpression: x => x.CountOfModelsInvolved).IsRequired();
         builder.Property(propertyExpression: x => x.Date).IsRequired();
-        builder.Property(propertyExpression: x => x.Department).HasConversion<int>().IsRequired();
         builder.HasMany(navigationExpression: x => x.Tasks).WithOne(navigationExpression: x => x.Document).IsRequired();
         builder.Ignore(propertyExpression: x => x.Employees);
+        builder.HasOne(w => w.Department).WithMany(d => d.Documents);
     }
 }

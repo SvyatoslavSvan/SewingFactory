@@ -2,12 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.ViewModels.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Mapping.Converters;
 
-public static class StubHelper
+public static class GarmentModelStubHelper
 {
     public static GarmentCategory GetGarmentCategoryStub(PostGarmentModelViewModel source, IUnitOfWork<ApplicationDbContext> unitOfWork)
     {
@@ -21,7 +22,7 @@ public static class StubHelper
     public static List<Process> GetProcessStubs(PostGarmentModelViewModel source, IUnitOfWork<ApplicationDbContext> unitOfWork) => source.ProcessesIds
         .Select(selector: id =>
         {
-            var stub = new Process("stub", default);
+            var stub = new Process("stub", new Department("stub"));
             var entry = unitOfWork.DbContext.Entry(stub);
             entry.Property("Id").CurrentValue = id;
             entry.State = EntityState.Unchanged;

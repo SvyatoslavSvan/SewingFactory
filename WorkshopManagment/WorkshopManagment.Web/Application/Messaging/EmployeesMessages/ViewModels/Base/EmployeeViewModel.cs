@@ -6,5 +6,4 @@ public abstract class EmployeeViewModel
 {
     public string Name { get; set; } = default!;
     public string InternalId { get; set; } = default!;
-    public Department Department { get; set; }
 }

@@ -11,6 +11,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Emp
 public class EmployeeUpdateViewModel : EmployeeViewModel, IIdentityViewModel
 {
     public Guid Id { get; set; }
+    public Guid DepartmentId { get; set; }
 }
 
 public class ProcessEmployeeUpdateViewModel : EmployeeUpdateViewModel
@@ -23,7 +24,7 @@ public sealed class RateEmployeeUpdateViewModel : ProcessEmployeeUpdateViewModel
     public decimal Rate { get; set; }
 }
 
-public sealed class TechnologistUpdateViewModel : EmployeeUpdateViewModel
+public sealed class TechnologistUpdateViewModel : ProcessEmployeeUpdateViewModel
 {
     public int SalaryPercentage { get; set; }
 }

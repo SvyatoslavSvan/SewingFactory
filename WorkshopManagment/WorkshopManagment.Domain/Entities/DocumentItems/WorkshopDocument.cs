@@ -12,6 +12,7 @@ public sealed class WorkshopDocument : Identity
     private readonly List<WorkshopTask> _tasks;
     private int _countOfModelsInvolved;
     private GarmentModel _garmentModel = null!;
+    private Department _department = null!;
 
 
     /// <summary>
@@ -56,7 +57,11 @@ public sealed class WorkshopDocument : Identity
 
     public DateOnly Date { get; set; }
 
-    public Department Department { get; init; }
+    public Department Department
+    {
+        get => _department;
+        set => _department = value ?? throw new SewingFactoryArgumentNullException(nameof(value));
+    }
 
     public IReadOnlyList<WorkshopTask> Tasks => _tasks;
 

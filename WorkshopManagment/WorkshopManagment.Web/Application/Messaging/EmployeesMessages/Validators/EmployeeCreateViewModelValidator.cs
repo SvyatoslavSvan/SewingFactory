@@ -14,7 +14,5 @@ public class EmployeeCreateViewModelValidator
         RuleFor(expression: x => x.InternalId)
             .NotEmpty().WithMessage("Internal ID is required.");
 
-        RuleFor(expression: x => x.Department)
-            .IsInEnum().WithMessage("Invalid department.");
     }
 }
