@@ -24,8 +24,8 @@ public sealed class CreateWorkshopDocumentHandler(
     : CreateRequestHandler<CreateWorkshopDocumentViewModel, WorkshopDocument, DetailsReadWorkshopDocumentViewModel>(unitOfWork,
         mapper)
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public override async Task<OperationResult<DetailsReadWorkshopDocumentViewModel>> Handle(
         CreateRequest<CreateWorkshopDocumentViewModel, WorkshopDocument, DetailsReadWorkshopDocumentViewModel> request,

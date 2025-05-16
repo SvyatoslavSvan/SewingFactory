@@ -1,10 +1,9 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels.Base;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
+
+public class ReadDepartmentViewModel : DepartmentViewModel, IIdentityViewModel
 {
-    public class ReadDepartmentViewModel : DepartmentViewModel, IIdentityViewModel
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

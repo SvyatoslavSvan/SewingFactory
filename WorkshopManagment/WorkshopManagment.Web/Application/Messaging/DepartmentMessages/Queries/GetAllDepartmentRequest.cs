@@ -6,12 +6,11 @@ using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Qu
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.Queries
-{
-    public sealed record GetAllDepartmentsRequest(ClaimsPrincipal User)
-        : GetAllRequest<Department, ReadDepartmentViewModel>(User);
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.Queries;
 
-    public sealed class GetAllDepartmentsHandler(
-        IUnitOfWork<ApplicationDbContext> unitOfWork,
-        IMapper mapper) : GetAllRequestHandler<Department, ReadDepartmentViewModel>(unitOfWork, mapper);
-}
+public sealed record GetAllDepartmentsRequest(ClaimsPrincipal User)
+    : GetAllRequest<Department, ReadDepartmentViewModel>(User);
+
+public sealed class GetAllDepartmentsHandler(
+    IUnitOfWork<ApplicationDbContext> unitOfWork,
+    IMapper mapper) : GetAllRequestHandler<Department, ReadDepartmentViewModel>(unitOfWork, mapper);

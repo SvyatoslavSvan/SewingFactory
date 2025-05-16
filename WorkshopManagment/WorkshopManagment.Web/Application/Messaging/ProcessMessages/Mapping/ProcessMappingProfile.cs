@@ -13,34 +13,30 @@ public sealed class ProcessProfile : Profile
     public ProcessProfile()
     {
         CreateMap<CreateProcessViewModel, Process>()
-            .ConstructUsing((
+            .ConstructUsing(ctor: (
                 src,
                 ctx) => new Process(
                 src.Name,
                 ctx.Mapper.Map<Department>(src.DepartmentId),
                 new Money(src.Price)
             ))
-            .ForMember(dest => dest.Department,
-                opt => opt.Ignore())
-            .ForAllOtherMembers(opt => opt.Ignore());
+            .ForMember(destinationMember: dest => dest.Department,
+                memberOptions: opt => opt.Ignore())
+            .ForAllOtherMembers(memberOptions: opt => opt.Ignore());
 
         CreateMap<UpdateProcessViewModel, Process>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => new Money(src.Price)))
-            .ForMember(dest => dest.Department, opt => opt.Ignore())
-            .ForAllOtherMembers(opt => opt.Ignore());
+            .ForMember(destinationMember: dest => dest.Name, memberOptions: opt => opt.MapFrom(mapExpression: src => src.Name))
+            .ForMember(destinationMember: dest => dest.Price, memberOptions: opt => opt.MapFrom(mapExpression: src => new Money(src.Price)))
+            .ForMember(destinationMember: dest => dest.Department, memberOptions: opt => opt.Ignore())
+            .ForAllOtherMembers(memberOptions: opt => opt.Ignore());
 
         CreateMap<Process, ReadProcessViewModel>()
-            .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name))
-            .ForMember(x => x.Id, opt => opt.MapFrom(x => x.Id))
-            .ForMember(dest => dest.Price,
-                opt => opt.MapFrom(src => src.Price.Amount))
-            .ForMember(dest => dest.DepartmentViewModel,
-                opt => opt.MapFrom(src => new ReadDepartmentViewModel
-                {
-                    Id = src.Department.Id,
-                    Name = src.Department.Name
-                }))
-            .ForAllOtherMembers(opt => opt.Ignore());
+            .ForMember(destinationMember: x => x.Name, memberOptions: opt => opt.MapFrom(mapExpression: x => x.Name))
+            .ForMember(destinationMember: x => x.Id, memberOptions: opt => opt.MapFrom(mapExpression: x => x.Id))
+            .ForMember(destinationMember: dest => dest.Price,
+                memberOptions: opt => opt.MapFrom(mapExpression: src => src.Price.Amount))
+            .ForMember(destinationMember: dest => dest.DepartmentViewModel,
+                memberOptions: opt => opt.MapFrom(mapExpression: src => new ReadDepartmentViewModel { Id = src.Department.Id, Name = src.Department.Name }))
+            .ForAllOtherMembers(memberOptions: opt => opt.Ignore());
     }
 }

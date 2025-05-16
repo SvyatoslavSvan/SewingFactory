@@ -6,6 +6,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Pro
 
 public sealed class ReadProcessViewModel : ProcessViewModel, IIdentityViewModel
 {
-    public Guid Id { get; set; }
     public required ReadDepartmentViewModel DepartmentViewModel { get; set; }
+    public Guid Id { get; set; }
 }

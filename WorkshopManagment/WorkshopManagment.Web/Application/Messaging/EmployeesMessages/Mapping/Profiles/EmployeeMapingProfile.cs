@@ -15,92 +15,87 @@ public sealed class EmployeeMappingProfile : Profile
 {
     public EmployeeMappingProfile()
     {
-
-        CreateMap<Guid,ProcessBasedEmployee>().ConvertUsing<EmployeeStubConverter>();
+        CreateMap<Guid, ProcessBasedEmployee>().ConvertUsing<EmployeeStubConverter>();
 
         CreateMap<Employee, EmployeeReadViewModel>()
-            .ForMember(d => d.DepartmentViewModel,
-                       o => o.MapFrom(s => new ReadDepartmentViewModel
-                       {
-                           Id = s.Department.Id,
-                           Name = s.Department.Name
-                       }));
+            .ForMember(destinationMember: d => d.DepartmentViewModel,
+                memberOptions: o => o.MapFrom(mapExpression: s => new ReadDepartmentViewModel { Id = s.Department.Id, Name = s.Department.Name }));
 
         CreateMap<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
-            .ForMember(d => d.Premium, o => o.MapFrom(s => s.Premium.Value));
+            .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => s.Premium.Value));
 
         CreateMap<RateBasedEmployee, RateEmployeeReadViewModel>()
             .IncludeBase<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
-            .ForMember(d => d.Rate, o => o.MapFrom(s => s.Rate.Amount));
+            .ForMember(destinationMember: d => d.Rate, memberOptions: o => o.MapFrom(mapExpression: s => s.Rate.Amount));
 
         CreateMap<Technologist, TechnologistReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
-            .ForMember(d => d.SalaryPercentage,
-                       o => o.MapFrom(s => s.SalaryPercentage.Value));
+            .ForMember(destinationMember: d => d.SalaryPercentage,
+                memberOptions: o => o.MapFrom(mapExpression: s => s.SalaryPercentage.Value));
 
         CreateMap<EmployeeCreateViewModel, Employee>()
-            .ConstructUsing((src, ctx) => src switch
+            .ConstructUsing(ctor: (src, ctx) => src switch
             {
                 RateEmployeeCreateViewModel r => ctx.Mapper.Map<RateBasedEmployee>(r),
                 TechnologistCreateViewModel t => ctx.Mapper.Map<Technologist>(t),
                 ProcessEmployeeCreateViewModel p => ctx.Mapper.Map<ProcessBasedEmployee>(p),
                 _ => throw new SewingFactoryArgumentOutOfRangeException(
-                         nameof(src),
-                         $"Unknown create DTO type: {src.GetType().Name}")
+                    nameof(src),
+                    $"Unknown create DTO type: {src.GetType().Name}")
             })
-            .ForMember(d => d.Department, o => o.Ignore());
+            .ForMember(destinationMember: d => d.Department, memberOptions: o => o.Ignore());
 
         CreateMap<ProcessEmployeeCreateViewModel, ProcessBasedEmployee>()
-            .ConstructUsing((src, ctx) =>
+            .ConstructUsing(ctor: (src, ctx) =>
                 new ProcessBasedEmployee(
                     src.Name,
                     src.InternalId,
-                    ctx.Mapper.Map<Department>(src.DepartmentId),  
+                    ctx.Mapper.Map<Department>(src.DepartmentId),
                     new Percent(src.Premium)))
-            .ForAllMembers(o => o.Ignore());
+            .ForAllMembers(memberOptions: o => o.Ignore());
 
         CreateMap<RateEmployeeCreateViewModel, RateBasedEmployee>()
-            .ConstructUsing((src, ctx) =>
+            .ConstructUsing(ctor: (src, ctx) =>
                 new RateBasedEmployee(
                     src.Name,
                     src.InternalId,
                     new Money(src.Rate),
                     ctx.Mapper.Map<Department>(src.DepartmentId),
                     (int)src.Premium))
-            .ForAllMembers(o => o.Ignore());
+            .ForAllMembers(memberOptions: o => o.Ignore());
 
         CreateMap<TechnologistCreateViewModel, Technologist>()
-            .ConstructUsing((src, ctx) =>
+            .ConstructUsing(ctor: (src, ctx) =>
                 new Technologist(
                     src.Name,
                     src.InternalId,
                     new Percent(src.SalaryPercentage),
                     ctx.Mapper.Map<Department>(src.DepartmentId)))
-            .ForAllMembers(o => o.Ignore());
+            .ForAllMembers(memberOptions: o => o.Ignore());
 
         CreateMap<EmployeeUpdateViewModel, Employee>()
-            .ForMember(d => d.InternalId, o => o.MapFrom(s => s.InternalId))
-            .ForMember(d => d.Department, o => o.Ignore())
-            .ForAllOtherMembers(o => o.Ignore());
+            .ForMember(destinationMember: d => d.InternalId, memberOptions: o => o.MapFrom(mapExpression: s => s.InternalId))
+            .ForMember(destinationMember: d => d.Department, memberOptions: o => o.Ignore())
+            .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
             .IncludeBase<EmployeeUpdateViewModel, Employee>()
-            .ForMember(d => d.Premium, o => o.MapFrom(s => new Percent(s.Premium)))
-            .ForMember(d => d.Documents, o => o.Ignore())
-            .ForAllOtherMembers(o => o.Ignore());
+            .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.Premium)))
+            .ForMember(destinationMember: d => d.Documents, memberOptions: o => o.Ignore())
+            .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<RateEmployeeUpdateViewModel, RateBasedEmployee>()
             .IncludeBase<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
-            .ForMember(d => d.Rate, o => o.MapFrom(s => new Money(s.Rate)))
-            .ForMember(d => d.Documents, o => o.Ignore())
-            .ForMember(d => d.Timesheets, o => o.Ignore())
-            .ForAllOtherMembers(o => o.Ignore());
+            .ForMember(destinationMember: d => d.Rate, memberOptions: o => o.MapFrom(mapExpression: s => new Money(s.Rate)))
+            .ForMember(destinationMember: d => d.Documents, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: d => d.Timesheets, memberOptions: o => o.Ignore())
+            .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<TechnologistUpdateViewModel, Technologist>()
             .IncludeBase<EmployeeUpdateViewModel, Employee>()
-            .ForMember(d => d.SalaryPercentage,
-                       o => o.MapFrom(s => new Percent(s.SalaryPercentage)))
-            .ForAllOtherMembers(o => o.Ignore());
+            .ForMember(destinationMember: d => d.SalaryPercentage,
+                memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.SalaryPercentage)))
+            .ForAllOtherMembers(memberOptions: o => o.Ignore());
     }
 }

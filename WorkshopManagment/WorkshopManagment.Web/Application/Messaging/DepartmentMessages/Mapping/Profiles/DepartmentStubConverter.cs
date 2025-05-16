@@ -14,6 +14,7 @@ public sealed class DepartmentStubConverter(IUnitOfWork<ApplicationDbContext> un
         var stub = new Department("STUB");
         db.Entry(stub).Property("Id").CurrentValue = id;
         db.Entry(stub).State = EntityState.Unchanged;
+
         return stub;
     }
 }

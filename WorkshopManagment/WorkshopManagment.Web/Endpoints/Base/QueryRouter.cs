@@ -8,7 +8,7 @@ using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
 
-public abstract class QueryRouter<TEntity, TReadViewModel,TDetailsReadViewModel> : AppDefinition where TEntity : Identity
+public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel> : AppDefinition where TEntity : Identity
 {
     protected static readonly string _featureGroupName = typeof(TEntity).Name;
     protected string Prefix => "/api/" + _featureGroupName;

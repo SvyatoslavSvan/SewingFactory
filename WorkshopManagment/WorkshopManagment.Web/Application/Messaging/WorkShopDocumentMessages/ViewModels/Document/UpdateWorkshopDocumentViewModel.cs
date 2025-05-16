@@ -4,8 +4,8 @@ using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.WorkSho
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.WorkShopDocumentMessages.ViewModels.Document;
 
-public class UpdateWorkshopDocumentViewModel : WorkshopDocumentViewModel,IIdentityViewModel
+public class UpdateWorkshopDocumentViewModel : WorkshopDocumentViewModel, IIdentityViewModel
 {
-    public Guid Id { get; set; }
     public List<UpdateWorkShopTaskViewModel> WorkshopTasks { get; set; } = null!;
+    public Guid Id { get; set; }
 }

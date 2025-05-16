@@ -14,13 +14,13 @@ public sealed class DepartmentMappingProfile : Profile
         CreateMap<Department, ReadDepartmentViewModel>();
 
         CreateMap<CreateDepartmentViewModel, Department>()
-            .ConstructUsing(src => new Department(src.Name))
-            .ForAllMembers(opt => opt.Ignore());   
+            .ConstructUsing(ctor: src => new Department(src.Name))
+            .ForAllMembers(memberOptions: opt => opt.Ignore());
 
         CreateMap<UpdateDepartmentViewModel, Department>()
-            .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
-            .ForMember(d => d.Documents, o => o.Ignore())
-            .ForMember(d => d.Employees, o => o.Ignore())
-            .ForMember(d => d.Processes, o => o.Ignore());
+            .ForMember(destinationMember: d => d.Name, memberOptions: o => o.MapFrom(mapExpression: s => s.Name))
+            .ForMember(destinationMember: d => d.Documents, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: d => d.Employees, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: d => d.Processes, memberOptions: o => o.Ignore());
     }
 }

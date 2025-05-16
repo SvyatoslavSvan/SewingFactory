@@ -22,8 +22,8 @@ public sealed class UpdateWorkshopDocumentHandler(
     IMapper mapper) : UpdateRequestHandler<UpdateWorkshopDocumentViewModel, WorkshopDocument>(unitOfWork,
     mapper)
 {
-    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
+    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
 
 
     public override async Task<OperationResult<UpdateWorkshopDocumentViewModel>> Handle(
@@ -38,8 +38,8 @@ public sealed class UpdateWorkshopDocumentHandler(
         var document = await _unitOfWork.GetRepository<WorkshopDocument>()
             .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.Id,
                 include: queryable => queryable
-                    .Include(workshopDocument => workshopDocument.Tasks)
-                    .ThenInclude(task => task.EmployeeTaskRepeats),
+                    .Include(navigationPropertyPath: workshopDocument => workshopDocument.Tasks)
+                    .ThenInclude(navigationPropertyPath: task => task.EmployeeTaskRepeats),
                 disableTracking: false);
 
         if (document is null)
@@ -53,8 +53,8 @@ public sealed class UpdateWorkshopDocumentHandler(
             document);
 
         document.ApplyUpdatedTasks(_mapper.Map<List<WorkshopTask>>(request.Model.WorkshopTasks),
-            await _unitOfWork.DbContext.ProcessBasedEmployees.Where(x => x.Documents!.Contains(document))
-                .Select(x => x.Id)
+            await _unitOfWork.DbContext.ProcessBasedEmployees.Where(predicate: x => x.Documents!.Contains(document))
+                .Select(selector: x => x.Id)
                 .ToListAsync(cancellationToken));
 
         _unitOfWork.GetRepository<WorkshopDocument>()

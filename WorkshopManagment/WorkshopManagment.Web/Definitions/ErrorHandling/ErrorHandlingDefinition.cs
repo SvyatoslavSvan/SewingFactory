@@ -2,9 +2,9 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
+using SewingFactory.Common.Domain.Exceptions;
 using System.Net;
 using System.Security.Authentication;
-using SewingFactory.Common.Domain.Exceptions;          
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.ErrorHandling;
 
@@ -13,7 +13,7 @@ public sealed class ErrorHandlingDefinition : AppDefinition
     public override bool Enabled => true;
 
     public override void ConfigureApplication(WebApplication app) =>
-        app.UseExceptionHandler(error => error.Run(async context =>
+        app.UseExceptionHandler(configure: error => error.Run(handler: async context =>
         {
             var feature = context.Features.Get<IExceptionHandlerFeature>();
             if (feature is null)
@@ -30,13 +30,7 @@ public sealed class ErrorHandlingDefinition : AppDefinition
             context.Response.ContentType = "application/json";
 
             object payload = app.Environment.IsDevelopment()
-                ? new
-                {
-                    status,
-                    error = ex.GetType().Name,
-                    message = ex.Message,
-                    stack = ex.StackTrace
-                }
+                ? new { status, error = ex.GetType().Name, message = ex.Message, stack = ex.StackTrace }
                 : new
                 {
                     status,
@@ -49,6 +43,7 @@ public sealed class ErrorHandlingDefinition : AppDefinition
                         _ => "Internal server error. Please try again later."
                     }
                 };
+
             await context.Response.WriteAsJsonAsync(payload);
         }));
 

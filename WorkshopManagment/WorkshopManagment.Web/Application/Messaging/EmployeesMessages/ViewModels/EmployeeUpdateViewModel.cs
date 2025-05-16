@@ -10,8 +10,8 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Emp
 [JsonDerivedType(typeof(TechnologistUpdateViewModel), "technologist")]
 public class EmployeeUpdateViewModel : EmployeeViewModel, IIdentityViewModel
 {
-    public Guid Id { get; set; }
     public Guid DepartmentId { get; set; }
+    public Guid Id { get; set; }
 }
 
 public class ProcessEmployeeUpdateViewModel : EmployeeUpdateViewModel

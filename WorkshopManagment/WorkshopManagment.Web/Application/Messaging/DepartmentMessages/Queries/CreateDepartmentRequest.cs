@@ -1,7 +1,6 @@
-﻿// CreateDepartmentRequest.cs
-using AutoMapper;
+﻿using AutoMapper;
 using Calabonga.UnitOfWork;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums; 
+using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
 using System.Security.Claims;

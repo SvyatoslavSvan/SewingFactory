@@ -31,7 +31,10 @@ public sealed class GarmentModelMappingProfile : Profile
                 Name = garmentModel.Name,
                 Category = new ReadGarmentCategoryViewModel { Id = garmentModel.Category.Id, Name = garmentModel.Category.Name },
                 Processes = garmentModel.Processes
-                    .Select(process => new ReadProcessViewModel { Id = process.Id, DepartmentViewModel = new ReadDepartmentViewModel {Id = process.Id, Name = process.Name}, Name = process.Name, Price = process.Price.Amount }).ToList()
+                    .Select(process => new ReadProcessViewModel
+                    {
+                        Id = process.Id, DepartmentViewModel = new ReadDepartmentViewModel { Id = process.Id, Name = process.Name }, Name = process.Name, Price = process.Price.Amount
+                    }).ToList()
             });
     }
 }

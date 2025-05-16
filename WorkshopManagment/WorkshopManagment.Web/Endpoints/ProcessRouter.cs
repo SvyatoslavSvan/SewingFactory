@@ -2,9 +2,8 @@
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.ProcessMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
+namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints;
+
+public class ProcessRouter : CommandRouter<Process, ReadProcessViewModel, CreateProcessViewModel, UpdateProcessViewModel, DeleteProcessViewModel, ReadProcessViewModel>
 {
-    public class ProcessRouter : CommandRouter<Process,ReadProcessViewModel,CreateProcessViewModel,UpdateProcessViewModel,DeleteProcessViewModel, ReadProcessViewModel>
-    {
-    }
 }

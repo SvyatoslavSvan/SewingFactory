@@ -1,7 +1,6 @@
-﻿namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels.Base
+﻿namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels.Base;
+
+public abstract class DepartmentViewModel
 {
-    public abstract class DepartmentViewModel
-    {
-        public required string Name { get; set; }
-    }
+    public required string Name { get; set; }
 }

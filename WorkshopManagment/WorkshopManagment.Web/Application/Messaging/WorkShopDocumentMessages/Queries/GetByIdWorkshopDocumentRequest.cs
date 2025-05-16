@@ -19,10 +19,11 @@ public sealed class GetByIdWorkshopDocumentHandler(
     IUnitOfWork<ApplicationDbContext> unitOfWork,
     IMapper mapper) : GetByIdRequestHandler<WorkshopDocument, DetailsReadWorkshopDocumentViewModel>(unitOfWork, mapper)
 {
-    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
+    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
 
-    public override async Task<OperationResult<DetailsReadWorkshopDocumentViewModel>> Handle(GetByIdRequest<WorkshopDocument, DetailsReadWorkshopDocumentViewModel> request, CancellationToken cancellationToken)
+    public override async Task<OperationResult<DetailsReadWorkshopDocumentViewModel>> Handle(
+        GetByIdRequest<WorkshopDocument, DetailsReadWorkshopDocumentViewModel> request, CancellationToken cancellationToken)
     {
         var result = OperationResult.CreateResult<DetailsReadWorkshopDocumentViewModel>();
         var document = await _unitOfWork
@@ -30,11 +31,11 @@ public sealed class GetByIdWorkshopDocumentHandler(
             .GetFirstOrDefaultAsync(
                 predicate: d => d.Id == request.Id,
                 include: q => q
-                    .Include(d => d.Tasks)
-                    .ThenInclude(t => t.EmployeeTaskRepeats)
-                    .ThenInclude(r => r.WorkShopEmployee)
-                    .Include(d => d.Tasks)
-                    .ThenInclude(t => t.Process));
+                    .Include(navigationPropertyPath: d => d.Tasks)
+                    .ThenInclude(navigationPropertyPath: t => t.EmployeeTaskRepeats)
+                    .ThenInclude(navigationPropertyPath: r => r.WorkShopEmployee)
+                    .Include(navigationPropertyPath: d => d.Tasks)
+                    .ThenInclude(navigationPropertyPath: t => t.Process));
 
         if (document is null)
         {

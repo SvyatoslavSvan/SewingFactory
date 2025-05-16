@@ -2,7 +2,6 @@
 using Calabonga.OperationResults;
 using Calabonga.UnitOfWork;
 using MediatR;
-using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.Exceptions;
 using System.Security.Claims;

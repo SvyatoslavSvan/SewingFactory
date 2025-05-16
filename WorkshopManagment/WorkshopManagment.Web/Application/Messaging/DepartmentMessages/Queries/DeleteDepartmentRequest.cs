@@ -1,5 +1,4 @@
-﻿// DeleteDepartmentRequest.cs
-using Calabonga.UnitOfWork;
+﻿using Calabonga.UnitOfWork;
 using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
