@@ -17,7 +17,7 @@ public abstract class UpdateRequestHandler<TViewModel, TEntity>(
     where TEntity : Identity
     where TViewModel : IIdentityViewModel
 {
-    private const string _errorMessageFormat = "An error occurred while updating {0} with Id {1}.";
+    protected const string _errorMessageFormat = "An error occurred while updating {0} with Id {1}.";
 
     public virtual async Task<OperationResult<TViewModel>> Handle(UpdateRequest<TViewModel, TEntity> request, CancellationToken cancellationToken)
     {

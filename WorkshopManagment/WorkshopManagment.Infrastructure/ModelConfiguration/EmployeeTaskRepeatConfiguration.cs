@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure.ModelConfiguration.Base;
 
@@ -11,7 +12,16 @@ public class EmployeeTaskRepeatConfiguration : IdentityModelConfigurationBase<Em
     protected override void AddBuilder(EntityTypeBuilder<EmployeeTaskRepeat> builder)
     {
         builder.Property(propertyExpression: x => x.Repeats).IsRequired();
-        builder.HasOne(navigationExpression: x => x.WorkShopEmployee).WithMany().IsRequired();
-        builder.HasOne(navigationExpression: x => x.WorkshopTask).WithMany(navigationExpression: x => x.EmployeeTaskRepeats).IsRequired();
+        builder
+            .HasOne(r => r.WorkShopEmployee)
+            .WithMany()                    
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(r => r.WorkshopTask)
+            .WithMany(t => t.EmployeeTaskRepeats)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade); 
     }
 }

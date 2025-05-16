@@ -31,11 +31,11 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)] //TODO: Uncomment when authentication is ready
-    protected async Task<OperationResult<TReadViewModel>> Create(
+    protected async Task<OperationResult<TDetailsReadViewModel>> Create(
         [FromBody] TCreateViewModel model,
         [FromServices] IMediator mediator,
         HttpContext context)
-        => await mediator.Send(new CreateRequest<TCreateViewModel, TEntity, TReadViewModel>(model,
+        => await mediator.Send(new CreateRequest<TCreateViewModel, TEntity, TDetailsReadViewModel>(model,
                 context.User),
             context.RequestAborted);
 

@@ -9,9 +9,9 @@ using System.Security.Claims;
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Queries;
 
 public sealed record CreateGarmentModelRequest(CreateGarmentModelViewModel Model, ClaimsPrincipal User)
-    : CreateRequest<CreateGarmentModelViewModel, GarmentModel, ReadGarmentModelViewModel>(Model, User);
+    : CreateRequest<CreateGarmentModelViewModel, GarmentModel, DetailsReadGarmentModelViewModel>(Model, User);
 
 public sealed class CreateGarmentModelHandler(IUnitOfWork<ApplicationDbContext> unitOfWork, IMapper mapper)
-    : CreateRequestHandler<CreateGarmentModelViewModel, GarmentModel, ReadGarmentModelViewModel>(unitOfWork, mapper)
+    : CreateRequestHandler<CreateGarmentModelViewModel, GarmentModel, DetailsReadGarmentModelViewModel>(unitOfWork, mapper)
 {
 }

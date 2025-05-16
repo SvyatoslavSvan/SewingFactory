@@ -1,4 +1,6 @@
-﻿namespace SewingFactory.Common.Domain.ValueObjects
+﻿using SewingFactory.Common.Domain.Exceptions;
+
+namespace SewingFactory.Common.Domain.ValueObjects
 {
     public class Percent
     {
@@ -19,7 +21,7 @@
             set
             {
                 if (value is < 0 or > 100)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Percent must be between 0 and 100.");
+                    throw new SewingFactoryArgumentOutOfRangeException(nameof(value), "Percent must be between 0 and 100.");
                 _value = value; 
             }
         }

@@ -6,13 +6,13 @@ using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 
-public sealed class WorkshopDocument : Identity
+public sealed class WorkshopDocument : NamedIdentity
 {
     private readonly List<ProcessBasedEmployee> _employees;
     private readonly List<WorkshopTask> _tasks;
     private int _countOfModelsInvolved;
     private GarmentModel _garmentModel = null!;
-    private Department _department = null!;
+    private readonly Department _department = null!;
 
 
     /// <summary>
@@ -24,14 +24,28 @@ public sealed class WorkshopDocument : Identity
         _employees = [];
     }
 
-    private WorkshopDocument(int countOfModelsInvolved, GarmentModel garmentModel, List<WorkshopTask> tasks)
+    private WorkshopDocument(string name, int countOfModelsInvolved, DateOnly date, GarmentModel garmentModel, Department department, List<WorkshopTask> tasks)
     {
         CountOfModelsInvolved = countOfModelsInvolved;
         GarmentModel = garmentModel;
+        Name = name;
+        Department = department;
+        Date = date;
         _tasks = tasks;
         _employees = tasks.SelectMany(selector: task => task.EmployeeTaskRepeats).Select(selector: repeat => repeat.WorkShopEmployee).Distinct().ToList();
     }
 
+    private void RecalculateEmployees(List<Guid> existingIds)
+    {
+        _employees.Clear();
+        _employees.AddRange(
+            _tasks
+                .SelectMany(t => t.EmployeeTaskRepeats)
+                .Select(r => r.WorkShopEmployee)
+                .Where(e => !existingIds.Contains(e.Id))   
+                .DistinctBy(e => e.Id)                     
+        );
+    }
 
     public int CountOfModelsInvolved
     {
@@ -60,7 +74,7 @@ public sealed class WorkshopDocument : Identity
     public Department Department
     {
         get => _department;
-        set => _department = value ?? throw new SewingFactoryArgumentNullException(nameof(value));
+        init => _department = value ?? throw new SewingFactoryArgumentNullException(nameof(value));
     }
 
     public IReadOnlyList<WorkshopTask> Tasks => _tasks;
@@ -68,13 +82,14 @@ public sealed class WorkshopDocument : Identity
     public IReadOnlyList<ProcessBasedEmployee> Employees => _employees;
 
     public static WorkshopDocument CreateInstance(
-        int countOfModelsInvolved,
+        string name,
+        int countOfModelsInvolved, DateOnly date,
         GarmentModel garmentModel,
         Department department)
-        => new(countOfModelsInvolved,
-            garmentModel,
+        => new(name, countOfModelsInvolved, date,
+            garmentModel, department,
             [
-                ..garmentModel.Processes.Where(x => x.Department == department)
+                ..garmentModel.Processes.Where(predicate: x => x.Department.Id == department.Id)
                     .Select(selector: process => new WorkshopTask(process))
             ]);
 
@@ -85,5 +100,24 @@ public sealed class WorkshopDocument : Identity
         payment = tasksForEmployee.Aggregate(payment, func: (current, workshopTask) => current + workshopTask.CalculatePaymentForEmployee(employee));
 
         return payment;
+    }
+
+    public void ApplyUpdatedTasks(List<WorkshopTask> updatedTasks, List<Guid> existingIds)
+    {
+        updatedTasks
+            .Join(
+                _tasks,
+                updated => updated.Id,
+                existing => existing.Id,
+                (updated, existing) => new { updated, existing }
+            )
+            .SelectMany(
+                pair => pair.updated.EmployeeTaskRepeats,
+                (pair, uRepeat) => new { existingTask = pair.existing, updatedRepeat = uRepeat }
+            )
+            .ToList()
+            .ForEach(x =>
+            x.existingTask.AddOrUpdateEmployeeRepeat(x.updatedRepeat));
+        RecalculateEmployees(existingIds);
     }
 }

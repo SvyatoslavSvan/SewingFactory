@@ -3,20 +3,21 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.Mapping.Converters;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages;
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.EmployeesMessages.Mapping.Profiles;
 
-public sealed class EmployeeMappingConfiguration : Profile
+public sealed class EmployeeMappingProfile : Profile
 {
-    public EmployeeMappingConfiguration()
+    public EmployeeMappingProfile()
     {
-        // ────────────────────────────────────────────
-        // READ: domain → ViewModels
-        // ────────────────────────────────────────────
+
+        CreateMap<Guid,ProcessBasedEmployee>().ConvertUsing<EmployeeStubConverter>();
+
         CreateMap<Employee, EmployeeReadViewModel>()
             .ForMember(d => d.DepartmentViewModel,
                        o => o.MapFrom(s => new ReadDepartmentViewModel
@@ -38,10 +39,6 @@ public sealed class EmployeeMappingConfiguration : Profile
             .ForMember(d => d.SalaryPercentage,
                        o => o.MapFrom(s => s.SalaryPercentage.Value));
 
-
-        // ────────────────────────────────────────────
-        // CREATE: ViewModel → domain (Department stub is set in the handler)
-        // ────────────────────────────────────────────
         CreateMap<EmployeeCreateViewModel, Employee>()
             .ConstructUsing((src, ctx) => src switch
             {
@@ -59,7 +56,7 @@ public sealed class EmployeeMappingConfiguration : Profile
                 new ProcessBasedEmployee(
                     src.Name,
                     src.InternalId,
-                    ctx.Mapper.Map<Department>(src.DepartmentId),  // requires Guid→Department map
+                    ctx.Mapper.Map<Department>(src.DepartmentId),  
                     new Percent(src.Premium)))
             .ForAllMembers(o => o.Ignore());
 
@@ -82,10 +79,6 @@ public sealed class EmployeeMappingConfiguration : Profile
                     ctx.Mapper.Map<Department>(src.DepartmentId)))
             .ForAllMembers(o => o.Ignore());
 
-
-        // ────────────────────────────────────────────
-        // UPDATE: map only scalar properties; navigations handled in the handler
-        // ────────────────────────────────────────────
         CreateMap<EmployeeUpdateViewModel, Employee>()
             .ForMember(d => d.InternalId, o => o.MapFrom(s => s.InternalId))
             .ForMember(d => d.Department, o => o.Ignore())

@@ -6,7 +6,7 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.ViewModels.Base;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Mapping.Converters;
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Mapping;
 
 public static class GarmentModelStubHelper
 {

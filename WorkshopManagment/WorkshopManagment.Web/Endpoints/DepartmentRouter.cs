@@ -4,7 +4,7 @@ using SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints
 {
-    public class DepartmentEndpoints : CommandRouter<Department,
+    public class DepartmentRouter : CommandRouter<Department,
         ReadDepartmentViewModel,
         CreateDepartmentViewModel,
         UpdateDepartmentViewModel,

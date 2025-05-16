@@ -29,6 +29,19 @@ public class WorkshopTask : Identity
         Document = document;
     }
 
+    private void UpdateEmployeeRepeat(EmployeeTaskRepeat updatedRepeat)
+    {
+        var existing = EmployeeTaskRepeats
+                           .FirstOrDefault(r => r.Id == updatedRepeat.Id)
+                       ?? throw new SewingFactoryArgumentException(
+                           nameof(updatedRepeat),
+                           $"Repeat {updatedRepeat.Id} not found on task {Id}"
+                       );
+
+        existing.Repeats = updatedRepeat.Repeats;
+        existing.WorkShopEmployee = updatedRepeat.WorkShopEmployee;
+    }
+
     public Process Process
     {
         get => _process;
@@ -54,8 +67,7 @@ public class WorkshopTask : Identity
 
         if (_employeeTaskRepeats.FirstOrDefault(predicate: x => x.WorkShopEmployee.Id == employeeRepeat.WorkShopEmployee.Id) != null)
         {
-            throw new SewingFactoryArgumentException(nameof(employeeRepeat),
-                $"The employee with ID '{employeeRepeat.WorkShopEmployee.Id}' is already assigned to this task. Duplicate assignments are not allowed");
+            return;
         }
 
         _employeeTaskRepeats.Add(employeeRepeat);
@@ -71,4 +83,15 @@ public class WorkshopTask : Identity
 
         return new Money(employeeTaskRepeat.Repeats * _process.Price.Amount);
     }
+
+    public void AddOrUpdateEmployeeRepeat(EmployeeTaskRepeat updatedRepeat)
+    {
+        if (updatedRepeat.Id == Guid.Empty)
+        {
+            AddEmployeeRepeat(updatedRepeat);
+            return;
+        }
+        UpdateEmployeeRepeat(updatedRepeat);
+    }
+
 }

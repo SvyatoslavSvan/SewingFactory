@@ -4,7 +4,7 @@ using Calabonga.UnitOfWork;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Mapping.Converters;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Mapping;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.ViewModels;
 using SewingFactory.Common.Domain.Exceptions;
 using System.Security.Claims;

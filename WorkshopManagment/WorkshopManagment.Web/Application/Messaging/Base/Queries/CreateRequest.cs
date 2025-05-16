@@ -25,7 +25,7 @@ public abstract class CreateRequestHandler<TCreateViewModel, TEntity, TReadViewM
         if (!unitOfWork.LastSaveChangesResult.IsOk)
         {
             operation.AddError(unitOfWork.LastSaveChangesResult.Exception
-                               ?? new SewingFactoryDatabaseSaveException($"Error while saving entity{nameof(ProcessBasedEmployee)}"));
+                               ?? new SewingFactoryDatabaseSaveException($"Error while saving entity{nameof(TEntity)}"));
 
             return operation;
         }

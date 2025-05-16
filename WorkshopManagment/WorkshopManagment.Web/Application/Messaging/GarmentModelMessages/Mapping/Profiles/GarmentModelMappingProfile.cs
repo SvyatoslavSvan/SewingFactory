@@ -11,6 +11,8 @@ public sealed class GarmentModelMappingProfile : Profile
 {
     public GarmentModelMappingProfile()
     {
+        CreateMap<Guid, GarmentModel>().ConvertUsing<GarmentModelStubConverter>();
+
         CreateMap<CreateGarmentModelViewModel, GarmentModel>().ConvertUsing<CreateGarmentModelConverter>();
 
         CreateMap<GarmentModel, ReadGarmentModelViewModel>().ConstructUsing(ctor: x => new ReadGarmentModelViewModel { Id = x.Id, Image = x.Image, Name = x.Name });

@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SewingFactory.Backend.WorkshopManagement.Domain.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
@@ -76,16 +77,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
 }
 
-///// <summary>
-///// ATTENTION!
-///// It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
-///// </summary>
-//public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
-//{
-//    public ApplicationDbContext CreateDbContext(string[] args)
-//    {
-//        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-//        optionsBuilder.UseSqlServer("Server=<SQL>;Database=<DatabaseName>;User ID=<UserName>;Password=<Password>");
-//        return new ApplicationDbContext(optionsBuilder.Options);
-//    }
-//}
+/// <summary>
+/// ATTENTION!
+/// It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
+/// </summary>
+public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+{
+    public ApplicationDbContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=WorkshopDb;Username=postgres;Password=1234");
+        return new ApplicationDbContext(optionsBuilder.Options);
+    }
+}

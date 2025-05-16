@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
+using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.DepartmentMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.ProcessMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
@@ -12,12 +13,16 @@ public sealed class ProcessProfile : Profile
     public ProcessProfile()
     {
         CreateMap<CreateProcessViewModel, Process>()
-            .ConstructUsing((src, ctx) =>
-                new Process(
-                    src.Name,
-                    default!,
-                    new Money(src.Price)))
-            .ForMember(dest => dest.Department, opt => opt.Ignore());
+            .ConstructUsing((
+                src,
+                ctx) => new Process(
+                src.Name,
+                ctx.Mapper.Map<Department>(src.DepartmentId),
+                new Money(src.Price)
+            ))
+            .ForMember(dest => dest.Department,
+                opt => opt.Ignore())
+            .ForAllOtherMembers(opt => opt.Ignore());
 
         CreateMap<UpdateProcessViewModel, Process>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
