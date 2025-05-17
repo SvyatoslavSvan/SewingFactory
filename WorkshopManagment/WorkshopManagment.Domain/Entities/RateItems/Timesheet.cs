@@ -59,7 +59,7 @@ public sealed class Timesheet : Identity
     /// <param name="leaves">A list of leaves during the month.</param>
     /// <returns>A new instance of <see cref="Timesheet" />.</returns>
     /// <exception cref="SewingFactoryArgumentException">Thrown when the list of employees is empty.</exception>
-    public static Timesheet CreateInstance(List<RateBasedEmployee> employees, DateOnly date)
+    public static Timesheet CreateInstance(IList<RateBasedEmployee> employees, DateOnly date)
     {
         if (employees.Count == 0)
         {

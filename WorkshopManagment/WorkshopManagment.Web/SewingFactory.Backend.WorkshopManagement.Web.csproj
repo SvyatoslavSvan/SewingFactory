@@ -27,11 +27,14 @@
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 		<PackageReference Include="OpenIddict.AspNetCore" Version="5.8.0" />
 		<PackageReference Include="OperationResultCore" Version="4.0.3" />
+		<PackageReference Include="Quartz" Version="3.14.0" />
+		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
 		<PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+		<PackageReference Include="TimeZoneConverter" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,8 +42,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Application\Features\TimesheetMessages\ViewModels\" />
-	  <Folder Include="Application\Features\TimesheetMessages\Queries\" />
 	  <Folder Include="Application\Features\WorkShopDocumentMessages\Mapping\Converters\" />
 	</ItemGroup>
 
