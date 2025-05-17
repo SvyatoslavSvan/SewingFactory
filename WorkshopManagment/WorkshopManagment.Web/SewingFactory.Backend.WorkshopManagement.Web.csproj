@@ -39,7 +39,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Application\Messaging\WorkShopDocumentMessages\Mapping\Converters\" />
+	  <Folder Include="Application\Features\TimesheetMessages\ViewModels\" />
+	  <Folder Include="Application\Features\TimesheetMessages\Queries\" />
+	  <Folder Include="Application\Features\WorkShopDocumentMessages\Mapping\Converters\" />
 	</ItemGroup>
 
 

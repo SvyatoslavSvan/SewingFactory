@@ -3,7 +3,7 @@ using Calabonga.OperationResults;
 using Calabonga.PagedListCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;

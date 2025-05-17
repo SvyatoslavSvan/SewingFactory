@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.Queries;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.GarmentModelMessages.ViewModels;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.GarmentModelMessages.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.GarmentModelMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints;

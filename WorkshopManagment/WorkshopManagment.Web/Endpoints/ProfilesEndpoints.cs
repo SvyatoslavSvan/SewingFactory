@@ -1,7 +1,7 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.ProfileMessages.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.ProfileMessages.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Definitions.Authorizations;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints;

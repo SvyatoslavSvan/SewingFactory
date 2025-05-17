@@ -1,8 +1,8 @@
 ﻿using Calabonga.OperationResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.Queries;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Messaging.Base.ViewModels;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Base.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Base.ViewModels;
 using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
