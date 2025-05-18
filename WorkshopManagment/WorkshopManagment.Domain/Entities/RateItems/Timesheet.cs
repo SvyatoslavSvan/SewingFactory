@@ -1,4 +1,5 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
 using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
@@ -8,7 +9,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 /// </summary>
 public sealed class Timesheet : Identity
 {
-    private readonly List<WorkDay> _workDays = null!;
+    private readonly List<WorkDay> _workDays = [];
 
     /// <summary>
     ///     Default constructor for EF Core
@@ -85,7 +86,7 @@ public sealed class Timesheet : Identity
         return new Timesheet(workDays, date, hoursDays.Item1, hoursDays.Item2);
     }
 
-    public int HoursWorked(RateBasedEmployee employee) => _workDays.Where(predicate: x => x.Employee == employee).Sum(selector: x => x.Hours);
+    public int HoursWorked(IHasRate employee) => _workDays.Where(predicate: x => x.Employee == employee).Sum(selector: x => x.Hours);
 
     /// <summary>
     ///     Determines whether the specified date is a weekend.

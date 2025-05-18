@@ -3,12 +3,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using SewingFactory.Backend.WorkshopManagement.Domain.Base;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Infrastructure;
@@ -70,10 +70,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<ProcessBasedEmployee>().ToTable("ProcessBasedEmployees");
         builder.Entity<RateBasedEmployee>().ToTable("RateBasedEmployees");
         builder.Entity<Technologist>().ToTable("Technologists");
-
-        builder.Entity<ProcessBasedEmployee>()
-            .HasMany(navigationExpression: e => e.Documents)
-            .WithMany(navigationExpression: d => d.Employees);
     }
 }
 

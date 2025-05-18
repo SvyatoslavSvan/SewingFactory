@@ -1,7 +1,7 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Base;
-using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 
-namespace SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 
 public class Department : NamedIdentity
 {

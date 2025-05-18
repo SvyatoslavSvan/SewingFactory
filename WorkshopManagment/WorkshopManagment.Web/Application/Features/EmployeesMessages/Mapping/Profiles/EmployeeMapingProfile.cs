@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using SewingFactory.Backend.WorkshopManagement.Domain.Base;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.DepartmentMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.Mapping.Converters;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.ViewModels;
@@ -26,8 +26,9 @@ public sealed class EmployeeMappingProfile : Profile
             .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => s.Premium.Value));
 
         CreateMap<RateBasedEmployee, RateEmployeeReadViewModel>()
-            .IncludeBase<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
-            .ForMember(destinationMember: d => d.Rate, memberOptions: o => o.MapFrom(mapExpression: s => s.Rate.Amount));
+            .IncludeBase<Employee, EmployeeReadViewModel>()
+            .ForMember(destinationMember: d => d.Rate, memberOptions: o => o.MapFrom(mapExpression: s => s.Rate.Amount))
+            .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => s.Premium.Value)); ;
 
         CreateMap<Technologist, TechnologistReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
@@ -44,7 +45,8 @@ public sealed class EmployeeMappingProfile : Profile
                     nameof(src),
                     $"Unknown create DTO type: {src.GetType().Name}")
             })
-            .ForMember(destinationMember: d => d.Department, memberOptions: o => o.Ignore());
+            .ForMember(destinationMember: d => d.Department, memberOptions: o => o.Ignore())
+            .ForMember(x => x.Documents, o => o.Ignore());
 
         CreateMap<ProcessEmployeeCreateViewModel, ProcessBasedEmployee>()
             .ConstructUsing(ctor: (src, ctx) =>
@@ -86,10 +88,12 @@ public sealed class EmployeeMappingProfile : Profile
             .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<RateEmployeeUpdateViewModel, RateBasedEmployee>()
-            .IncludeBase<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
+            .IncludeBase<EmployeeUpdateViewModel, Employee>()
             .ForMember(destinationMember: d => d.Rate, memberOptions: o => o.MapFrom(mapExpression: s => new Money(s.Rate)))
             .ForMember(destinationMember: d => d.Documents, memberOptions: o => o.Ignore())
             .ForMember(destinationMember: d => d.Timesheets, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.Premium)))
+            .ForMember(destinationMember: d => d.Documents, memberOptions: o => o.Ignore())
             .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<TechnologistUpdateViewModel, Technologist>()

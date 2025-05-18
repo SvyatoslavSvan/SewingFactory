@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.DepartmentMessages.Mapping.Profiles;

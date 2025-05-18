@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.DepartmentMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.ProcessMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Extensions;

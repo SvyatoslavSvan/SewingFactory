@@ -1,35 +1,28 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport;
 
-public class Salary
+public class Salary(
+    Money payment,
+    Money premium,
+    Employee employee,
+    Money additionalPayment)
 {
     public Salary(Money payment,
         Money premium,
-        ProcessBasedEmployee employee)
+        Employee employee)
         : this(payment, premium, employee, new Money(0)) { }
 
-    public Salary(Money payment,
-        Money premium,
-        ProcessBasedEmployee employee,
-        Money additionalPayment)
-    {
-        Payment = payment;
-        Premium = premium;
-        Employee = employee ?? throw new SewingFactoryArgumentNullException(nameof(employee));
-        AdditionalPayment = additionalPayment;
-    }
 
+    public Money Payment { get; set; } = payment;
 
-    public Money Payment { get; init; }
+    public Money Premium { get; set; } = premium;
 
-    public Money Premium { get; init; }
-
-    public ProcessBasedEmployee Employee { get; set; }
+    public Employee Employee { get; set; } = employee ?? throw new SewingFactoryArgumentNullException(nameof(employee));
 
     public Money TakeHome => Payment + Premium;
 
-    public Money AdditionalPayment { get; init; }
+    public Money AdditionalPayment { get; set; } = additionalPayment;
 }

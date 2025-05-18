@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure.ModelConfiguration.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Infrastructure.ModelConfiguration

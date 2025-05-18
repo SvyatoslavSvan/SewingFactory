@@ -14,9 +14,5 @@ public class ProcessBasedEmployeeConfiguration : IEntityTypeConfiguration<Proces
         builder.Property(propertyExpression: x => x.Premium)
             .HasConversion(convertToProviderExpression: v => v.Value, convertFromProviderExpression: v => new Percent(v))
             .IsRequired();
-
-        builder
-            .HasMany(navigationExpression: e => e.Documents)
-            .WithMany(navigationExpression: d => d.Employees);
     }
 }

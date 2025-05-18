@@ -24,7 +24,7 @@ public sealed class RateEmployeeUpdateViewModel : ProcessEmployeeUpdateViewModel
     public decimal Rate { get; set; }
 }
 
-public sealed class TechnologistUpdateViewModel : ProcessEmployeeUpdateViewModel
+public sealed class TechnologistUpdateViewModel : EmployeeUpdateViewModel
 {
     public int SalaryPercentage { get; set; }
 }

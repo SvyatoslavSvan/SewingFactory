@@ -1,4 +1,5 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
@@ -56,7 +57,7 @@ public class WorkshopTask : Identity
 
     public IReadOnlyList<EmployeeTaskRepeat> EmployeeTaskRepeats => _employeeTaskRepeats;
 
-    public List<ProcessBasedEmployee> EmployeesInvolved => _employeeTaskRepeats.Select(selector: x => x.WorkShopEmployee).ToList();
+    public List<Employee> EmployeesInvolved => _employeeTaskRepeats.Select(selector: x => x.WorkShopEmployee).ToList();
 
     public void AddEmployeeRepeat(EmployeeTaskRepeat employeeRepeat)
     {
@@ -73,7 +74,7 @@ public class WorkshopTask : Identity
         _employeeTaskRepeats.Add(employeeRepeat);
     }
 
-    public Money CalculatePaymentForEmployee(ProcessBasedEmployee employee)
+    public Money CalculatePaymentForEmployee(Employee employee)
     {
         var employeeTaskRepeat = _employeeTaskRepeats.FirstOrDefault(predicate: x => x.WorkShopEmployee.Id == employee.Id);
         if (employeeTaskRepeat == null)

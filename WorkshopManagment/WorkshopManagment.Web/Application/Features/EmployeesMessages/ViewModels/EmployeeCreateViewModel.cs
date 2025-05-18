@@ -22,7 +22,7 @@ public sealed class RateEmployeeCreateViewModel : ProcessEmployeeCreateViewModel
     public decimal Rate { get; set; }
 }
 
-public sealed class TechnologistCreateViewModel : ProcessEmployeeCreateViewModel
+public sealed class TechnologistCreateViewModel : EmployeeCreateViewModel
 {
     public int SalaryPercentage { get; set; }
 }

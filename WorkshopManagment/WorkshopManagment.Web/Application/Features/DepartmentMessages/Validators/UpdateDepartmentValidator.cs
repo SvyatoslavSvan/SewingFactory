@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.DepartmentMessages.ViewModels;
 

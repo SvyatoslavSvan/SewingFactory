@@ -1,6 +1,6 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
@@ -8,7 +8,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems
 
 public sealed class WorkshopDocument : NamedIdentity
 {
-    private readonly List<ProcessBasedEmployee> _employees;
+    private readonly List<Employee> _employees;
     private readonly List<WorkshopTask> _tasks;
     private int _countOfModelsInvolved;
     private GarmentModel _garmentModel = null!;
@@ -40,10 +40,10 @@ public sealed class WorkshopDocument : NamedIdentity
         _employees.Clear();
         _employees.AddRange(
             _tasks
-                .SelectMany(t => t.EmployeeTaskRepeats)
-                .Select(r => r.WorkShopEmployee)
-                .Where(e => !existingIds.Contains(e.Id))   
-                .DistinctBy(e => e.Id)                     
+                .SelectMany(selector: t => t.EmployeeTaskRepeats)
+                .Select(selector: r => r.WorkShopEmployee)
+                .Where(predicate: e => !existingIds.Contains(e.Id))
+                .DistinctBy(keySelector: e => e.Id)
         );
     }
 
@@ -79,7 +79,7 @@ public sealed class WorkshopDocument : NamedIdentity
 
     public IReadOnlyList<WorkshopTask> Tasks => _tasks;
 
-    public IReadOnlyList<ProcessBasedEmployee> Employees => _employees;
+    public IReadOnlyList<Employee> Employees => _employees;
 
     public static WorkshopDocument CreateInstance(
         string name,
@@ -93,13 +93,16 @@ public sealed class WorkshopDocument : NamedIdentity
                     .Select(selector: process => new WorkshopTask(process))
             ]);
 
-    public Money CalculatePaymentForEmployee(ProcessBasedEmployee employee)
+    public Money CalculatePaymentForEmployee(Employee employee)
     {
-        var payment = new Money(0);
-        var tasksForEmployee = _tasks.Where(predicate: task => task.EmployeesInvolved.Contains(employee)).ToList();
-        payment = tasksForEmployee.Aggregate(payment, func: (current, workshopTask) => current + workshopTask.CalculatePaymentForEmployee(employee));
+        var employeeTasks = _tasks
+            .Where(predicate: t => t.EmployeesInvolved.Contains(employee));
 
-        return payment;
+        var total = employeeTasks.Aggregate(
+            Money.Zero,
+            func: (sum, task) => sum + task.CalculatePaymentForEmployee(employee));
+
+        return total;
     }
 
     public void ApplyUpdatedTasks(List<WorkshopTask> updatedTasks, List<Guid> existingIds)
@@ -107,17 +110,18 @@ public sealed class WorkshopDocument : NamedIdentity
         updatedTasks
             .Join(
                 _tasks,
-                updated => updated.Id,
-                existing => existing.Id,
-                (updated, existing) => new { updated, existing }
+                outerKeySelector: updated => updated.Id,
+                innerKeySelector: existing => existing.Id,
+                resultSelector: (updated, existing) => new { updated, existing }
             )
             .SelectMany(
-                pair => pair.updated.EmployeeTaskRepeats,
-                (pair, uRepeat) => new { existingTask = pair.existing, updatedRepeat = uRepeat }
+                collectionSelector: pair => pair.updated.EmployeeTaskRepeats,
+                resultSelector: (pair, uRepeat) => new { existingTask = pair.existing, updatedRepeat = uRepeat }
             )
             .ToList()
-            .ForEach(x =>
-            x.existingTask.AddOrUpdateEmployeeRepeat(x.updatedRepeat));
+            .ForEach(action: x =>
+                x.existingTask.AddOrUpdateEmployeeRepeat(x.updatedRepeat));
+
         RecalculateEmployees(existingIds);
     }
 }

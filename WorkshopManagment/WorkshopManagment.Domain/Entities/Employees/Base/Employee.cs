@@ -1,15 +1,16 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
 using SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SewingFactory.Backend.WorkshopManagement.Domain.Base;
+namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 
 /// <summary>
 ///     Base class for an employee in the workshop.
 /// </summary>
-public abstract class Employee : NamedIdentity
+public abstract class Employee : NamedIdentity, IHasDocuments
 {
     private string _internalId = null!;
     private Department _department = null!;
@@ -51,5 +52,12 @@ public abstract class Employee : NamedIdentity
         set => _department = value ?? throw new SewingFactoryArgumentNullException(nameof(value));
     }
 
-    public abstract Salary CalculateSalary(DateRange dateRange);
+    public virtual Salary CalculateSalary(DateRange dateRange)
+    {
+        var documentPart = ((IHasDocuments)this).DocumentPayment(dateRange);
+
+        return new Salary(documentPart, Money.Zero, this);
+    }
+
+    public IEnumerable<WorkshopDocument> Documents { get; protected set; } = [];
 }

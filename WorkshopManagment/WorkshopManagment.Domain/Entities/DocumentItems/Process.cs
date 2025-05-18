@@ -1,5 +1,4 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
-using SewingFactory.Common.Domain.ValueObjects;
+﻿using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 

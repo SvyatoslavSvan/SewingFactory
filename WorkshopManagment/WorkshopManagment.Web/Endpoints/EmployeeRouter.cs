@@ -1,4 +1,4 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Base;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Endpoints.Base;
 

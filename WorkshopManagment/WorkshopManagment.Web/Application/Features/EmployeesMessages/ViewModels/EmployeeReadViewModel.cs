@@ -25,7 +25,7 @@ public sealed class RateEmployeeReadViewModel : ProcessEmployeeReadViewModel
     public decimal Rate { get; set; }
 }
 
-public sealed class TechnologistReadViewModel : ProcessEmployeeReadViewModel
+public sealed class TechnologistReadViewModel : EmployeeReadViewModel
 {
     public int SalaryPercentage { get; set; }
 }

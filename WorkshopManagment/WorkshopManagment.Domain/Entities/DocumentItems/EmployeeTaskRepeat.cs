@@ -1,4 +1,5 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
@@ -6,7 +7,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems
 public sealed class EmployeeTaskRepeat : Identity
 {
     private int _repeats;
-    private ProcessBasedEmployee _workShopEmployee = null!;
+    private Employee _workShopEmployee = null!;
     private WorkshopTask _workshopTask = null!;
 
     /// <summary>
@@ -20,7 +21,7 @@ public sealed class EmployeeTaskRepeat : Identity
         Repeats = repeats;
     }
 
-    public ProcessBasedEmployee WorkShopEmployee
+    public Employee WorkShopEmployee
     {
         get => _workShopEmployee;
         set => _workShopEmployee = value ?? throw new SewingFactoryArgumentNullException(nameof(WorkShopEmployee));

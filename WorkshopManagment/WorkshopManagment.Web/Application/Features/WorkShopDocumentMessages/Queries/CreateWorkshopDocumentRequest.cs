@@ -2,9 +2,9 @@
 using Calabonga.OperationResults;
 using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
-using SewingFactory.Backend.WorkshopManagement.Domain.Enums;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.WorkShopDocumentMessages.ViewModels.Document;
 using SewingFactory.Common.Domain.Exceptions;
