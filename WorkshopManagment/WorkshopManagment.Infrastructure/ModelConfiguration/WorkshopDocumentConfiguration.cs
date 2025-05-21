@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure.ModelConfiguration.Base;
 
@@ -15,5 +16,9 @@ public class WorkshopDocumentConfiguration : IdentityModelConfigurationBase<Work
         builder.HasMany(navigationExpression: x => x.Tasks).WithOne(navigationExpression: x => x.Document).IsRequired();
         builder.HasMany(x => x.Employees).WithMany(x => x.Documents);
         builder.HasOne(w => w.Department).WithMany(d => d.Documents);
+        builder.Navigation(d => d.Tasks)
+            .UsePropertyAccessMode(PropertyAccessMode.Field).HasField("_tasks");
+        builder.Navigation(d => d.Employees)
+            .UsePropertyAccessMode(PropertyAccessMode.Field).HasField("_employees");
     }
 }

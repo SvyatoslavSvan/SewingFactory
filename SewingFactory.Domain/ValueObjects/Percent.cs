@@ -25,5 +25,7 @@ namespace SewingFactory.Common.Domain.ValueObjects
                 _value = value; 
             }
         }
+
+        public decimal ToDecimal() => Value / 100;
     }
 }

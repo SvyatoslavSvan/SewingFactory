@@ -19,7 +19,7 @@ public class GetForCreateWorkshopDocumentRequestHandler(IUnitOfWork unitOfWork, 
     public async Task<OperationResult<GetForCreateWorkshopDocumentViewModel>> Handle(GetForCreateWorkshopDocumentRequest request, CancellationToken cancellationToken) => OperationResult.CreateResult(
         new GetForCreateWorkshopDocumentViewModel
         {
-            GarmentModel = mapper.Map<List<ReadGarmentModelViewModel>>(await unitOfWork.GetRepository<GarmentModel>().GetAllAsync(true)),
-            Departments = mapper.Map<List<ReadDepartmentViewModel>>(await unitOfWork.GetRepository<Department>().GetAllAsync(true))
+            GarmentModel = mapper.Map<List<ReadGarmentModelViewModel>>(await unitOfWork.GetRepository<GarmentModel>().GetAllAsync(TrackingType.NoTracking)),
+            Departments = mapper.Map<List<ReadDepartmentViewModel>>(await unitOfWork.GetRepository<Department>().GetAllAsync(TrackingType.NoTracking))
         });
 }

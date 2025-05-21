@@ -23,6 +23,6 @@ public class GetForUpdateWorkshopDocumentRequestHandler(
         => OperationResult.CreateResult(new GetForUpdateWorkshopDocumentViewModel
         {
             Employees = mapper.Map<List<EmployeeReadViewModel>>(await unitOfWork.GetRepository<Employee>()
-                .GetAllAsync(true))
+                .GetAllAsync(TrackingType.NoTracking))
         });
 }

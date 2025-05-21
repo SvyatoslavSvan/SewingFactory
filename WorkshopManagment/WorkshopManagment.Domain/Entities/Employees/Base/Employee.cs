@@ -14,18 +14,19 @@ public abstract class Employee : NamedIdentity, IHasDocuments
 {
     private string _internalId = null!;
     private Department _department = null!;
+    private readonly List<WorkshopDocument> _documents;
 
     /// <summary>
     /// Default constructor for EF Core
     /// </summary>
-    protected Employee()
-    { }
+    protected Employee() => _documents = new List<WorkshopDocument>();
 
     [SetsRequiredMembers]
     protected Employee(string name, string internalId, Department department) : base(name)
     {
         InternalId = internalId;
         Department = department;
+        _documents = new List<WorkshopDocument>();
     }
 
     /// <summary>
@@ -59,5 +60,5 @@ public abstract class Employee : NamedIdentity, IHasDocuments
         return new Salary(documentPart, Money.Zero, this);
     }
 
-    public IEnumerable<WorkshopDocument> Documents { get; protected set; } = [];
+    public IEnumerable<WorkshopDocument> Documents => _documents;
 }

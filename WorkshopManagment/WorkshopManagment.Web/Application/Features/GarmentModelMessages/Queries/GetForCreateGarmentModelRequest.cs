@@ -18,7 +18,7 @@ public class GetForCreateGarmentModelRequestHandler(IUnitOfWork unitOfWork, IMap
     public async Task<OperationResult<GetForCreateGarmentModelViewModel>> Handle(GetForCreateGarmentModelRequest request, CancellationToken cancellationToken) => OperationResult.CreateResult(
         new GetForCreateGarmentModelViewModel
         {
-            Processes = mapper.Map<List<ReadProcessViewModel>>(await unitOfWork.GetRepository<Process>().GetAllAsync(true)),
-            GarmentCategories = mapper.Map<List<ReadGarmentCategoryViewModel>>(await unitOfWork.GetRepository<GarmentCategory>().GetAllAsync(true))
+            Processes = mapper.Map<List<ReadProcessViewModel>>(await unitOfWork.GetRepository<Process>().GetAllAsync(TrackingType.NoTracking)),
+            GarmentCategories = mapper.Map<List<ReadGarmentCategoryViewModel>>(await unitOfWork.GetRepository<GarmentCategory>().GetAllAsync(TrackingType.NoTracking))
         });
 }

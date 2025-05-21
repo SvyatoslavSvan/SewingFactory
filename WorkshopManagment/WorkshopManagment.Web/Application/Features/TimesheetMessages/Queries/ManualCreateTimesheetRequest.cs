@@ -24,13 +24,13 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Time
             var operationResult = OperationResult.CreateResult<TimesheetViewModel>();
             var timesheet = await unitOfWork.GetRepository<Timesheet>()
                 .InsertAsync(Timesheet.CreateInstance(await unitOfWork.GetRepository<RateBasedEmployee>()
-                            .GetAllAsync(disableTracking: false),
+                            .GetAllAsync(trackingType: TrackingType.Tracking),
                         provider.CurrentMonthStart),
                     cancellationToken);
             await unitOfWork.SaveChangesAsync();
-            if (!unitOfWork.LastSaveChangesResult.IsOk)
+            if (!unitOfWork.Result.Ok)
             {
-                operationResult.AddError(unitOfWork.LastSaveChangesResult.Exception);
+                operationResult.AddError(unitOfWork.Result.Exception);
 
                 return operationResult;
             }

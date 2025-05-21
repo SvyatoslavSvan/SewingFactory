@@ -24,9 +24,9 @@ public abstract class DeleteRequestHandler<TViewModel, TEntity>(IUnitOfWork unit
                           throw new SewingFactoryNotFoundException(errorMessage));
 
         await unitOfWork.SaveChangesAsync();
-        if (!unitOfWork.LastSaveChangesResult.IsOk)
+        if (!unitOfWork.Result.Ok)
         {
-            operation.AddError(unitOfWork.LastSaveChangesResult.Exception
+            operation.AddError(unitOfWork.Result.Exception
                                ?? new SewingFactoryDatabaseSaveException(errorMessage));
 
             return operation;

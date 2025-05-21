@@ -25,7 +25,7 @@ public sealed class UpdateGarmentModelHandler(
         var operation = OperationResult.CreateResult<UpdateGarmentModelViewModel>();
         var entity = await unitOfWork.GetRepository<GarmentModel>().GetFirstOrDefaultAsync(
             predicate: x => x.Id == request.Model.Id,
-            disableTracking: false);
+            trackingType: TrackingType.Tracking);
 
         if (entity == null)
         {
@@ -39,7 +39,7 @@ public sealed class UpdateGarmentModelHandler(
         entity.Category = GarmentModelStubHelper.GetGarmentCategoryStub(request.Model, unitOfWork);
         unitOfWork.GetRepository<GarmentModel>().Update(entity);
         await unitOfWork.SaveChangesAsync();
-        if (unitOfWork.LastSaveChangesResult.IsOk)
+        if (unitOfWork.Result.Ok)
         {
             operation.Result = request.Model;
 

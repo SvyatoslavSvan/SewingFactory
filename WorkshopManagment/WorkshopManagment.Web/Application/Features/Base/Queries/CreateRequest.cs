@@ -21,9 +21,9 @@ public abstract class CreateRequestHandler<TCreateViewModel, TEntity, TReadViewM
         var entity = mapper.Map<TEntity>(request.Model);
         await unitOfWork.GetRepository<TEntity>().InsertAsync(entity, cancellationToken);
         await unitOfWork.SaveChangesAsync();
-        if (!unitOfWork.LastSaveChangesResult.IsOk)
+        if (!unitOfWork.Result.Ok)
         {
-            operation.AddError(unitOfWork.LastSaveChangesResult.Exception
+            operation.AddError(unitOfWork.Result.Exception
                                ?? new SewingFactoryDatabaseSaveException($"Error while saving entity{nameof(TEntity)}"));
 
             return operation;

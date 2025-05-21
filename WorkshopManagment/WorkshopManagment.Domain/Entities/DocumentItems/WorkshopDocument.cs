@@ -1,6 +1,5 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
-using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
@@ -20,8 +19,8 @@ public sealed class WorkshopDocument : NamedIdentity
     /// </summary>
     private WorkshopDocument()
     {
-        _tasks = [];
-        _employees = [];
+        _employees = new List<Employee>();
+        _tasks = new List<WorkshopTask>();
     }
 
     private WorkshopDocument(string name, int countOfModelsInvolved, DateOnly date, GarmentModel garmentModel, Department department, List<WorkshopTask> tasks)
@@ -35,16 +34,29 @@ public sealed class WorkshopDocument : NamedIdentity
         _employees = tasks.SelectMany(selector: task => task.EmployeeTaskRepeats).Select(selector: repeat => repeat.WorkShopEmployee).Distinct().ToList();
     }
 
-    private void RecalculateEmployees(List<Guid> existingIds)
+    public void RecalculateEmployees()
     {
-        _employees.Clear();
-        _employees.AddRange(
-            _tasks
-                .SelectMany(selector: t => t.EmployeeTaskRepeats)
-                .Select(selector: r => r.WorkShopEmployee)
-                .Where(predicate: e => !existingIds.Contains(e.Id))
-                .DistinctBy(keySelector: e => e.Id)
-        );
+        var newEmployees = _tasks
+            .SelectMany(selector: t => t.EmployeesInvolved)
+            .DistinctBy(keySelector: e => e.Id)
+            .ToList();
+
+        var toRemove = _employees
+            .Where(predicate: old => newEmployees.All(predicate: ne => ne.Id != old.Id))
+            .ToList();
+
+        foreach (var old in toRemove)
+        {
+            _employees.Remove(old);
+        }
+
+        foreach (var emp in newEmployees)
+        {
+            if (_employees.All(predicate: e => e.Id != emp.Id))
+            {
+                _employees.Add(emp);
+            }
+        }
     }
 
     public int CountOfModelsInvolved
@@ -103,25 +115,5 @@ public sealed class WorkshopDocument : NamedIdentity
             func: (sum, task) => sum + task.CalculatePaymentForEmployee(employee));
 
         return total;
-    }
-
-    public void ApplyUpdatedTasks(List<WorkshopTask> updatedTasks, List<Guid> existingIds)
-    {
-        updatedTasks
-            .Join(
-                _tasks,
-                outerKeySelector: updated => updated.Id,
-                innerKeySelector: existing => existing.Id,
-                resultSelector: (updated, existing) => new { updated, existing }
-            )
-            .SelectMany(
-                collectionSelector: pair => pair.updated.EmployeeTaskRepeats,
-                resultSelector: (pair, uRepeat) => new { existingTask = pair.existing, updatedRepeat = uRepeat }
-            )
-            .ToList()
-            .ForEach(action: x =>
-                x.existingTask.AddOrUpdateEmployeeRepeat(x.updatedRepeat));
-
-        RecalculateEmployees(existingIds);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
-using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.ProcessMessages.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.WorkShopDocumentMessages.ViewModels.Document;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.WorkShopDocumentMessages.ViewModels.Repeats;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.WorkShopDocumentMessages.ViewModels.Tasks;
+using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 using SewingFactory.Common.Domain.Base;
 using System.Reflection;
 
@@ -84,68 +85,35 @@ public class WorkshopDocumentMappingProfile : Profile
         CreateMap<UpdateWorkshopDocumentViewModel, WorkshopDocument>()
             .ForMember(destinationMember: x => x.Date,
                 memberOptions: opt => opt.MapFrom(mapExpression: x => x.Date))
-            .ForMember(destinationMember: x => x.Id,
-                memberOptions: opt => opt.MapFrom(mapExpression: x => x.Id))
             .ForMember(destinationMember: x => x.Name,
                 memberOptions: opt => opt.MapFrom(mapExpression: x => x.Name))
             .ForMember(destinationMember: x => x.CountOfModelsInvolved,
                 memberOptions: opt => opt.MapFrom(mapExpression: x => x.CountOfModelsInvolved))
-            .ForMember(destinationMember: dest => dest.GarmentModel,
-                memberOptions: opt => opt.Ignore())
-            .ForMember(destinationMember: dest => dest.Department,
-                memberOptions: opt => opt.Ignore())
-            .ForMember(destinationMember: dest => dest.Tasks,
-                memberOptions: opt => opt.Ignore())
-            .ForMember(destinationMember: dest => dest.Employees,
-                memberOptions: opt => opt.Ignore());
+            .ForMember(x => x.Employees, o => o.Ignore())
+            .ForMember(x => x.GarmentModel, o => o.Ignore())
+            .ForMember(x => x.Tasks, o => o.Ignore())
+            .ForMember(x => x.Department, o => o.Ignore());
 
-        ;
-
-        CreateMap<UpdateWorkShopTaskViewModel, WorkshopTask>()
-            .ForMember(destinationMember: x => x.Id,
-                memberOptions: opt => opt.MapFrom(mapExpression: x => x.Id))
-            .ForMember(destinationMember: x => x.EmployeeTaskRepeats,
-                memberOptions: opt => opt.Ignore())
-            .ForMember(destinationMember: dest => dest.Process,
-                memberOptions: opt => opt.Ignore())
-            .ForMember(destinationMember: dest => dest.Document,
-                memberOptions: opt => opt.Ignore())
-            .ForMember(destinationMember: dest => dest.EmployeesInvolved,
-                memberOptions: opt => opt.Ignore())
-            .AfterMap(afterFunction: (src, dest, ctx) =>
+        ; CreateMap<UpdateEmployeeTaskRepeatViewModel, EmployeeTaskRepeat>()
+            .ConstructUsing((src, ctx) =>
             {
-                foreach (var vm in src.EmployeeRepeats)
+                var dict = (Dictionary<Guid, Employee>)ctx.Items["EmployeesById"];
+                if (!dict.TryGetValue(src.EmployeeId, out var emp))
                 {
-                    dest.AddOrUpdateEmployeeRepeat(
-                        ctx.Mapper.Map<EmployeeTaskRepeat>(vm)
-                    );
+                    throw new KeyNotFoundException($"Employee {src.EmployeeId} not loaded");
+                }
+                var repeat = new EmployeeTaskRepeat(emp, src.RepeatsCount);
+
+                if (src.Id != Guid.Empty)
+                {
+                    typeof(Identity)
+                        .GetField("<Id>k__BackingField",
+                            BindingFlags.Instance | BindingFlags.NonPublic)!
+                        .SetValue(repeat, src.Id);
                 }
 
-                typeof(Identity)
-                    .GetField("<Id>k__BackingField",
-                        BindingFlags.Instance | BindingFlags.NonPublic)!
-                    .SetValue(dest, src.Id);
-            });
-
-        ;
-
-        ;
-
-        CreateMap<UpdateEmployeeTaskRepeatViewModel, EmployeeTaskRepeat>()
-            .ForMember(destinationMember: x => x.Repeats,
-                memberOptions: opt => opt.MapFrom(mapExpression: x => x.RepeatsCount))
-            .ForMember(destinationMember: x => x.WorkShopEmployee,
-                memberOptions: opt => opt.MapFrom(mappingFunction: (
-                        src,
-                        dest,
-                        destMember,
-                        ctx) =>
-                    ctx.Mapper.Map<ProcessBasedEmployee>(src.EmployeeId)
-                ))
-            .ForMember(destinationMember: x => x.Id,
-                memberOptions: opt => opt.MapFrom(mapExpression: x => x.Id))
-            .ForMember(destinationMember: dest => dest.WorkshopTask,
-                memberOptions: opt => opt.Ignore());
+                return repeat;
+            }).ForAllOtherMembers(x => x.Ignore());
 
         ;
     }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Calabonga.Microservices.Core;
+using Calabonga.Utils.Extensions;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.ProfileMessages.ViewModels;
 using System.Security.Claims;
 

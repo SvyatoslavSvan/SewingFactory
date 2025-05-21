@@ -16,6 +16,6 @@ public class DbContextDefinition : AppDefinition
     public override void ConfigureServices(WebApplicationBuilder builder)
         => builder.Services.AddDbContext<ApplicationDbContext>(optionsAction: config =>
         {
-            config.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            config.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging();
         });
 }

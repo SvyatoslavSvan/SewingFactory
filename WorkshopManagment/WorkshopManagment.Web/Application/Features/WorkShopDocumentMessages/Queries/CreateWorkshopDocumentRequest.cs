@@ -35,7 +35,7 @@ public sealed class CreateWorkshopDocumentHandler(
         var garmentModel = await _unitOfWork.GetRepository<GarmentModel>()
             .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.GarmentModelId,
                 include: x => x.Include(navigationPropertyPath: model => model.Processes),
-                disableTracking: false);
+                trackingType: TrackingType.Tracking);
 
         if (garmentModel == null)
         {
@@ -55,14 +55,14 @@ public sealed class CreateWorkshopDocumentHandler(
                 cancellationToken);
 
         await _unitOfWork.SaveChangesAsync();
-        if (_unitOfWork.LastSaveChangesResult.IsOk)
+        if (_unitOfWork.Result.Ok)
         {
             result.Result = _mapper.Map<DetailsReadWorkshopDocumentViewModel>(document);
 
             return result;
         }
 
-        result.AddError(_unitOfWork.LastSaveChangesResult.Exception ?? new SewingFactoryDatabaseSaveException($"Error while saving entity{nameof(GarmentModel)}"));
+        result.AddError(_unitOfWork.Result.Exception ?? new SewingFactoryDatabaseSaveException($"Error while saving entity{nameof(GarmentModel)}"));
 
         return result;
     }

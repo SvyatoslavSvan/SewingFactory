@@ -15,7 +15,7 @@ public sealed class EmployeeTaskRepeat : Identity
     /// </summary>
     private EmployeeTaskRepeat() { }
 
-    public EmployeeTaskRepeat(ProcessBasedEmployee workShopEmployee, int repeats)
+    public EmployeeTaskRepeat(Employee workShopEmployee, int repeats)
     {
         WorkShopEmployee = workShopEmployee;
         Repeats = repeats;

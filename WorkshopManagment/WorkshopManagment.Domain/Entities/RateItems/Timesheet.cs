@@ -10,6 +10,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 public sealed class Timesheet : Identity
 {
     private readonly List<WorkDay> _workDays = [];
+    private readonly List<RateBasedEmployee> _employees = [];
 
     /// <summary>
     ///     Default constructor for EF Core
@@ -23,12 +24,14 @@ public sealed class Timesheet : Identity
     /// <param name="date">The date representing the month and year of the timesheet.</param>
     /// <param name="hours">The total number of working hours in the month.</param>
     /// <param name="daysCount">The total number of working days in the month.</param>
-    private Timesheet(List<WorkDay> workDays, DateOnly date, int hours, int daysCount)
+    /// <param name="employees">Employees involved into timesheet</param>
+    private Timesheet(List<WorkDay> workDays, DateOnly date, int hours, int daysCount, IList<RateBasedEmployee> employees)
     {
         _workDays = workDays;
         Date = date;
         Hours = hours;
         DaysCount = daysCount;
+        _employees = employees.ToList();
     }
 
     /// <summary>
@@ -51,13 +54,13 @@ public sealed class Timesheet : Identity
     /// </summary>
     public IReadOnlyList<WorkDay> WorkDays => _workDays;
 
+    public IReadOnlyList<RateBasedEmployee> Employees => _employees;
+
     /// <summary>
     ///     Creates an instance of <see cref="Timesheet" /> for the specified employees, month, and year.
     /// </summary>
     /// <param name="employees">A list of employees for whom the timesheet is created.</param>
     /// <param name="date">The date representing the month and year of the timesheet.</param>
-    /// <param name="holidays">A list of holidays during the month.</param>
-    /// <param name="leaves">A list of leaves during the month.</param>
     /// <returns>A new instance of <see cref="Timesheet" />.</returns>
     /// <exception cref="SewingFactoryArgumentException">Thrown when the list of employees is empty.</exception>
     public static Timesheet CreateInstance(IList<RateBasedEmployee> employees, DateOnly date)
@@ -83,7 +86,7 @@ public sealed class Timesheet : Identity
 
         var hoursDays = GetHoursDays(date);
 
-        return new Timesheet(workDays, date, hoursDays.Item1, hoursDays.Item2);
+        return new Timesheet(workDays, date, hoursDays.Item1, hoursDays.Item2,employees);
     }
 
     public int HoursWorked(IHasRate employee) => _workDays.Where(predicate: x => x.Employee == employee).Sum(selector: x => x.Hours);

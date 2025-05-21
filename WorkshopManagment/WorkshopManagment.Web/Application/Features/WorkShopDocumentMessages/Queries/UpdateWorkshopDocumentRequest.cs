@@ -3,6 +3,7 @@ using Calabonga.OperationResults;
 using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.WorkShopDocumentMessages.ViewModels.Document;
@@ -23,53 +24,71 @@ public sealed class UpdateWorkshopDocumentHandler(
     mapper)
 {
     private readonly IMapper _mapper = mapper;
-    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
-
 
     public override async Task<OperationResult<UpdateWorkshopDocumentViewModel>> Handle(
         UpdateRequest<UpdateWorkshopDocumentViewModel, WorkshopDocument> request,
         CancellationToken cancellationToken)
     {
-        var operation = OperationResult.CreateResult<UpdateWorkshopDocumentViewModel>();
+        var operationResult = OperationResult.CreateResult<UpdateWorkshopDocumentViewModel>();
         var errorMessage = string.Format(_errorMessageFormat,
             nameof(WorkshopDocument),
             request.Model.Id);
 
-        var document = await _unitOfWork.GetRepository<WorkshopDocument>()
+        var document = await unitOfWork.GetRepository<WorkshopDocument>()
             .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.Id,
                 include: queryable => queryable
                     .Include(navigationPropertyPath: workshopDocument => workshopDocument.Tasks)
-                    .ThenInclude(navigationPropertyPath: task => task.EmployeeTaskRepeats),
-                disableTracking: false);
+                    .ThenInclude(navigationPropertyPath: task => task.EmployeeTaskRepeats)
+                    .ThenInclude(x => x.WorkShopEmployee).Include(x => x.Employees),
+                trackingType: TrackingType.Tracking);
 
         if (document is null)
         {
-            operation.AddError(new SewingFactoryNotFoundException(errorMessage + $"The entity {nameof(WorkshopDocument)} was not found"));
+            operationResult.AddError(new SewingFactoryNotFoundException(errorMessage + $"The entity {nameof(WorkshopDocument)} was not found"));
 
-            return operation;
+            return operationResult;
         }
 
         _mapper.Map(request.Model,
             document);
 
-        document.ApplyUpdatedTasks(_mapper.Map<List<WorkshopTask>>(request.Model.WorkshopTasks),
-            await _unitOfWork.DbContext.ProcessBasedEmployees.Where(predicate: x => x.Documents!.Contains(document))
-                .Select(selector: x => x.Id)
-                .ToListAsync(cancellationToken));
+        var employeesInvolvedIds = request.Model.WorkshopTasks.SelectMany(x => x.EmployeeRepeats)
+            .Select(x => x.EmployeeId)
+            .Distinct().ToList();
 
-        _unitOfWork.GetRepository<WorkshopDocument>()
-            .Update(document);
+        var employeesInvolved = await unitOfWork.GetRepository<Employee>()
+            .GetAllAsync(predicate: x => employeesInvolvedIds.Contains(x.Id),
+                trackingType: TrackingType.Tracking);
 
-        await _unitOfWork.SaveChangesAsync();
-        if (!_unitOfWork.LastSaveChangesResult.IsOk)
+        var employeesDictionary = employeesInvolved.ToDictionary(x => x.Id);
+
+        foreach (var taskVm in request.Model.WorkshopTasks)
         {
-            operation.AddError(_unitOfWork.LastSaveChangesResult.Exception);
+            var task = document.Tasks.FirstOrDefault(predicate: x => x.Id == taskVm.Id);
+            if (task == null)
+            {
+                operationResult.AddError(new SewingFactoryNotFoundException($"Task {taskVm.Id} not found in document {document.Id}"));
 
-            return operation;
+                return operationResult;
+            }
+
+            var employeeTaskRepeats = _mapper.Map<List<EmployeeTaskRepeat>>(taskVm.EmployeeRepeats,
+                opt => opt.Items["EmployeesById"] = employeesDictionary);
+            task.ReplaceRepeats(employeeTaskRepeats);
         }
 
-        operation.Result = request.Model;
+        document.RecalculateEmployees();
 
-        return operation;
+        await unitOfWork.SaveChangesAsync();
+        if (!unitOfWork.Result.Ok)
+        {
+            operationResult.AddError(unitOfWork.Result.Exception);
+
+            return operationResult;
+        }
+
+        operationResult.Result = request.Model;
+
+        return operationResult;
     }
 }

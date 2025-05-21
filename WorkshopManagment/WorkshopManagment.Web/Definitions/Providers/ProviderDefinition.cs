@@ -1,4 +1,5 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.Providers;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Providers;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.Providers
@@ -7,6 +8,9 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.Providers
     {
         public override void ConfigureServices(
             WebApplicationBuilder builder)
-            => builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+        {
+            builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+            builder.Services.AddTransient<IReportProvider, ClosedXmlReportProvider>();
+        }
     }
 }

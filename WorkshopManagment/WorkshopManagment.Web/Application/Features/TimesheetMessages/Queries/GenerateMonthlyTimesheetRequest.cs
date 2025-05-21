@@ -18,7 +18,7 @@ public class GenerateMonthlyTimesheetRequestHandler(
     {
         if (await unitOfWork.GetRepository<Timesheet>()
                 .GetFirstOrDefaultAsync(predicate: x => x.Date == provider.CurrentMonthStart,
-                    disableTracking: true) !=
+                    trackingType: TrackingType.NoTracking) !=
             null)
         {
             logger.LogError($"{nameof(Timesheet)} with {provider.CurrentMonthStart} already exist");
@@ -27,14 +27,14 @@ public class GenerateMonthlyTimesheetRequestHandler(
 
         await unitOfWork.GetRepository<Timesheet>()
             .InsertAsync(Timesheet.CreateInstance(await unitOfWork.GetRepository<RateBasedEmployee>()
-                        .GetAllAsync(false),
+                        .GetAllAsync(TrackingType.Tracking),
                     provider.CurrentMonthStart),
                 cancellationToken);
 
         await unitOfWork.SaveChangesAsync();
-        if (!unitOfWork.LastSaveChangesResult.IsOk)
+        if (!unitOfWork.Result.Ok)
         {
-            logger.LogCritical(unitOfWork.LastSaveChangesResult.Exception, "Cannot create a timesheet");
+            logger.LogCritical(unitOfWork.Result.Exception, "Cannot create a timesheet");
         }
     }
 }

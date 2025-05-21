@@ -6,6 +6,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces
     {
         public Percent Premium { get; set; }
 
-        public Money PremiumPayment(Money basePayment) => basePayment * Premium;
+        public Money PremiumPayment(Money basePayment) => basePayment * Premium.ToDecimal();
     }
 }

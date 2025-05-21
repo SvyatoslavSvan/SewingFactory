@@ -16,5 +16,5 @@ public abstract class GetAllRequestHandler<TEntity, TViewModel>(IUnitOfWork unit
         GetAllRequest<TEntity, TViewModel> request,
         CancellationToken cancellationToken)
         => OperationResult.CreateResult(mapper.Map<IEnumerable<TViewModel>>(await unitOfWork.GetRepository<TEntity>()
-            .GetAllAsync(true)));
+            .GetAllAsync(TrackingType.NoTracking)));
 }

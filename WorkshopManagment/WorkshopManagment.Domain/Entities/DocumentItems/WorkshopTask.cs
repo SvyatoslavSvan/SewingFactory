@@ -1,5 +1,4 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
-using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
@@ -15,11 +14,11 @@ public class WorkshopTask : Identity
     /// <summary>
     ///     Default constructor for EF Core
     /// </summary>
-    private WorkshopTask() => _employeeTaskRepeats = [];
+    private WorkshopTask() => _employeeTaskRepeats = new List<EmployeeTaskRepeat>();
 
     public WorkshopTask(Process process)
     {
-        _employeeTaskRepeats = [];
+        _employeeTaskRepeats = new List<EmployeeTaskRepeat>();
         Process = process;
     }
 
@@ -28,19 +27,6 @@ public class WorkshopTask : Identity
         Process = process;
         _employeeTaskRepeats = employeeTaskRepeats;
         Document = document;
-    }
-
-    private void UpdateEmployeeRepeat(EmployeeTaskRepeat updatedRepeat)
-    {
-        var existing = EmployeeTaskRepeats
-                           .FirstOrDefault(r => r.Id == updatedRepeat.Id)
-                       ?? throw new SewingFactoryArgumentException(
-                           nameof(updatedRepeat),
-                           $"Repeat {updatedRepeat.Id} not found on task {Id}"
-                       );
-
-        existing.Repeats = updatedRepeat.Repeats;
-        existing.WorkShopEmployee = updatedRepeat.WorkShopEmployee;
     }
 
     public Process Process
@@ -71,6 +57,7 @@ public class WorkshopTask : Identity
             return;
         }
 
+        employeeRepeat.WorkshopTask = this;
         _employeeTaskRepeats.Add(employeeRepeat);
     }
 
@@ -85,14 +72,38 @@ public class WorkshopTask : Identity
         return new Money(employeeTaskRepeat.Repeats * _process.Price.Amount);
     }
 
-    public void AddOrUpdateEmployeeRepeat(EmployeeTaskRepeat updatedRepeat)
+    public void ReplaceRepeats(List<EmployeeTaskRepeat> newRepeats)
     {
-        if (updatedRepeat.Id == Guid.Empty)
-        {
-            AddEmployeeRepeat(updatedRepeat);
-            return;
-        }
-        UpdateEmployeeRepeat(updatedRepeat);
-    }
+        var toRemove = _employeeTaskRepeats
+            .Where(predicate: old => newRepeats.All(predicate: nr => nr.Id != old.Id))
+            .ToList();
 
+        foreach (var old in toRemove)
+        {
+            _employeeTaskRepeats.Remove(old);
+        }
+
+        foreach (var nr in newRepeats)
+        {
+            if (nr.Id == Guid.Empty)
+            {
+                nr.WorkshopTask = this;
+                _employeeTaskRepeats.Add(nr);
+            }
+            else
+            {
+                var existing = _employeeTaskRepeats.FirstOrDefault(predicate: r => r.Id == nr.Id);
+                if (existing != null)
+                {
+                    existing.Repeats = nr.Repeats;
+                    existing.WorkShopEmployee = nr.WorkShopEmployee;
+                }
+                else
+                {
+                    nr.WorkshopTask = this;
+                    _employeeTaskRepeats.Add(nr);
+                }
+            }
+        }
+    }
 }

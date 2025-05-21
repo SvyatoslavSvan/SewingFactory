@@ -13,5 +13,6 @@ public class TimesheetConfiguration : IdentityModelConfigurationBase<Timesheet>
         builder.Property(propertyExpression: x => x.Hours).IsRequired();
         builder.Property(propertyExpression: x => x.DaysCount).IsRequired();
         builder.Property(propertyExpression: x => x.Date).IsRequired();
+        builder.HasMany(x => x.Employees).WithMany(x => x.Timesheets);
     }
 }

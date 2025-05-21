@@ -18,5 +18,7 @@ public class RateBasedEmployeeConfiguration : IEntityTypeConfiguration<RateBased
         builder.Property(propertyExpression: x => x.Rate)
             .HasConversion(convertToProviderExpression: v => v.Amount, convertFromProviderExpression: v => new Money(v))
             .IsRequired();
+
+        builder.HasMany(x => x.Timesheets).WithMany(x => x.Employees);
     }
 }

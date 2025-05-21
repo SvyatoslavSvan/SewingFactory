@@ -27,7 +27,7 @@ public class GetCurrentTimesheetRequestHandler(
         var operationResult = OperationResult.CreateResult<TimesheetViewModel>();
         var timesheet = await unitOfWork.GetRepository<Timesheet>()
             .GetFirstOrDefaultAsync(predicate: x => x.Date == provider.CurrentMonthStart,
-                disableTracking: true,
+                trackingType: TrackingType.Tracking,
                 include: x => x.Include(navigationPropertyPath: t => t.WorkDays)
                     .ThenInclude(navigationPropertyPath: w => w.Employee));
 
