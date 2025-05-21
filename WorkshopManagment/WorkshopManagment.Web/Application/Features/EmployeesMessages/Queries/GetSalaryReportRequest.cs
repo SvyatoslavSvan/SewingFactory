@@ -38,7 +38,13 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Empl
                         .ThenInclude(x => x.EmployeeTaskRepeats)
                         .ThenInclude(x => x.WorkShopEmployee)
                         .Include(e => (e as RateBasedEmployee)!.Timesheets
-                            .Where(x => x.Date >= request.Period.Start && x.Date <= request.Period.End)) //TODO Create & Use method of DateRange
+                            .Where(d =>
+                                (d.Date.Year > request.Period.Start.Year ||
+                                 (d.Date.Year == request.Period.Start.Year && d.Date.Month >= request.Period.Start.Month))
+                                &&
+                                (d.Date.Year < request.Period.End.Year ||
+                                 (d.Date.Year == request.Period.End.Year && d.Date.Month <= request.Period.End.Month))
+                            )) //TODO Create & Use method of DateRange
                         .ThenInclude(x => x.WorkDays)
                         .ThenInclude(x => x.Employee),
                     trackingType: TrackingType.NoTrackingWithIdentityResolution
