@@ -22,7 +22,8 @@ public class Technologist : Employee, IHasSalaryPercentage
     {
         var baseSalary = base.CalculateSalary(dateRange);
         baseSalary.AdditionalPayment = baseSalary.Payment;
-        baseSalary.Payment += ((IHasSalaryPercentage)this).SalaryPercentagePayment(dateRange);
+        baseSalary.Payment = Money.Zero;
+        baseSalary.Payment = ((IHasSalaryPercentage)this).SalaryPercentagePayment(dateRange);
         return baseSalary;
     }
 }

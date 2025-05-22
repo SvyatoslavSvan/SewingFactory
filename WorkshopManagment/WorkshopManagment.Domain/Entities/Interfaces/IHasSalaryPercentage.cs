@@ -14,8 +14,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces
             {
                 throw new SewingFactoryInvalidOperationException("IHasSalaryPercentage can be implemented only in employee type");
             }
-            var debug =  employee.Department.Employees.Where(x => x.Id != employee.Id)
-                .ToList().Select(x => x.CalculateSalary(period)).ToList();
             var deptTotal = employee.Department.Employees.Where(x => x.Id != employee.Id)
                 .Sum(e => e.CalculateSalary(period).Payment.Amount);
 

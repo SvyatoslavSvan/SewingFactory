@@ -22,7 +22,7 @@ public class Salary(
 
     public Employee Employee { get; set; } = employee ?? throw new SewingFactoryArgumentNullException(nameof(employee));
 
-    public Money TakeHome => Payment + Premium;
+    public Money TakeHome => Payment + Premium + AdditionalPayment;
 
     public Money AdditionalPayment { get; set; } = additionalPayment;
 }
