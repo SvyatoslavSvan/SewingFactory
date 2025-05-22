@@ -1,4 +1,6 @@
-﻿namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
+﻿using SewingFactory.Common.Domain.Base;
+
+namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
 {
     /// <summary>
     /// Represent person with login information (ApplicationUser)

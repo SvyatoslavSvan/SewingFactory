@@ -1,5 +1,5 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
-using SewingFactory.Backend.WarehouseManagement.Domain.Base;
+using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Cors
 {
@@ -17,7 +17,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Cors
             var origins = builder.Configuration.GetSection("Cors").GetSection("Origins").Value?.Split(',');
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(AppData.CorsPolicyName, policyBuilder =>
+                options.AddPolicy(AppData.PolicyCorsName, policyBuilder =>
                 {
                     policyBuilder.AllowAnyHeader();
                     policyBuilder.AllowAnyMethod();

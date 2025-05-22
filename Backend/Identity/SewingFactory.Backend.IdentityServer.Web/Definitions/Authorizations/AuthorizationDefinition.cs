@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using SewingFactory.Backend.IdentityServer.Domain.Base;
 using SewingFactory.Backend.IdentityServer.Web.Definitions.OpenIddict;
+using SewingFactory.Common.Domain.Base;
 using System.Text.Json;
 
 namespace SewingFactory.Backend.IdentityServer.Web.Definitions.Authorizations

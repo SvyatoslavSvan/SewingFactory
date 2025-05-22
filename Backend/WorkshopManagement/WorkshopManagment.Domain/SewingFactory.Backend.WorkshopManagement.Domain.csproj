@@ -9,8 +9,9 @@
 		<WarningsAsErrors>enable</WarningsAsErrors>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\..\SewingFactory.Domain\SewingFactory.Common.Domain.csproj" />
+	<ItemGroup>	  <ProjectReference Include="..\..\..\Common\Domain\SewingFactory.Common.Domain.csproj" />
+
+		
 	</ItemGroup>
 
 </Project>

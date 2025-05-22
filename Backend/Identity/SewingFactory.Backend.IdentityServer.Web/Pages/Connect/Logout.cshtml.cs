@@ -36,8 +36,8 @@ namespace SewingFactory.Backend.IdentityServer.Web.Pages.Connect
             {
                 // While not required, the specification encourages sending an id_token_hint
                 // parameter containing an identity token returned by the server for this user.
-                [OpenIddictClientAspNetCoreConstants.Properties.IdentityTokenHint] = result.Properties.GetTokenValue(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken)
-            })
+                [OpenIddictClientAspNetCoreConstants.Properties.IdentityTokenHint] = result.Properties.GetTokenValue(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken)!
+            }!)
             {
                 // Only allow local return URLs to prevent open redirect attacks.
                 RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/"

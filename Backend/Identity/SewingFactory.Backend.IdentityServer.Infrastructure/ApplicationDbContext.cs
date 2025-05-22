@@ -2,7 +2,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using SewingFactory.Backend.IdentityServer.Domain;
 using SewingFactory.Backend.IdentityServer.Infrastructure.Base;
 
 namespace SewingFactory.Backend.IdentityServer.Infrastructure
@@ -15,7 +14,6 @@ namespace SewingFactory.Backend.IdentityServer.Infrastructure
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        public DbSet<EventItem> EventItems { get; set; }
 
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
 

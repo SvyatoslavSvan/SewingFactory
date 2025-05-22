@@ -1,9 +1,9 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SewingFactory.Backend.IdentityServer.Domain.Base;
 using SewingFactory.Backend.IdentityServer.Web.Application.Messaging.ProfileMessages.Queries;
 using SewingFactory.Backend.IdentityServer.Web.Application.Messaging.ProfileMessages.ViewModels;
+using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.IdentityServer.Web.Endpoints
 {

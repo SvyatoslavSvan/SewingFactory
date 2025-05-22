@@ -15,7 +15,6 @@ namespace SewingFactory.Backend.IdentityServer.Web.Definitions.DataSeeding
         public override void ConfigureApplication(WebApplication app)
         {
             DatabaseInitializer.SeedUsers(app.Services);
-            DatabaseInitializer.SeedEvents(app.Services);
         }
     }
 }

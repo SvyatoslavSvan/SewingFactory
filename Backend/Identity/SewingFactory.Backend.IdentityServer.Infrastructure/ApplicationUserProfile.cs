@@ -1,4 +1,4 @@
-﻿using SewingFactory.Backend.IdentityServer.Domain.Base;
+﻿using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.IdentityServer.Infrastructure
 {

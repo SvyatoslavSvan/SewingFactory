@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
-using SewingFactory.Backend.IdentityServer.Domain.Base;
 using SewingFactory.Backend.IdentityServer.Infrastructure;
 using SewingFactory.Backend.IdentityServer.Web.Application.Messaging.ProfileMessages.ViewModels;
 using SewingFactory.Backend.IdentityServer.Web.Definitions.Authorizations;
+using SewingFactory.Common.Domain.Base;
 using System.Security.Claims;
 
 namespace SewingFactory.Backend.IdentityServer.Web.Application.Services

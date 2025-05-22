@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Server.AspNetCore;
-using SewingFactory.Backend.WarehouseManagement.Domain.Base;
+using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.OpenApi
 {

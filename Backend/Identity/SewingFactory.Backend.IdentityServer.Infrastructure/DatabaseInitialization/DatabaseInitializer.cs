@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using SewingFactory.Backend.IdentityServer.Domain;
-using SewingFactory.Backend.IdentityServer.Domain.Base;
+using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.IdentityServer.Infrastructure.DatabaseInitialization
 {
@@ -107,42 +106,5 @@ namespace SewingFactory.Backend.IdentityServer.Infrastructure.DatabaseInitializa
             await context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Seeds one event to database for demo purposes only
-        /// </summary>
-        /// <param name="serviceProvider"></param>
-        public static async void SeedEvents(IServiceProvider serviceProvider)
-        {
-            using var scope = serviceProvider.CreateScope();
-            await using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            // ATTENTION!
-            // -----------------------------------------------------------------------------
-            // This is should not be used when UseInMemoryDatabase()
-            // It should be uncomment when using UseSqlServer() settings or any other providers.
-            // -----------------------------------------------------------------------------
-            //await context!.Database.EnsureCreatedAsync();
-            //var pending = await context.Database.GetPendingMigrationsAsync();
-            //if (pending.Any())
-            //{
-            //    await context!.Database.MigrateAsync();
-            //}
-
-            if (context.EventItems.Any())
-            {
-                return;
-            }
-
-            await context.EventItems.AddAsync(new EventItem
-            {
-                CreatedAt = DateTime.UtcNow,
-                Id = Guid.Parse("1467a5b9-e61f-82b0-425b-7ec75f5c5029"),
-                Level = "Information",
-                Logger = "SEED",
-                Message = "Seed method some entities successfully save to ApplicationDbContext"
-            });
-
-            await context.SaveChangesAsync();
-        }
     }
 }

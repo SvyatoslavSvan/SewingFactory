@@ -22,7 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\SewingFactory.Backend.IdentityServer.Domain\SewingFactory.Backend.IdentityServer.Domain.csproj" />
+	  <ProjectReference Include="..\..\..\Common\Domain\SewingFactory.Common.Domain.csproj" />
 	</ItemGroup>
 
 

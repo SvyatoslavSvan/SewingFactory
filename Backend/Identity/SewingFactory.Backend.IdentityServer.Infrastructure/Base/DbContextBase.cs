@@ -1,7 +1,7 @@
 ﻿using Calabonga.UnitOfWork;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SewingFactory.Backend.IdentityServer.Domain.Base;
+using SewingFactory.Common.Domain.Base;
 using System.Reflection;
 
 namespace SewingFactory.Backend.IdentityServer.Infrastructure.Base

@@ -1,6 +1,6 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
 using Microsoft.AspNetCore.Mvc;
-using SewingFactory.Backend.WarehouseManagement.Domain.Base;
+using SewingFactory.Common.Domain.Base;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.OpenApi

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Server.AspNetCore;
-using SewingFactory.Backend.WarehouseManagement.Domain.Base;
 using SewingFactory.Backend.WarehouseManagement.Web.Definitions.OpenIddict;
+using SewingFactory.Common.Domain.Base;
 using System.Text.Json;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Authorizations
@@ -89,7 +89,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Authorizatio
         public override void ConfigureApplication(WebApplication app)
         {
             app.UseRouting();
-            app.UseCors(AppData.CorsPolicyName);
+            app.UseCors(AppData.PolicyCorsName);
             app.UseAuthentication();
             app.UseAuthorization();
 

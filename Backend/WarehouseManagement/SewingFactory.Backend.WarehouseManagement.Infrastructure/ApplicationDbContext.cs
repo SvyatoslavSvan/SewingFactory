@@ -14,8 +14,6 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        public DbSet<EventItem> EventItems { get; set; }
-
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
 
         public DbSet<MicroservicePermission> Permissions { get; set; }
