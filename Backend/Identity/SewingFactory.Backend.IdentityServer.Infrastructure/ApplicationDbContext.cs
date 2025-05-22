@@ -22,6 +22,20 @@ namespace SewingFactory.Backend.IdentityServer.Infrastructure
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.UseOpenIddict<Guid>();
+            builder.Entity<ApplicationUser>()
+                .HasOne(u => u.ApplicationUserProfile)
+                .WithOne(p => p.ApplicationUser)
+                .HasForeignKey<ApplicationUser>(u => u.ApplicationUserProfileId);
+            builder.Entity<ApplicationUserProfile>(b =>
+            {
+                b.HasKey(p => p.Id);                        
+                b.Property(p => p.Id).ValueGeneratedOnAdd(); 
+            });
+            builder.Entity<AppPermission>(b =>
+            {
+                b.HasKey(p => p.Id);
+                b.Property(p => p.Id).ValueGeneratedOnAdd();
+            });
             base.OnModelCreating(builder);
         }
 
