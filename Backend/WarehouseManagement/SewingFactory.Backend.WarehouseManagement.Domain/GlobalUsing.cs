@@ -1,0 +1,1 @@
+﻿global using SewingFactory.Backend.WarehouseManagement.Domain.Base;
