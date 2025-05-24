@@ -16,5 +16,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
         /// Microservice permission for policy-based authorization
         /// </summary>
         public ICollection<MicroservicePermission>? Permissions { get; set; }
+
+        public Guid ApplicationUserId { get; set; }
     }
 }

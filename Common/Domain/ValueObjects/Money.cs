@@ -1,6 +1,6 @@
 ﻿namespace SewingFactory.Common.Domain.ValueObjects
 {
-    public class Money
+    public sealed class Money
     {
         private decimal _amount;
 

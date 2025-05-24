@@ -5,20 +5,31 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 
 public class Operation : Identity
 {
-    private PointOfSale _pointOfSale = null!;
+    private PointOfSale _owner = null!;
     private int _quantity;
 
-    public Operation(PointOfSale pointOfSale, int quantity, DateOnly date, OperationType operationType)
+    /// <summary>
+    /// default constructor for EF Core
+    /// </summary>
+    protected Operation()
     {
-        PointOfSale = pointOfSale;
+        
+    }
+
+    public Operation(PointOfSale owner, int quantity, DateOnly date, OperationType operationType)
+    {
+        Owner = owner;
         Quantity = quantity;
         Date = date;
         OperationType = operationType;
+        OwnerId = owner.Id;
     }
 
     public OperationType OperationType { get; set; }
 
     public DateOnly Date { get; set; }
+
+    public Guid OwnerId { get; protected set; }
 
     public int Quantity
     {
@@ -33,9 +44,9 @@ public class Operation : Identity
         }
     }
 
-    public PointOfSale PointOfSale
+    public PointOfSale Owner
     {
-        get => _pointOfSale;
-        set => _pointOfSale = value ?? throw new SewingFactoryArgumentNullException(nameof(PointOfSale));
+        get => _owner;
+        set => _owner = value ?? throw new SewingFactoryArgumentNullException(nameof(Owner));
     }
 }

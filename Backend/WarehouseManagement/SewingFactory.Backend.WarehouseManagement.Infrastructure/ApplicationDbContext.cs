@@ -1,7 +1,10 @@
 ﻿#nullable disable
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure.Base;
 
 namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
@@ -9,14 +12,23 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
     /// <summary>
     /// Database context for current application
     /// </summary>
-    public class ApplicationDbContext : DbContextBase
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContextBase(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
-
         public DbSet<ApplicationUserProfile> Profiles { get; set; }
 
         public DbSet<MicroservicePermission> Permissions { get; set; }
+
+        public DbSet<GarmentModel> GarmentModels { get; set; }
+
+        public DbSet<GarmentCategory> GarmentCategories { get; set; }
+
+        public DbSet<Operation> Operations { get; set; }
+
+        public DbSet<InternalTransferOperation> InternalTransferOperations { get; set; }
+
+        public DbSet<PointOfSale> PointOfSales { get; set; }
+
+        public DbSet<StockItem> StockItems { get; set; }
 
         /// <summary>
         ///     <para>
@@ -48,18 +60,18 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
     }
 }
 
-///// <summary>
-///// ATTENTION!
-///// It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
-///// </summary>
-//public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
-//{
-//    public ApplicationDbContext CreateDbContext(string[] args)
-//    {
-//        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-//        optionsBuilder.UseSqlServer("Server=<SQL>;Database=<DatabaseName>;User ID=<UserName>;Password=<Password>");
-//        return new ApplicationDbContext(optionsBuilder.Options);
-//    }
-//}
+/// <summary>
+/// ATTENTION!
+/// It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
+/// </summary>
+public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+{
+    public ApplicationDbContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=WarehouseDb;Username=postgres;Password=1234;Include Error Detail=true");
+        return new ApplicationDbContext(optionsBuilder.Options);
+    }
+}
 
 #nullable restore

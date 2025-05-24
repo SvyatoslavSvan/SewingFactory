@@ -3,9 +3,15 @@ using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
 {
-    public class GarmentModel : NamedIdentity
+    public sealed class GarmentModel : NamedIdentity
     {
         private GarmentCategory _category = null!;
+
+        /// <summary>
+        /// default constructor for EF Core
+        /// </summary>
+        private GarmentModel()
+        { }
 
         public GarmentModel(string name, GarmentCategory category, Money price) : base(name)
         {
@@ -19,6 +25,6 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
             set => _category = value ?? throw new ArgumentNullException(nameof(Category));
         }
 
-        public Money Price { get; set; }
+        public Money Price { get; set; } = null!;
     }
 }

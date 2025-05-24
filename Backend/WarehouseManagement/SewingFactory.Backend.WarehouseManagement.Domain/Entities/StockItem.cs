@@ -3,11 +3,19 @@ using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
 {
-    public class StockItem : Identity
+    public sealed class StockItem : Identity
     {
         private PointOfSale _pointOfSale = null!;
         private GarmentModel _garmentModel = null!;
         private int _quantity;
+
+        /// <summary>
+        /// default constructor for EF Core
+        /// </summary>
+        private StockItem()
+        {
+            
+        }
 
         public StockItem(int quantity, PointOfSale pointOfSale, GarmentModel garmentModel)
         {

@@ -3,7 +3,7 @@ using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Common.Domain.ValueObjects
 {
-    public class DateRange
+    public sealed class DateRange
     {
         private DateOnly _start;
         private DateOnly _end;

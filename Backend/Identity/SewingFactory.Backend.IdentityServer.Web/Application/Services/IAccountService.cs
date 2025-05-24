@@ -1,7 +1,7 @@
 ﻿using Calabonga.Microservices.Core.Validators;
 using Calabonga.OperationResults;
 using SewingFactory.Backend.IdentityServer.Infrastructure;
-using SewingFactory.Backend.IdentityServer.Web.Application.Messaging.ProfileMessages.ViewModels;
+using SewingFactory.Backend.IdentityServer.Web.Application.Features.Profile.ViewModels;
 using System.Security.Claims;
 
 namespace SewingFactory.Backend.IdentityServer.Web.Application.Services

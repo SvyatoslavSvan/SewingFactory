@@ -2,7 +2,7 @@
 
 namespace SewingFactory.Common.Domain.ValueObjects
 {
-    public class Percent
+    public sealed class Percent
     {
         private  decimal _value;
 

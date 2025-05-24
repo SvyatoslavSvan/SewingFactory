@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
+using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.DepartmentMessages.Mapping.Converters;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.DepartmentMessages.ViewModels;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.DepartmentMessages.Mapping.Profiles;
