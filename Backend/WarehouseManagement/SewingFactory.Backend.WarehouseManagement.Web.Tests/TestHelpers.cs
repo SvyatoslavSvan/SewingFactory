@@ -5,6 +5,7 @@ using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.Mapping.Converters;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.Mapping.Profiles;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.Mapping;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Mapping.Profiles;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;
 
@@ -27,6 +28,7 @@ public static class TestHelpers
                 cfg.ConstructServicesUsing(sp.GetService);
                 cfg.AddProfile<GarmentCategoryProfile>();
                 cfg.AddProfile<GarmentModelMappingProfile>();
+                cfg.AddProfile<PointOfSaleMappingProfile>();
             },
             typeof(GarmentCategoryProfile).Assembly);
 

@@ -20,7 +20,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.DbContext
                 // Should uninstall package "Microsoft.EntityFrameworkCore.InMemory" and install what you need. 
                 // For example: "Microsoft.EntityFrameworkCore.SqlServer"
                 // uncomment line below to use UseSqlServer(). Don't forget setup connection string in appSettings.json 
-                config.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+                config.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging();
             });
     }
 }
