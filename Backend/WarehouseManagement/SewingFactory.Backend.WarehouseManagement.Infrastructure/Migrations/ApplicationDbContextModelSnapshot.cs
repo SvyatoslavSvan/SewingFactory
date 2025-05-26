@@ -221,6 +221,9 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ShortageQuantity")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GarmentModelId");

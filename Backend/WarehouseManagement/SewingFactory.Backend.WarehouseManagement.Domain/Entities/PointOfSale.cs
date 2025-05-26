@@ -28,14 +28,14 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
         public void Sell(Guid modelId, int quantityToSell, DateOnly date)
         {
             var stockItem = GetOrThrowStockItemByModelId(modelId);
-            ReduceStockQuantity(quantityToSell, stockItem);
+            stockItem.ReduceQuantity(quantityToSell);
             _operations.Add(new SaleOperation(this, quantityToSell, date));
         }
 
         public void WriteOff(Guid modelId, int quantityToWriteOff, DateOnly date)
         {
             var stockItem = GetOrThrowStockItemByModelId(modelId);
-            ReduceStockQuantity(quantityToWriteOff, stockItem);
+            stockItem.ReduceQuantity(quantityToWriteOff);
             _operations.Add(new WriteOffOperation(this, quantityToWriteOff, date));
         }
 
@@ -48,7 +48,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
             }
             else
             {
-                stockItem.Quantity += quantityToReceive;
+                stockItem.IncreaseQuantity(quantityToReceive);
             }
             _operations.Add(new ReceiveOperation(this, quantityToReceive, date));
         }
@@ -56,19 +56,9 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
         public void Transfer(GarmentModel model, int quantityToTransfer, DateOnly date, PointOfSale receiver)
         {
             var stockItem = GetOrThrowStockItemByModelId(model.Id);
-            ReduceStockQuantity(quantityToTransfer, stockItem);
+            stockItem.ReduceQuantity(quantityToTransfer);
             receiver.Receive(model, quantityToTransfer, date);
             _operations.Add(new InternalTransferOperation(this, quantityToTransfer, date, receiver));
-        }
-
-        private static void ReduceStockQuantity(int quantityToSell, StockItem stockItem)
-        {
-            if (stockItem.Quantity < quantityToSell)
-            {
-                throw new SewingFactoryInvalidOperationException($"Insufficient stock quantityToSell. Available: {stockItem.Quantity}, requested: {quantityToSell}.");
-            }
-
-            stockItem.Quantity -= quantityToSell;
         }
 
         private StockItem GetOrThrowStockItemByModelId(Guid modelId)

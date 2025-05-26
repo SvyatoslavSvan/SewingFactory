@@ -32,13 +32,17 @@ public sealed class PointOfSaleTests
         Assert.IsType<SaleOperation>(pos.Operations.Single());
     }
 
-    [Fact(DisplayName = "Sell fails when stock is insufficient")]
-    public void Sell_Insufficient_Stock_Throws()
+    [Fact(DisplayName = "Sell with insufficient stock records shortage and zeroes qty")]
+    public void Sell_Insufficient_Stock_Records_Shortage()
     {
-        var (pos, model, _) = TestFixture.CreatePOS(1);
+        var (pos, model, stock) = TestFixture.CreatePOS(initialQty: 1);
 
-        Assert.Throws<SewingFactoryInvalidOperationException>(
-            testCode: () => pos.Sell(model.Id, 5, DateOnly.FromDateTime(DateTime.Today)));
+        pos.Sell(model.Id, 5, new DateOnly(2025, 5, 22));
+
+        Assert.Equal(0, stock.Quantity);
+        Assert.Equal(4, stock.ShortageQuantity);               
+        Assert.Single(pos.Operations);
+        Assert.IsType<SaleOperation>(pos.Operations.Single());
     }
 
     [Fact(DisplayName = "Write-off reduces stock and logs an operation")]
@@ -100,12 +104,17 @@ public sealed class PointOfSaleTests
             () => pos.WriteOff(missingId, 1, new DateOnly(2025, 5, 22)));
     }
 
-    [Fact(DisplayName = "Write-off fails when stock is insufficient")]
-    public void WriteOff_Insufficient_Stock_Throws()
+    [Fact(DisplayName = "Write-off with insufficient stock records shortage and zeroes qty")]
+    public void WriteOff_Insufficient_Stock_Records_Shortage()
     {
-        var (pos, model, _) = TestFixture.CreatePOS(initialQty: 1);
-        Assert.Throws<SewingFactoryInvalidOperationException>(
-            () => pos.WriteOff(model.Id, 5, new DateOnly(2025, 5, 22)));
+        var (pos, model, stock) = TestFixture.CreatePOS(initialQty: 1);
+
+        pos.WriteOff(model.Id, 5, new DateOnly(2025, 5, 22));
+
+        Assert.Equal(0, stock.Quantity);
+        Assert.Equal(4, stock.ShortageQuantity);
+        Assert.Single(pos.Operations);
+        Assert.IsType<WriteOffOperation>(pos.Operations.Single());
     }
 
     [Fact(DisplayName = "Transfer fails when sender does not have the model")]
@@ -121,14 +130,24 @@ public sealed class PointOfSaleTests
             () => sender.Transfer(fakeModel, 1, new DateOnly(2025, 5, 22), receiver));
     }
 
-    [Fact(DisplayName = "Transfer fails when sender stock is insufficient")]
-    public void Transfer_Insufficient_Stock_Throws()
+    [Fact(DisplayName = "Transfer with insufficient stock records shortage on sender, delivers to receiver")]
+    public void Transfer_Insufficient_Stock_Records_Shortage()
     {
-        var (sender, model, _) = TestFixture.CreatePOS(initialQty: 2);
+        var (sender, model, senderStock) = TestFixture.CreatePOS(initialQty: 2);
         var receiver = new PointOfSale("Receiver");
         receiver.AddStockItem(model);
+        var receiverStock = receiver.StockItems.First();       
 
-        Assert.Throws<SewingFactoryInvalidOperationException>(
-            () => sender.Transfer(model, 5, new DateOnly(2025, 5, 22), receiver));
+        sender.Transfer(model, 5, new DateOnly(2025, 5, 22), receiver);
+
+        Assert.Equal(0, senderStock.Quantity);
+        Assert.Equal(3, senderStock.ShortageQuantity);         
+        Assert.Equal(5, receiverStock.Quantity);               
+        Assert.Equal(0, receiverStock.ShortageQuantity);
+
+        Assert.Single(sender.Operations);
+        Assert.IsType<InternalTransferOperation>(sender.Operations.Single());
+        Assert.Single(receiver.Operations);
+        Assert.IsType<ReceiveOperation>(receiver.Operations.Single());
     }
 }

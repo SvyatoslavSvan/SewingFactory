@@ -7,14 +7,13 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
     {
         private PointOfSale _pointOfSale = null!;
         private GarmentModel _garmentModel = null!;
-        private int _quantity;
 
         /// <summary>
         /// default constructor for EF Core
         /// </summary>
         private StockItem()
         {
-            
+
         }
 
         public StockItem(int quantity, PointOfSale pointOfSale, GarmentModel garmentModel)
@@ -22,6 +21,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
             Quantity = quantity;
             GarmentModel = garmentModel;
             PointOfSale = pointOfSale;
+            ShortageQuantity = 0;
         }
 
 
@@ -37,17 +37,33 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
             set => _garmentModel = value ?? throw new SewingFactoryArgumentNullException(nameof(GarmentModel));
         }
 
-        public int Quantity
+        public int Quantity { get; private set; }
+
+        public int ShortageQuantity { get; private set; }
+
+        public void ReduceQuantity(int quantityToReduce)
         {
-            get => _quantity;
-            set
+            if (quantityToReduce <= Quantity)
             {
-                if (value < 0)
-                {
-                    throw new SewingFactoryArgumentException(nameof(Quantity), "Quantity cannot be negative");
-                }
-                _quantity = value;
+                Quantity -= quantityToReduce;
+                ShortageQuantity = 0;
             }
+            else
+            {
+                ShortageQuantity = quantityToReduce - Quantity;
+                Quantity = 0;
+            }
+        }
+
+        public void IncreaseQuantity(int quantityToIncrease)
+        {
+            if (quantityToIncrease < 0)
+            {
+                throw new SewingFactoryArgumentException(nameof(quantityToIncrease), "Quantity to increase cannot be negative.");
+            }
+
+            Quantity += quantityToIncrease;
+            ShortageQuantity = 0;
         }
     }
 }

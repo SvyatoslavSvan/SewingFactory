@@ -10,10 +10,10 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Poi
     public record CreatePointOfSaleRequest(
         PointOfSaleCreateViewModel Model,
         ClaimsPrincipal User)
-        : CreateRequest<PointOfSaleCreateViewModel, PointOfSale, PointOfSaleReadViewModel>(Model, User);
+        : CreateRequest<PointOfSaleCreateViewModel, PointOfSale, PointOfSaleDetailsReadViewModel>(Model, User);
 
     public sealed class CreatePointOfSaleHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper)
-        : CreateRequestHandler<PointOfSaleCreateViewModel, PointOfSale, PointOfSaleReadViewModel>(unitOfWork, mapper);
+        : CreateRequestHandler<PointOfSaleCreateViewModel, PointOfSale, PointOfSaleDetailsReadViewModel>(unitOfWork, mapper);
 }

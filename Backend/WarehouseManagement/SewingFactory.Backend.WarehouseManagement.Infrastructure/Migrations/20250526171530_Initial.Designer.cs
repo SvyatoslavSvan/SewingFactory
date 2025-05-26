@@ -12,7 +12,7 @@ using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250526120440_Initial")]
+    [Migration("20250526171530_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -222,6 +222,9 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ShortageQuantity")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

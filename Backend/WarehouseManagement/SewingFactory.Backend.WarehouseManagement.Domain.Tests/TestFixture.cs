@@ -23,7 +23,7 @@ internal static class TestFixture
         pos.AddStockItem(model);
 
         var stockItem = pos.StockItems.First();
-        stockItem.Quantity = initialQty;
+        stockItem.IncreaseQuantity(initialQty);
 
         return (pos, model, stockItem);
     }

@@ -285,7 +285,8 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     PointOfSaleId = table.Column<Guid>(type: "uuid", nullable: false),
                     GarmentModelId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false)
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    ShortageQuantity = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
