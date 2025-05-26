@@ -1,4 +1,5 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
 using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Tests;
@@ -12,8 +13,8 @@ public sealed class OperationTests
     public void Quantity_Negative_Throws()
     {
         var (pos, _, _) = TestFixture.CreatePOS();
-        var op = new Operation(pos, 1,
-            DateOnly.FromDateTime(DateTime.Today), OperationType.Sale);
+        var op = new SaleOperation(pos, 1,
+            DateOnly.FromDateTime(DateTime.Today));
 
         Assert.Throws<SewingFactoryArgumentException>(testCode: () => op.Quantity = -5);
     }
@@ -22,8 +23,8 @@ public sealed class OperationTests
     public void PointOfSale_Null_Throws()
     {
         var (pos, _, _) = TestFixture.CreatePOS();
-        var op = new Operation(pos, 1,
-            DateOnly.FromDateTime(DateTime.Today), OperationType.Sale);
+        var op = new SaleOperation(pos, 1,
+            DateOnly.FromDateTime(DateTime.Today));
 
         Assert.Throws<SewingFactoryArgumentNullException>(testCode: () => op.Owner = null!);
     }

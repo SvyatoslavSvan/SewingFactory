@@ -1,9 +1,9 @@
 ﻿using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.Exceptions;
 
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
 
-public class Operation : Identity
+public abstract class Operation : Identity
 {
     private PointOfSale _owner = null!;
     private int _quantity;
@@ -16,16 +16,13 @@ public class Operation : Identity
         
     }
 
-    public Operation(PointOfSale owner, int quantity, DateOnly date, OperationType operationType)
+    protected Operation(PointOfSale owner, int quantity, DateOnly date)
     {
         Owner = owner;
         Quantity = quantity;
         Date = date;
-        OperationType = operationType;
         OwnerId = owner.Id;
     }
-
-    public OperationType OperationType { get; set; }
 
     public DateOnly Date { get; set; }
 

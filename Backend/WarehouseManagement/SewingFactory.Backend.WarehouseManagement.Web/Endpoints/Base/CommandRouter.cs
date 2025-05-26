@@ -31,6 +31,7 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)] //TODO: Uncomment when authentication is ready
     protected async Task<Operation<TDetailsReadViewModel, Exception>> Create(
         [FromBody] TCreateViewModel model,
@@ -43,6 +44,7 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     protected async Task<Operation<TDeleteViewModel, Exception>> Delete(
         [FromBody] TDeleteViewModel model,
@@ -55,6 +57,7 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     protected async Task<Operation<TUpdateViewModel,SewingFactoryNotFoundException, SewingFactoryDatabaseSaveException>> Update(
         [FromBody] TUpdateViewModel model,

@@ -1,6 +1,13 @@
-﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+﻿using Calabonga.OperationResults;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Operations;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.StockItems;
 using SewingFactory.Backend.WarehouseManagement.Web.Endpoints.Base;
+using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Endpoints
 {
@@ -10,7 +17,72 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Endpoints
             PointOfSaleCreateViewModel,
             PointOfSaleEditViewModel,
             PointOfSaleDeleteViewModel,
-            PointOfSaleReadViewModel>
+            PointOfSaleDetailsReadViewModel>
     {
+        public override void ConfigureApplication(WebApplication app)
+        {
+            base.ConfigureApplication(app);
+            app.MapPost(Prefix + "/addStockItem", AddStockItem).WithTags(_featureGroupName);
+            app.MapPost(Prefix + "/sell", Sell).WithTags(_featureGroupName);
+            app.MapPost(Prefix + "/writeOff", WriteOff).WithTags(_featureGroupName);
+            app.MapPost(Prefix + "/receive", Receive).WithTags(_featureGroupName);
+            app.MapPost(Prefix + "/internalTransfer", InternalTransfer).WithTags(_featureGroupName);
+        }
+
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        private static async Task<Operation<StockItemReadViewModel, SewingFactoryNotFoundException, Exception>>
+        AddStockItem(
+            [FromBody] AddStockItemViewModel model,
+            [FromServices] IMediator mediator,
+            HttpContext context)
+        => await mediator.Send(new AddStockItemRequest(model, context.User));
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        private static async Task<OperationEmpty<SewingFactoryNotFoundException, Exception>>
+            Sell(
+                [FromBody] OperationViewModel model,
+                [FromServices] IMediator mediator,
+                HttpContext context)
+            => await mediator.Send(new SellRequest(model, context.User));
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        private static async Task<OperationEmpty<SewingFactoryNotFoundException, Exception>>
+            WriteOff(
+                [FromBody] OperationViewModel model,
+                [FromServices] IMediator mediator,
+                HttpContext context)
+            => await mediator.Send(new WriteOffRequest(model, context.User));
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        private static async Task<OperationEmpty<SewingFactoryNotFoundException, Exception>>
+            Receive(
+                [FromBody] OperationViewModel model,
+                [FromServices] IMediator mediator,
+                HttpContext context)
+            => await mediator.Send(new ReceiveRequest(model, context.User));
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        private static async Task<OperationEmpty<SewingFactoryNotFoundException, Exception>>
+            InternalTransfer(
+                [FromBody] InternalTransferViewModel model,
+                [FromServices] IMediator mediator,
+                HttpContext context)
+            => await mediator.Send(new InternalTransferRequest(model, context.User));
     }
 }

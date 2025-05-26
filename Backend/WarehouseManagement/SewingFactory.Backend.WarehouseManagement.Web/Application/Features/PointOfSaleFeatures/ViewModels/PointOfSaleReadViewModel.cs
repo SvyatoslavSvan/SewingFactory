@@ -3,7 +3,7 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOf
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels
 {
-    public sealed class PointOfSaleReadViewModel : PointOfSaleViewModel, IIdentityViewModel
+    public class PointOfSaleReadViewModel : PointOfSaleViewModel, IIdentityViewModel
     {
         public Guid Id { get; set; }
     }

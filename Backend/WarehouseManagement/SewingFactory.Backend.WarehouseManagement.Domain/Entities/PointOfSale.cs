@@ -1,4 +1,6 @@
-﻿using SewingFactory.Common.Domain.Base;
+﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+using SewingFactory.Common.Domain.Base;
+using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
 {
@@ -12,30 +14,49 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
 
         public IReadOnlyList<StockItem> StockItems => _stockItems;
 
-        public void AddStockItem(GarmentModel model) => _stockItems.Add(new StockItem(0,this,model));
-
-        public void Sell(GarmentModel model, int quantityToSell, DateOnly date)
+        public StockItem AddStockItem(GarmentModel model)
         {
-            ReduceStockQuantity(quantityToSell, _stockItems.First(x => x.GarmentModel == model));
-            _operations.Add(new Operation(this, quantityToSell, date, OperationType.Sale));
+            if (_stockItems.Any(x => x.GarmentModel.Id == model.Id))
+            {
+                throw new SewingFactoryInvalidOperationException($"Stock item for model {model.Name} already exists in point of sale {Name}.");
+            }
+            var stockItem = new StockItem(0, this, model);
+            _stockItems.Add(stockItem);
+            return stockItem;
         }
 
-        public void WriteOff(GarmentModel model, int quantityToSell, DateOnly date)
+        public void Sell(Guid modelId, int quantityToSell, DateOnly date)
         {
-            ReduceStockQuantity(quantityToSell, _stockItems.First(x => x.GarmentModel == model));
-            _operations.Add(new Operation(this, quantityToSell, date, OperationType.WriteOff));
+            var stockItem = GetOrThrowStockItemByModelId(modelId);
+            ReduceStockQuantity(quantityToSell, stockItem);
+            _operations.Add(new SaleOperation(this, quantityToSell, date));
+        }
+
+        public void WriteOff(Guid modelId, int quantityToWriteOff, DateOnly date)
+        {
+            var stockItem = GetOrThrowStockItemByModelId(modelId);
+            ReduceStockQuantity(quantityToWriteOff, stockItem);
+            _operations.Add(new WriteOffOperation(this, quantityToWriteOff, date));
         }
 
         public void Receive(GarmentModel model, int quantityToReceive, DateOnly date)
         {
-            var stockItem = _stockItems.First(x => x.GarmentModel.Id == model.Id);
-            stockItem.Quantity += quantityToReceive;
-            _operations.Add(new Operation(this, quantityToReceive, date, OperationType.Receive));
+            var stockItem = _stockItems.FirstOrDefault(x => x.GarmentModel.Id == model.Id);
+            if (stockItem is null)
+            {
+                _stockItems.Add(new StockItem(quantityToReceive, this,model));
+            }
+            else
+            {
+                stockItem.Quantity += quantityToReceive;
+            }
+            _operations.Add(new ReceiveOperation(this, quantityToReceive, date));
         }
 
         public void Transfer(GarmentModel model, int quantityToTransfer, DateOnly date, PointOfSale receiver)
         {
-            ReduceStockQuantity(quantityToTransfer, _stockItems.First(x => x.GarmentModel == model));
+            var stockItem = GetOrThrowStockItemByModelId(model.Id);
+            ReduceStockQuantity(quantityToTransfer, stockItem);
             receiver.Receive(model, quantityToTransfer, date);
             _operations.Add(new InternalTransferOperation(this, quantityToTransfer, date, receiver));
         }
@@ -44,10 +65,21 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
         {
             if (stockItem.Quantity < quantityToSell)
             {
-                throw new InvalidOperationException($"Insufficient stock quantityToSell. Available: {stockItem.Quantity}, requested: {quantityToSell}.");
+                throw new SewingFactoryInvalidOperationException($"Insufficient stock quantityToSell. Available: {stockItem.Quantity}, requested: {quantityToSell}.");
             }
 
             stockItem.Quantity -= quantityToSell;
+        }
+
+        private StockItem GetOrThrowStockItemByModelId(Guid modelId)
+        {
+            var stockItem = _stockItems.FirstOrDefault(x => x.GarmentModel.Id == modelId);
+            if (stockItem is null)
+            {
+                throw new SewingFactoryInvalidOperationException($"Stock item for GarmentModel with Id {modelId} does not exist in point of sale {Name}.");
+            }
+
+            return stockItem;
         }
     }
 }

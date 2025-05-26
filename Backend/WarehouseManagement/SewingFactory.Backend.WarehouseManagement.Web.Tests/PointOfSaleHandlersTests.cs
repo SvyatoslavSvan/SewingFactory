@@ -7,6 +7,8 @@ using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Operations;
+using SewingFactory.Common.Domain.ValueObjects;
 using System.Security.Claims;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;
@@ -94,5 +96,181 @@ public sealed class PointOfSaleHandlersTests
 
         Assert.True(res.Ok);
         Assert.Empty(uow.DbContext.Set<PointOfSale>());
+    }
+
+    [Fact]
+    public async Task GetPointOfSaleById_Returns_Details_With_Stocks()
+    {
+        var sp = TestHelpers.BuildServices();
+        var uow = (UnitOfWork<ApplicationDbContext>)sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+
+        var cat = new GarmentCategory("Tees", []);
+        var model = new GarmentModel("Classic", cat, Money.Zero);
+        var pos = new PointOfSale("Main");
+        pos.AddStockItem(model);
+        pos.StockItems.Single().Quantity = 4;
+
+        uow.DbContext.AddRange(cat, model, pos);
+        await uow.DbContext.SaveChangesAsync();
+
+        var handler = new GetPointOfSaleByIdHandler(uow, sp.GetRequiredService<IMapper>());
+        var res = await handler.Handle(new GetPointOfSaleByIdRequest(FakeUser, pos.Id), default);
+
+        Assert.True(res.Ok);
+        Assert.Equal("Main", res.Result!.Name);
+        Assert.Single(res.Result.StockItems);          // проверяем новую детальную выдачу
+        Assert.Equal(4, res.Result.StockItems.First().Quantity);
+    }
+
+    [Fact]
+    public async Task ReceiveRequest_Increases_Stock_And_Persists()
+    {
+        var sp = TestHelpers.BuildServices();
+        var uow = (UnitOfWork<ApplicationDbContext>)sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+
+        var cat = new GarmentCategory("Tees", []);
+        var model = new GarmentModel("Classic", cat, Money.Zero);
+
+        var pos = new PointOfSale("Main");
+        pos.AddStockItem(model);                     // qty = 0
+        uow.DbContext.AddRange(cat, model, pos);
+        await uow.DbContext.SaveChangesAsync();
+
+        var vm = new OperationViewModel
+        {
+            PointOfSaleId = pos.Id,
+            GarmentModelId = model.Id,
+            Quantity = 5,
+            Date = new DateOnly(2025, 5, 22)
+        };
+
+        var handler = new ReceiveRequestHandler(uow);
+        var res = await handler.Handle(new ReceiveRequest(vm, FakeUser), default);
+
+        Assert.True(res.Ok);
+
+        var qty = await uow.DbContext.Set<StockItem>()
+            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(x => x.Quantity)
+            .SingleAsync();
+        Assert.Equal(5, qty);
+    }
+
+    [Fact]
+    public async Task SellRequest_Decreases_Stock_And_Persists()
+    {
+        var sp = TestHelpers.BuildServices();
+        var uow = (UnitOfWork<ApplicationDbContext>)sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+
+        var cat = new GarmentCategory("Tees", []);
+        var model = new GarmentModel("Classic", cat, Money.Zero);
+
+        var pos = new PointOfSale("Main");
+        pos.AddStockItem(model);
+        pos.StockItems.Single().Quantity = 10;
+
+        uow.DbContext.AddRange(cat, model, pos);
+        await uow.DbContext.SaveChangesAsync();
+
+        var vm = new OperationViewModel
+        {
+            PointOfSaleId = pos.Id,
+            GarmentModelId = model.Id,
+            Quantity = 3,
+            Date = new DateOnly(2025, 5, 22)
+        };
+
+        var handler = new SellRequestRequestHandler(uow);
+        var res = await handler.Handle(new SellRequest(vm, FakeUser), default);
+
+        Assert.True(res.Ok);
+
+        var qty = await uow.DbContext.Set<StockItem>()
+            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(x => x.Quantity)
+            .SingleAsync();
+        Assert.Equal(7, qty);
+    }
+
+    [Fact]
+    public async Task WriteOffRequest_Decreases_Stock_And_Persists()
+    {
+        var sp = TestHelpers.BuildServices();
+        var uow = (UnitOfWork<ApplicationDbContext>)sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+
+        var cat = new GarmentCategory("Tees", []);
+        var model = new GarmentModel("Classic", cat, Money.Zero);
+
+        var pos = new PointOfSale("Main");
+        pos.AddStockItem(model);
+        pos.StockItems.Single().Quantity = 6;
+
+        uow.DbContext.AddRange(cat, model, pos);
+        await uow.DbContext.SaveChangesAsync();
+
+        var vm = new OperationViewModel
+        {
+            PointOfSaleId = pos.Id,
+            GarmentModelId = model.Id,
+            Quantity = 2,
+            Date = new DateOnly(2025, 5, 22)
+        };
+
+        var handler = new WriteOffRequestHandler(uow);
+        var res = await handler.Handle(new WriteOffRequest(vm, FakeUser), default);
+
+        Assert.True(res.Ok);
+
+        var qty = await uow.DbContext.Set<StockItem>()
+            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(x => x.Quantity)
+            .SingleAsync();
+        Assert.Equal(4, qty);
+    }
+
+    [Fact]
+    public async Task InternalTransferRequest_Moves_Stock_Between_Points()
+    {
+        var sp = TestHelpers.BuildServices();
+        var uow = (UnitOfWork<ApplicationDbContext>)sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+
+        var cat = new GarmentCategory("Tees", []);
+        var model = new GarmentModel("Classic", cat, Money.Zero);
+
+        var sender = new PointOfSale("Sender");
+        sender.AddStockItem(model);
+        sender.StockItems.Single().Quantity = 8;
+
+        var receiver = new PointOfSale("Receiver");
+        receiver.AddStockItem(model);
+
+        uow.DbContext.AddRange(cat, model, sender, receiver);
+        await uow.DbContext.SaveChangesAsync();
+
+        var vm = new InternalTransferViewModel
+        {
+            PointOfSaleId = sender.Id,
+            ReceiverId = receiver.Id,
+            GarmentModelId = model.Id,
+            Quantity = 5,
+            Date = new DateOnly(2025, 5, 22)
+        };
+
+        var handler = new InternalTransferRequestHandler(uow);
+        var res = await handler.Handle(new InternalTransferRequest(vm, FakeUser), default);
+
+        Assert.True(res.Ok);
+
+        var senderQty = await uow.DbContext.Set<StockItem>()
+            .Where(x => x.PointOfSale.Id == sender.Id && x.GarmentModel.Id == model.Id)
+            .Select(x => x.Quantity)
+            .SingleAsync();
+        var receiverQty = await uow.DbContext.Set<StockItem>()
+            .Where(x => x.PointOfSale.Id == receiver.Id && x.GarmentModel.Id == model.Id)
+            .Select(x => x.Quantity)
+            .SingleAsync();
+
+        Assert.Equal(3, senderQty);
+        Assert.Equal(5, receiverQty);
     }
 }

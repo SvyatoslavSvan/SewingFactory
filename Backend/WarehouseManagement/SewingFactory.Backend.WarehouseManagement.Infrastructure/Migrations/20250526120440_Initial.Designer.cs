@@ -12,7 +12,7 @@ using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250524190955_Initial")]
+    [Migration("20250526120440_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -128,6 +128,37 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base.Operation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("OperationType")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Operations", (string)null);
+
+                    b.HasDiscriminator<string>("OperationType").HasValue("Operation");
+
+                    b.UseTphMappingStrategy();
+                });
+
             modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.GarmentCategory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -161,36 +192,6 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("GarmentModels", (string)null);
-                });
-
-            modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<string>("OperationType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Operations", (string)null);
-
-                    b.HasDiscriminator<string>("OperationType").HasValue("WriteOff");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.PointOfSale", b =>
@@ -410,7 +411,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.InternalTransferOperation", b =>
                 {
-                    b.HasBaseType("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operation");
+                    b.HasBaseType("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base.Operation");
 
                     b.Property<Guid>("ReceiverId")
                         .HasColumnType("uuid");
@@ -418,6 +419,27 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                     b.HasIndex("ReceiverId");
 
                     b.HasDiscriminator().HasValue("InternalTransfer");
+                });
+
+            modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.ReceiveOperation", b =>
+                {
+                    b.HasBaseType("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base.Operation");
+
+                    b.HasDiscriminator().HasValue("Receive");
+                });
+
+            modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.SaleOperation", b =>
+                {
+                    b.HasBaseType("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base.Operation");
+
+                    b.HasDiscriminator().HasValue("Sale");
+                });
+
+            modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.WriteOffOperation", b =>
+                {
+                    b.HasBaseType("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base.Operation");
+
+                    b.HasDiscriminator().HasValue("WriteOff");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -471,6 +493,17 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base.Operation", b =>
+                {
+                    b.HasOne("SewingFactory.Backend.WarehouseManagement.Domain.Entities.PointOfSale", "Owner")
+                        .WithMany("Operations")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.GarmentModel", b =>
                 {
                     b.HasOne("SewingFactory.Backend.WarehouseManagement.Domain.Entities.GarmentCategory", "Category")
@@ -499,17 +532,6 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
 
                     b.Navigation("Price")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operation", b =>
-                {
-                    b.HasOne("SewingFactory.Backend.WarehouseManagement.Domain.Entities.PointOfSale", "Owner")
-                        .WithMany("Operations")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("SewingFactory.Backend.WarehouseManagement.Domain.Entities.StockItem", b =>

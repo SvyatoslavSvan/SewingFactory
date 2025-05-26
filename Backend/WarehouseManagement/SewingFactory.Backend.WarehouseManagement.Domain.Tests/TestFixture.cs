@@ -1,4 +1,5 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Tests;
 
@@ -16,7 +17,7 @@ internal static class TestFixture
         StockItem stock) CreatePOS(int initialQty = 10)
     {
         var category = new GarmentCategory("T-Shirts", []);
-        var model = new GarmentModel("Classic Tee", category, default);
+        var model = new GarmentModel("Classic Tee", category, Money.Zero);
 
         var pos = new PointOfSale("Main store");
         pos.AddStockItem(model);

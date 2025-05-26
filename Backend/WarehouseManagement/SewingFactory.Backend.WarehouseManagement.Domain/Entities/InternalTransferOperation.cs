@@ -1,4 +1,5 @@
-﻿using SewingFactory.Common.Domain.Exceptions;
+﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 
@@ -17,8 +18,7 @@ public sealed class InternalTransferOperation : Operation
         DateOnly date,
         PointOfSale receiver) : base(owner,
         quantity,
-        date,
-        OperationType.InternalTransfer)
+        date)
     {
         Receiver = receiver;
         ReceiverId = receiver.Id;

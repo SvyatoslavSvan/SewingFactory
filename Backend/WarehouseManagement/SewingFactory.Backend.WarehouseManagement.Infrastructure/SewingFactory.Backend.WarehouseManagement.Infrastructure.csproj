@@ -22,5 +22,9 @@
 		<ProjectReference Include="..\SewingFactory.Backend.WarehouseManagement.Domain\SewingFactory.Backend.WarehouseManagement.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
+
 
 </Project>

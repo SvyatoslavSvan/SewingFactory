@@ -231,10 +231,10 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OperationType = table.Column<string>(type: "text", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
+                    OperationType = table.Column<string>(type: "character varying(21)", maxLength: 21, nullable: false),
                     ReceiverId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
