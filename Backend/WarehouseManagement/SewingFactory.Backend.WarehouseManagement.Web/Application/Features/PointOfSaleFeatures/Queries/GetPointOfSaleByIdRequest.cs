@@ -29,12 +29,15 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Poi
         {
             var pointOfSale = await unitOfWork.GetRepository<PointOfSale>()
                 .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Id,
-                    include: x => x.Include(pointOfSale => pointOfSale.StockItems).ThenInclude(stockItem => stockItem.GarmentModel));
+                    include: x => x.Include(pointOfSale => pointOfSale.StockItems)
+                        .ThenInclude(stockItem => stockItem.GarmentModel)
+                        .Include(pointOfSale => pointOfSale.Operations));
 
             if (pointOfSale is null)
             {
                 Operation.Error(new SewingFactoryNotFoundException($"{nameof(PointOfSale)} with key {request.Id} was not found"));
             }
+
             return Operation.Result(mapper.Map<PointOfSaleDetailsReadViewModel>(pointOfSale));
         }
     }

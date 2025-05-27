@@ -27,12 +27,6 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Poi
                     o => o.MapFrom(x => x.Name))
                 .ForAllOtherMembers(opt => opt.Ignore());
 
-            CreateMap<StockItem, StockItemReadViewModel>()
-                .ForMember(x => x.Quantity,
-                    o => o.MapFrom(x => x.Quantity))
-                .ForMember(x => x.GarmentModel,
-                    o => o.MapFrom(x => x.GarmentModel));
-
             CreateMap<PointOfSale, PointOfSaleDetailsReadViewModel>()
                 .ForMember(x => x.Id,
                     o => o.MapFrom(x => x.Id))
@@ -40,7 +34,16 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Poi
                     o => o.MapFrom(x => x.Name))
                 .ForMember(x => x.StockItems,
                 o => o.MapFrom(x => x.StockItems))
+                .ForMember(x => x.Operations,
+                    o => o.MapFrom(x => x.Operations))
                 .ForAllOtherMembers(x => x.Ignore());
+
+            CreateMap<StockItem, StockItemReadViewModel>()
+                .ForMember(x => x.Quantity,
+                    o => o.MapFrom(x => x.Quantity))
+                .ForMember(x => x.GarmentModel,
+                    o => o.MapFrom(x => x.GarmentModel));
+
         }
     }
 }

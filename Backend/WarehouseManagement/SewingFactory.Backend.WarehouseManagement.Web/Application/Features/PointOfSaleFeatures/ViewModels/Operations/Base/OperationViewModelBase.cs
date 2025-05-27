@@ -1,4 +1,4 @@
-﻿namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Base
+﻿namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Operations.Base
 {
     public abstract class OperationViewModelBase
     {

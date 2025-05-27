@@ -11,6 +11,7 @@
 		<PackageReference Include="Automapper" Version="14.0.0" />
 		<PackageReference Include="Calabonga.AspNetCore.AppDefinitions" Version="4.0.0" />
 		<PackageReference Include="Calabonga.Results" Version="1.1.0" />
+		<PackageReference Include="ClosedXML" Version="0.105.0" />
 		<PackageReference Include="FluentValidation" Version="12.0.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
 		<PackageReference Include="GitInfo" Version="3.5.0">

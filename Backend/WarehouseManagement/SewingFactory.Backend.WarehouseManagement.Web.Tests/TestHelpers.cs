@@ -29,6 +29,7 @@ public static class TestHelpers
                 cfg.AddProfile<GarmentCategoryProfile>();
                 cfg.AddProfile<GarmentModelMappingProfile>();
                 cfg.AddProfile<PointOfSaleMappingProfile>();
+                cfg.AddProfile<OperationMappingProfile>();
             },
             typeof(GarmentCategoryProfile).Assembly);
 

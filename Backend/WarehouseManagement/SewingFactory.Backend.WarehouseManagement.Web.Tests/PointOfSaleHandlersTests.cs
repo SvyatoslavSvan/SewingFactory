@@ -35,7 +35,7 @@ public sealed class PointOfSaleHandlersTests
         var handler = new CreatePointOfSaleHandler(uow, sp.GetRequiredService<IMapper>());
         var vm = new PointOfSaleCreateViewModel { Name = "Outlet" };
 
-        var result = await handler.Handle(new CreateRequest<PointOfSaleCreateViewModel, PointOfSale, PointOfSaleReadViewModel>(vm, FakeUser), default);
+        var result = await handler.Handle(new CreateRequest<PointOfSaleCreateViewModel, PointOfSale, PointOfSaleDetailsReadViewModel>(vm, FakeUser), default);
 
         Assert.True(result.Ok);
         Assert.Equal("Outlet", result.Result!.Name);
@@ -99,28 +99,62 @@ public sealed class PointOfSaleHandlersTests
     }
 
     [Fact]
-    public async Task GetPointOfSaleById_Returns_Details_With_Stocks()
+    public async Task GetPointOfSaleById_Returns_Details_With_Stocks_And_Operations()
     {
+        //arrange
         var sp = TestHelpers.BuildServices();
         var uow = (UnitOfWork<ApplicationDbContext>)sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
 
         var cat = new GarmentCategory("Tees", []);
         var model = new GarmentModel("Classic", cat, Money.Zero);
+
         var pos = new PointOfSale("Main");
         pos.AddStockItem(model);
-        pos.StockItems.Single().IncreaseQuantity(4); 
+        pos.StockItems.Single().IncreaseQuantity(4);      
 
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
+        await new ReceiveRequestHandler(uow).Handle(
+            new ReceiveRequest(
+                new CreateOperationViewModel
+                {
+                    PointOfSaleId = pos.Id,
+                    GarmentModelId = model.Id,
+                    Quantity = 2,
+                    Date = new DateOnly(2025, 5, 10)
+                },
+                FakeUser), default);
+
+        await new SellRequestRequestHandler(uow).Handle(
+            new SellRequest(
+                new CreateOperationViewModel
+                {
+                    PointOfSaleId = pos.Id,
+                    GarmentModelId = model.Id,
+                    Quantity = 1,
+                    Date = new DateOnly(2025, 5, 11)
+                },
+                FakeUser), default);
+
+        // --- act ---
         var handler = new GetPointOfSaleByIdHandler(uow, sp.GetRequiredService<IMapper>());
         var res = await handler.Handle(new GetPointOfSaleByIdRequest(FakeUser, pos.Id), default);
 
+        // --- assert ---
         Assert.True(res.Ok);
-        Assert.Equal("Main", res.Result!.Name);
-        Assert.Single(res.Result.StockItems);          
-        Assert.Equal(4, res.Result.StockItems.First().Quantity);
+
+        var vm = res.Result!;
+        Assert.Equal("Main", vm.Name);
+
+        Assert.Single(vm.StockItems);
+        Assert.Equal(5, vm.StockItems.First().Quantity);      // 4 + 2 – 1
+
+        Assert.Equal(2, vm.Operations.Count);
+        Assert.Single(vm.Operations.OfType<ReadReceiveOperationViewModel>());
+        Assert.Single(vm.Operations.OfType<ReadSellOperationViewModel>());
     }
+
 
     [Fact]
     public async Task ReceiveRequest_Increases_Stock_And_Persists()
@@ -136,7 +170,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vm = new OperationViewModel
+        var vm = new CreateOperationViewModel
         {
             PointOfSaleId = pos.Id,
             GarmentModelId = model.Id,
@@ -172,7 +206,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vm = new OperationViewModel
+        var vm = new CreateOperationViewModel
         {
             PointOfSaleId = pos.Id,
             GarmentModelId = model.Id,
@@ -208,7 +242,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vm = new OperationViewModel
+        var vm = new CreateOperationViewModel
         {
             PointOfSaleId = pos.Id,
             GarmentModelId = model.Id,
@@ -247,7 +281,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, sender, receiver);
         await uow.DbContext.SaveChangesAsync();
 
-        var vm = new InternalTransferViewModel
+        var vm = new CreateInternalTransferViewModel
         {
             PointOfSaleId = sender.Id,
             ReceiverId = receiver.Id,
@@ -290,7 +324,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vmSell = new OperationViewModel
+        var vmSell = new CreateOperationViewModel
         {
             PointOfSaleId = pos.Id,
             GarmentModelId = model.Id,
@@ -328,7 +362,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vmSell = new OperationViewModel
+        var vmSell = new CreateOperationViewModel
         {
             PointOfSaleId = pos.Id,
             GarmentModelId = model.Id,
@@ -338,7 +372,7 @@ public sealed class PointOfSaleHandlersTests
         await new SellRequestRequestHandler(uow)
             .Handle(new SellRequest(vmSell, FakeUser), default);
 
-        var vmReceive = new OperationViewModel
+        var vmReceive = new CreateOperationViewModel
         {
             PointOfSaleId = pos.Id,
             GarmentModelId = model.Id,

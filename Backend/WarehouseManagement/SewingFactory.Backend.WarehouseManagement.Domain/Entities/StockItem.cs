@@ -41,6 +41,8 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities
 
         public int ShortageQuantity { get; private set; }
 
+        public decimal SumOfStock => (Quantity + ShortageQuantity) * _garmentModel.Price.Amount;
+
         public void ReduceQuantity(int quantityToReduce)
         {
             if (quantityToReduce <= Quantity)

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Operations;
 using SewingFactory.Common.Domain.Exceptions;
 using System.Security.Claims;
 using Operation = Calabonga.OperationResults.Operation;
@@ -12,7 +13,7 @@ using Operation = Calabonga.OperationResults.Operation;
 namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries
 {
     public record InternalTransferRequest(
-    InternalTransferViewModel Model,
+    CreateInternalTransferViewModel Model,
     ClaimsPrincipal User
 ) : IRequest<OperationEmpty<SewingFactoryNotFoundException, Exception>>;
 
