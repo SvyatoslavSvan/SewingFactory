@@ -5,15 +5,14 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Qu
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries
-{
-    public record UpdatePointOfSaleRequest(
-        PointOfSaleEditViewModel Model,
-        ClaimsPrincipal User)
-        : UpdateRequest<PointOfSaleEditViewModel, PointOfSale>(Model, User);
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 
-    public sealed class UpdatePointOfSaleHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
-        : UpdateRequestHandler<PointOfSaleEditViewModel, PointOfSale>(unitOfWork, mapper);
-}
+public record UpdatePointOfSaleRequest(
+    PointOfSaleEditViewModel Model,
+    ClaimsPrincipal User)
+    : UpdateRequest<PointOfSaleEditViewModel, PointOfSale>(Model, User);
+
+public sealed class UpdatePointOfSaleHandler(
+    IUnitOfWork unitOfWork,
+    IMapper mapper)
+    : UpdateRequestHandler<PointOfSaleEditViewModel, PointOfSale>(unitOfWork, mapper);

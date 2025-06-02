@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.ViewModels;
 using System.Security.Claims;
@@ -17,8 +18,9 @@ public class GarmentCategoryHandlersTests
     private static async Task<UnitOfWork<ApplicationDbContext>> SeedAsync(IServiceProvider sp)
     {
         var uow = (UnitOfWork<ApplicationDbContext>)sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
-        uow.DbContext.GarmentCategories.Add(new GarmentCategory("T-shirts", new()));
+        uow.DbContext.GarmentCategories.Add(new GarmentCategory("T-shirts", new List<GarmentModel>()));
         await uow.DbContext.SaveChangesAsync();
+
         return uow;
     }
 
@@ -31,7 +33,7 @@ public class GarmentCategoryHandlersTests
         var handler = new CreateGarmentCategoryHandler(uow, sp.GetRequiredService<IMapper>());
         var vm = new GarmentCategoryCreateViewModel { Name = "Jeans" };
 
-        var result = await handler.Handle(new(vm, FakeUser), default);
+        var result = await handler.Handle(new CreateRequest<GarmentCategoryCreateViewModel, GarmentCategory, GarmentCategoryReadViewModel>(vm, FakeUser), default);
 
         Assert.True(result.Ok);
         Assert.Equal("Jeans", result.Result!.Name);
@@ -46,7 +48,7 @@ public class GarmentCategoryHandlersTests
         var uow = await SeedAsync(sp);
 
         var handler = new GetAllGarmentCategoriesHandler(uow, sp.GetRequiredService<IMapper>());
-        var res = await handler.Handle(new(FakeUser), default);
+        var res = await handler.Handle(new GetAllRequest<GarmentCategory, GarmentCategoryReadViewModel>(FakeUser), default);
 
         Assert.True(res.Ok);
         Assert.Single(res.Result!);
@@ -62,7 +64,7 @@ public class GarmentCategoryHandlersTests
         var handler = new UpdateGarmentCategoryHandler(uow, sp.GetRequiredService<IMapper>());
 
         var editVm = new GarmentCategoryEditViewModel { Id = entity.Id, Name = "NewName" };
-        var res = await handler.Handle(new(editVm, FakeUser), default);
+        var res = await handler.Handle(new UpdateRequest<GarmentCategoryEditViewModel, GarmentCategory>(editVm, FakeUser), default);
 
         Assert.True(res.Ok);
         Assert.Equal("NewName", res.Result!.Name);
@@ -75,8 +77,8 @@ public class GarmentCategoryHandlersTests
         var uow = await SeedAsync(sp);
 
         var id = await uow.DbContext.GarmentCategories
-            .AsNoTracking()         
-            .Select(x => x.Id)
+            .AsNoTracking()
+            .Select(selector: x => x.Id)
             .FirstAsync();
 
         uow.DbContext.ChangeTracker.Clear();

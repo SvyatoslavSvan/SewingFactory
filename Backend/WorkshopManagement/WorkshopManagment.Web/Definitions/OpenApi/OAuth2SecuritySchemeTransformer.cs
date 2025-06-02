@@ -7,7 +7,7 @@ using SewingFactory.Common.Domain.Base;
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.OpenApi;
 
 /// <summary>
-/// Swagger security configuration scheme
+///     Swagger security configuration scheme
 /// </summary>
 public sealed class OAuth2SecuritySchemeTransformer : IOpenApiDocumentTransformer
 {
@@ -25,9 +25,9 @@ public sealed class OAuth2SecuritySchemeTransformer : IOpenApiDocumentTransforme
     public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
     {
         var authenticationSchemes = await _authenticationSchemeProvider.GetAllSchemesAsync();
-        if (authenticationSchemes.Any(authScheme => authScheme.Name == OpenIddictServerAspNetCoreDefaults.AuthenticationScheme))
+        if (authenticationSchemes.Any(predicate: authScheme => authScheme.Name == OpenIddictServerAspNetCoreDefaults.AuthenticationScheme))
         {
-            var reference = new OpenApiReference() { Id = "oauth2", Type = ReferenceType.SecurityScheme };
+            var reference = new OpenApiReference { Id = "oauth2", Type = ReferenceType.SecurityScheme };
             var scheme = new OpenApiSecurityScheme
             {
                 Reference = reference,
@@ -52,13 +52,13 @@ public sealed class OAuth2SecuritySchemeTransformer : IOpenApiDocumentTransforme
             document.Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
             document.SecurityRequirements = [requirement];
             document.Components.SecuritySchemes[scheme.Reference.Id] = scheme;
-            document.Info = new()
+            document.Info = new OpenApiInfo
             {
-                License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://mit-license.org/") },
+                License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://mit-license.org/") },
                 Title = AppData.ServiceName,
                 Version = OpenApiDefinition.AppVersion,
                 Description = AppData.ServiceDescription,
-                Contact = new() { Name = "Sergei Calabonga", Url = new("https://www.calabonga.net"), }
+                Contact = new OpenApiContact { Name = "Sergei Calabonga", Url = new Uri("https://www.calabonga.net") }
             };
         }
     }

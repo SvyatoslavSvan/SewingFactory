@@ -1,5 +1,4 @@
-﻿using Calabonga.OperationResults;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.Queries;
@@ -25,6 +24,6 @@ public sealed class EmployeeRouter : CommandRouter<Employee, EmployeeReadViewMod
     public async Task<IResult> GetSalaryReport(
         [FromServices] IMediator mediator, [FromQuery] DateOnly from, [FromQuery] DateOnly to,
         HttpContext context)
-        => await mediator.Send(new GetSalaryReportRequest(context.User, new DateRange(from,to)),
+        => await mediator.Send(new GetSalaryReportRequest(context.User, new DateRange(from, to)),
             context.RequestAborted);
 }

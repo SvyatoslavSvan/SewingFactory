@@ -14,7 +14,7 @@ public class WorkshopDocumentTests
     {
         var model = new GarmentModel("ModelX", "desc", new List<Process>(), new GarmentCategory("Cat"));
         var dept = new Department("Dept");
-        Assert.Throws<SewingFactoryArgumentException>(() =>
+        Assert.Throws<SewingFactoryArgumentException>(testCode: () =>
             WorkshopDocument.CreateInstance("Doc1", -5, DateOnly.FromDateTime(DateTime.Now), model, dept));
     }
 
@@ -23,7 +23,7 @@ public class WorkshopDocumentTests
     {
         var dept = new Department("Dept");
         // Теперь мы ожидаем NullReferenceException, поскольку код прямо обращается к garmentModel
-        Assert.Throws<NullReferenceException>(() =>
+        Assert.Throws<NullReferenceException>(testCode: () =>
             WorkshopDocument.CreateInstance("Doc1", 1, new DateOnly(2025, 1, 1), null!, dept));
     }
 
@@ -37,7 +37,7 @@ public class WorkshopDocumentTests
         var proc1 = new Process("P1", dept, new Money(10m));
         var proc2 = new Process("P2", dept, new Money(20m));
         var procOther = new Process("P3", otherDept, new Money(5m));
-        var model = new GarmentModel("Model1","desc", 
+        var model = new GarmentModel("Model1", "desc",
             new List<Process> { proc1, proc2, procOther }, new GarmentCategory("Cat"));
 
         // Act
@@ -59,7 +59,7 @@ public class WorkshopDocumentTests
         // Arrange: document with one task and one employee repeat
         var dept = new Department("Dep");
         var process = new Process("Proc", dept, new Money(0));
-        var model = new GarmentModel("M","desc", new List<Process> { process }, new GarmentCategory("Cat"));
+        var model = new GarmentModel("M", "desc", new List<Process> { process }, new GarmentCategory("Cat"));
         var doc = WorkshopDocument.CreateInstance("Doc", 1, DateOnly.FromDateTime(DateTime.Now), model, dept);
         var emp = new RateBasedEmployee("E", "ID", new Money(0), dept);
         // Initially no employees involved

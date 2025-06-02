@@ -9,36 +9,38 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOf
 using SewingFactory.Common.Domain.Exceptions;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
+
+public sealed record GetPointOfSaleByIdRequest(
+    ClaimsPrincipal User,
+    Guid Id)
+    : GetByIdRequest<PointOfSale, PointOfSaleDetailsReadViewModel>(User,
+        Id);
+
+public sealed class GetPointOfSaleByIdHandler(
+    IUnitOfWork<ApplicationDbContext> unitOfWork,
+    IMapper mapper)
+    : GetByIdRequestHandler<PointOfSale, PointOfSaleDetailsReadViewModel>(unitOfWork,
+        mapper)
 {
-    public record GetPointOfSaleByIdRequest(
-        ClaimsPrincipal User,
-        Guid Id)
-        : GetByIdRequest<PointOfSale, PointOfSaleDetailsReadViewModel>(User,
-            Id);
+    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
+    private readonly IMapper _mapper = mapper;
 
-    public sealed class GetPointOfSaleByIdHandler(
-        IUnitOfWork<ApplicationDbContext> unitOfWork,
-        IMapper mapper)
-        : GetByIdRequestHandler<PointOfSale, PointOfSaleDetailsReadViewModel>(unitOfWork,
-            mapper)
+    public override async Task<Operation<PointOfSaleDetailsReadViewModel, SewingFactoryNotFoundException>> Handle(
+        GetByIdRequest<PointOfSale, PointOfSaleDetailsReadViewModel> request,
+        CancellationToken cancellationToken)
     {
-        public override async Task<Operation<PointOfSaleDetailsReadViewModel, SewingFactoryNotFoundException>> Handle(
-            GetByIdRequest<PointOfSale, PointOfSaleDetailsReadViewModel> request,
-            CancellationToken cancellationToken)
+        var pointOfSale = await _unitOfWork.GetRepository<PointOfSale>()
+            .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Id,
+                include: x => x.Include(navigationPropertyPath: pointOfSale => pointOfSale.StockItems)
+                    .ThenInclude(navigationPropertyPath: stockItem => stockItem.GarmentModel)
+                    .Include(navigationPropertyPath: pointOfSale => pointOfSale.Operations));
+
+        if (pointOfSale is null)
         {
-            var pointOfSale = await unitOfWork.GetRepository<PointOfSale>()
-                .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Id,
-                    include: x => x.Include(pointOfSale => pointOfSale.StockItems)
-                        .ThenInclude(stockItem => stockItem.GarmentModel)
-                        .Include(pointOfSale => pointOfSale.Operations));
-
-            if (pointOfSale is null)
-            {
-                Operation.Error(new SewingFactoryNotFoundException($"{nameof(PointOfSale)} with key {request.Id} was not found"));
-            }
-
-            return Operation.Result(mapper.Map<PointOfSaleDetailsReadViewModel>(pointOfSale));
+            Operation.Error(new SewingFactoryNotFoundException($"{nameof(PointOfSale)} with key {request.Id} was not found"));
         }
+
+        return Operation.Result(_mapper.Map<PointOfSaleDetailsReadViewModel>(pointOfSale));
     }
 }

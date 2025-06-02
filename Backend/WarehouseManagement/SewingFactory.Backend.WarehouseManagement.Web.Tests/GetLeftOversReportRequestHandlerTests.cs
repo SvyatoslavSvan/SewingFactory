@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Security.Claims;
-using Calabonga.UnitOfWork;
+﻿using Calabonga.UnitOfWork;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
@@ -9,6 +7,8 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOf
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.ValueObjects;
+using System.Reflection;
+using System.Security.Claims;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;
 
@@ -16,8 +16,8 @@ public class GetLeftOversReportRequestHandlerTests
 {
     private static void SetId(object entity, Guid id) // AAA
         => typeof(Identity)
-           .GetField("<Id>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!
-           .SetValue(entity, id);
+            .GetField("<Id>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(entity, id);
 
     private static PointOfSale SeedPointOfSale(IServiceProvider sp, Guid id) // AAA
     {
@@ -35,12 +35,8 @@ public class GetLeftOversReportRequestHandlerTests
         var ctx = sp.GetRequiredService<ApplicationDbContext>();
         ctx.AddRange(pants, model, pos);
         ctx.SaveChanges();
-        return pos;
-    }
 
-    private sealed class StubReportProvider(byte[] bytes) : ILeftoverReportProvider
-    {
-        public byte[] Build(PointOfSale _) => bytes;
+        return pos;
     }
 
     [Fact(DisplayName = "Handle: returns file when POS exists")]
@@ -81,5 +77,10 @@ public class GetLeftOversReportRequestHandlerTests
         // Assert
         var notFound = Assert.IsType<NotFound<string>>(res);
         Assert.Contains(id.ToString(), notFound.Value, StringComparison.Ordinal);
+    }
+
+    private sealed class StubReportProvider(byte[] bytes) : ILeftoverReportProvider
+    {
+        public byte[] Build(PointOfSale _) => bytes;
     }
 }

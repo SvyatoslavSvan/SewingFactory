@@ -9,8 +9,8 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 /// </summary>
 public sealed class Timesheet : Identity
 {
-    private readonly List<WorkDay> _workDays = [];
     private readonly List<RateBasedEmployee> _employees = [];
+    private readonly List<WorkDay> _workDays = [];
 
     /// <summary>
     ///     Default constructor for EF Core
@@ -86,7 +86,7 @@ public sealed class Timesheet : Identity
 
         var hoursDays = GetHoursDays(date);
 
-        return new Timesheet(workDays, date, hoursDays.Item1, hoursDays.Item2,employees);
+        return new Timesheet(workDays, date, hoursDays.Item1, hoursDays.Item2, employees);
     }
 
     public int HoursWorked(IHasRate employee) => _workDays.Where(predicate: x => x.Employee == employee).Sum(selector: x => x.Hours);

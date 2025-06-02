@@ -15,7 +15,7 @@ public class LeftoverReportProviderTests
             .GetField("<Id>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!
             .SetValue(entity, id);
 
-    private static PointOfSale CreatePointOfSale() 
+    private static PointOfSale CreatePointOfSale()
     {
         var pants = new GarmentCategory("Pants", []);
         var winterPants = new GarmentModel("Winter Pants", pants, new Money(1_200m));

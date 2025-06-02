@@ -35,12 +35,12 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Sell with insufficient stock records shortage and zeroes qty")]
     public void Sell_Insufficient_Stock_Records_Shortage()
     {
-        var (pos, model, stock) = TestFixture.CreatePOS(initialQty: 1);
+        var (pos, model, stock) = TestFixture.CreatePOS(1);
 
         pos.Sell(model.Id, 5, new DateOnly(2025, 5, 22));
 
         Assert.Equal(0, stock.Quantity);
-        Assert.Equal(4, stock.ShortageQuantity);               
+        Assert.Equal(4, stock.ShortageQuantity);
         Assert.Single(pos.Operations);
         Assert.IsType<SaleOperation>(pos.Operations.Single());
     }
@@ -67,8 +67,8 @@ public sealed class PointOfSaleTests
 
         sender.Transfer(model, 5, new DateOnly(2025, 5, 22), receiver);
 
-        Assert.Equal(3, senderStock.Quantity); 
-        Assert.Equal(5, receiverStock.Quantity); 
+        Assert.Equal(3, senderStock.Quantity);
+        Assert.Equal(5, receiverStock.Quantity);
 
         Assert.Single(sender.Operations);
         Assert.IsType<InternalTransferOperation>(sender.Operations.Single());
@@ -81,7 +81,7 @@ public sealed class PointOfSaleTests
     public void AddStockItem_DuplicateModel_Throws()
     {
         var (pos, model, _) = TestFixture.CreatePOS();
-        Assert.Throws<SewingFactoryInvalidOperationException>(() => pos.AddStockItem(model));
+        Assert.Throws<SewingFactoryInvalidOperationException>(testCode: () => pos.AddStockItem(model));
     }
 
     [Fact(DisplayName = "Sell fails when model is not found in stock")]
@@ -91,7 +91,7 @@ public sealed class PointOfSaleTests
         var missingId = Guid.NewGuid();
 
         Assert.Throws<SewingFactoryInvalidOperationException>(
-            () => pos.Sell(missingId, 1, new DateOnly(2025, 5, 22)));
+            testCode: () => pos.Sell(missingId, 1, new DateOnly(2025, 5, 22)));
     }
 
     [Fact(DisplayName = "Write-off fails when model is not found in stock")]
@@ -101,13 +101,13 @@ public sealed class PointOfSaleTests
         var missingId = Guid.NewGuid();
 
         Assert.Throws<SewingFactoryInvalidOperationException>(
-            () => pos.WriteOff(missingId, 1, new DateOnly(2025, 5, 22)));
+            testCode: () => pos.WriteOff(missingId, 1, new DateOnly(2025, 5, 22)));
     }
 
     [Fact(DisplayName = "Write-off with insufficient stock records shortage and zeroes qty")]
     public void WriteOff_Insufficient_Stock_Records_Shortage()
     {
-        var (pos, model, stock) = TestFixture.CreatePOS(initialQty: 1);
+        var (pos, model, stock) = TestFixture.CreatePOS(1);
 
         pos.WriteOff(model.Id, 5, new DateOnly(2025, 5, 22));
 
@@ -127,22 +127,22 @@ public sealed class PointOfSaleTests
         var fakeModel = new GarmentModel("Fake Tee", fakeCategory, Money.Zero);
 
         Assert.Throws<SewingFactoryInvalidOperationException>(
-            () => sender.Transfer(fakeModel, 1, new DateOnly(2025, 5, 22), receiver));
+            testCode: () => sender.Transfer(fakeModel, 1, new DateOnly(2025, 5, 22), receiver));
     }
 
     [Fact(DisplayName = "Transfer with insufficient stock records shortage on sender, delivers to receiver")]
     public void Transfer_Insufficient_Stock_Records_Shortage()
     {
-        var (sender, model, senderStock) = TestFixture.CreatePOS(initialQty: 2);
+        var (sender, model, senderStock) = TestFixture.CreatePOS(2);
         var receiver = new PointOfSale("Receiver");
         receiver.AddStockItem(model);
-        var receiverStock = receiver.StockItems.First();       
+        var receiverStock = receiver.StockItems.First();
 
         sender.Transfer(model, 5, new DateOnly(2025, 5, 22), receiver);
 
         Assert.Equal(0, senderStock.Quantity);
-        Assert.Equal(3, senderStock.ShortageQuantity);         
-        Assert.Equal(5, receiverStock.Quantity);               
+        Assert.Equal(3, senderStock.ShortageQuantity);
+        Assert.Equal(5, receiverStock.Quantity);
         Assert.Equal(0, receiverStock.ShortageQuantity);
 
         Assert.Single(sender.Operations);

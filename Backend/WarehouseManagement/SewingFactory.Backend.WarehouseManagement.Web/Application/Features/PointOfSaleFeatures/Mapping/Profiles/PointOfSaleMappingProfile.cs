@@ -3,47 +3,45 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOf
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.StockItems;
 using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Mapping.Profiles
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Mapping.Profiles;
+
+public class PointOfSaleMappingProfile : AutoMapper.Profile
 {
-    public class PointOfSaleMappingProfile : AutoMapper.Profile
+    public PointOfSaleMappingProfile()
     {
-        public PointOfSaleMappingProfile()
-        {
-            CreateMap<PointOfSale, PointOfSaleReadViewModel>()
-                .ForMember(x => x.Name,
-                    o => o.MapFrom(x => x.Name))
-                .ForMember(x => x.Id,
-                    o => o.MapFrom(x => x.Id))
-                .ForAllOtherMembers(opt => opt.Ignore());
+        CreateMap<PointOfSale, PointOfSaleReadViewModel>()
+            .ForMember(destinationMember: x => x.Name,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Name))
+            .ForMember(destinationMember: x => x.Id,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Id))
+            .ForAllOtherMembers(memberOptions: opt => opt.Ignore());
 
-            CreateMap<PointOfSaleCreateViewModel, PointOfSale>()
-                .ConstructUsing(src => new PointOfSale(
-                    src.Name
-                ))
-                .ForAllOtherMembers(opt => opt.Ignore());
+        CreateMap<PointOfSaleCreateViewModel, PointOfSale>()
+            .ConstructUsing(ctor: src => new PointOfSale(
+                src.Name
+            ))
+            .ForAllOtherMembers(memberOptions: opt => opt.Ignore());
 
-            CreateMap<PointOfSaleEditViewModel, PointOfSale>()
-                .ForMember(x => x.Name,
-                    o => o.MapFrom(x => x.Name))
-                .ForAllOtherMembers(opt => opt.Ignore());
+        CreateMap<PointOfSaleEditViewModel, PointOfSale>()
+            .ForMember(destinationMember: x => x.Name,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Name))
+            .ForAllOtherMembers(memberOptions: opt => opt.Ignore());
 
-            CreateMap<PointOfSale, PointOfSaleDetailsReadViewModel>()
-                .ForMember(x => x.Id,
-                    o => o.MapFrom(x => x.Id))
-                .ForMember(x => x.Name,
-                    o => o.MapFrom(x => x.Name))
-                .ForMember(x => x.StockItems,
-                o => o.MapFrom(x => x.StockItems))
-                .ForMember(x => x.Operations,
-                    o => o.MapFrom(x => x.Operations))
-                .ForAllOtherMembers(x => x.Ignore());
+        CreateMap<PointOfSale, PointOfSaleDetailsReadViewModel>()
+            .ForMember(destinationMember: x => x.Id,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Id))
+            .ForMember(destinationMember: x => x.Name,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Name))
+            .ForMember(destinationMember: x => x.StockItems,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.StockItems))
+            .ForMember(destinationMember: x => x.Operations,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Operations))
+            .ForAllOtherMembers(memberOptions: x => x.Ignore());
 
-            CreateMap<StockItem, StockItemReadViewModel>()
-                .ForMember(x => x.Quantity,
-                    o => o.MapFrom(x => x.Quantity))
-                .ForMember(x => x.GarmentModel,
-                    o => o.MapFrom(x => x.GarmentModel));
-
-        }
+        CreateMap<StockItem, StockItemReadViewModel>()
+            .ForMember(destinationMember: x => x.Quantity,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Quantity))
+            .ForMember(destinationMember: x => x.GarmentModel,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.GarmentModel));
     }
 }

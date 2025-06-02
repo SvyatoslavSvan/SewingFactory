@@ -3,71 +3,71 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using System.Security.Cryptography;
 
-namespace SewingFactory.Backend.IdentityServer.Web.Definitions.ETagGenerator
+namespace SewingFactory.Backend.IdentityServer.Web.Definitions.ETagGenerator;
+
+/// <summary>
+///     ETag Generator
+/// </summary>
+public class ETagGeneratorDefinition : AppDefinition
 {
+    public override bool Enabled => true;
+
     /// <summary>
-    /// ETag Generator
+    ///     Configure application for current application
     /// </summary>
-    public class ETagGeneratorDefinition : AppDefinition
-    {
+    /// <param name="app"></param>
+    public override void ConfigureApplication(WebApplication app) =>
+        app.Use(middleware: async (context, next) =>
+        {
+            var response = context.Response;
+            var originalStream = response.Body;
 
-        public override bool Enabled => true;
+            await using var ms = new MemoryStream();
+            response.Body = ms;
 
-        /// <summary>
-        /// Configure application for current application
-        /// </summary>
-        /// <param name="app"></param>
-        public override void ConfigureApplication(WebApplication app) =>
-            app.Use(async (context, next) =>
+            await next(context);
+
+            if (IsEtagSupported(response))
             {
-                var response = context.Response;
-                var originalStream = response.Body;
+                var checksum = CalculateChecksum(ms);
 
-                await using var ms = new MemoryStream();
-                response.Body = ms;
+                response.Headers[HeaderNames.ETag] = checksum;
 
-                await next(context);
-
-                if (IsEtagSupported(response))
+                if (context.Request.Headers.TryGetValue(HeaderNames.IfNoneMatch, out var etag) && checksum == etag)
                 {
-                    var checksum = CalculateChecksum(ms);
+                    response.StatusCode = StatusCodes.Status304NotModified;
 
-                    response.Headers[HeaderNames.ETag] = checksum;
-
-                    if (context.Request.Headers.TryGetValue(HeaderNames.IfNoneMatch, out var etag) && checksum == etag)
-                    {
-                        response.StatusCode = StatusCodes.Status304NotModified;
-                        return;
-                    }
+                    return;
                 }
-
-                ms.Position = 0;
-                await ms.CopyToAsync(originalStream);
-            });
-
-
-        private static bool IsEtagSupported(HttpResponse response)
-        {
-            if (response.StatusCode != StatusCodes.Status200OK)
-            {
-                return false;
             }
 
-            // The 100kb length limit is not based in science. Feel free to change
-            if (response.Body.Length > 100 * 1024)
-            {
-                return false;
-            }
-
-            return !response.Headers.ContainsKey(HeaderNames.ETag);
-        }
-
-        private static string CalculateChecksum(MemoryStream ms)
-        {
-            using var algorithm = SHA1.Create();
             ms.Position = 0;
-            var bytes = algorithm.ComputeHash(ms);
-            return $"\"{WebEncoders.Base64UrlEncode(bytes)}\"";
+            await ms.CopyToAsync(originalStream);
+        });
+
+
+    private static bool IsEtagSupported(HttpResponse response)
+    {
+        if (response.StatusCode != StatusCodes.Status200OK)
+        {
+            return false;
         }
+
+        // The 100kb length limit is not based in science. Feel free to change
+        if (response.Body.Length > 100 * 1024)
+        {
+            return false;
+        }
+
+        return !response.Headers.ContainsKey(HeaderNames.ETag);
+    }
+
+    private static string CalculateChecksum(MemoryStream ms)
+    {
+        using var algorithm = SHA1.Create();
+        ms.Position = 0;
+        var bytes = algorithm.ComputeHash(ms);
+
+        return $"\"{WebEncoders.Base64UrlEncode(bytes)}\"";
     }
 }

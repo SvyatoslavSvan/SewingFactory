@@ -14,11 +14,12 @@ public class WorkshopDocumentConfiguration : IdentityModelConfigurationBase<Work
         builder.Property(propertyExpression: x => x.CountOfModelsInvolved).IsRequired();
         builder.Property(propertyExpression: x => x.Date).IsRequired();
         builder.HasMany(navigationExpression: x => x.Tasks).WithOne(navigationExpression: x => x.Document).IsRequired();
-        builder.HasMany(x => x.Employees).WithMany(x => x.Documents);
-        builder.HasOne(w => w.Department).WithMany(d => d.Documents);
-        builder.Navigation(d => d.Tasks)
+        builder.HasMany(navigationExpression: x => x.Employees).WithMany(navigationExpression: x => x.Documents);
+        builder.HasOne(navigationExpression: w => w.Department).WithMany(navigationExpression: d => d.Documents);
+        builder.Navigation(navigationExpression: d => d.Tasks)
             .UsePropertyAccessMode(PropertyAccessMode.Field).HasField("_tasks");
-        builder.Navigation(d => d.Employees)
+
+        builder.Navigation(navigationExpression: d => d.Employees)
             .UsePropertyAccessMode(PropertyAccessMode.Field).HasField("_employees");
     }
 }

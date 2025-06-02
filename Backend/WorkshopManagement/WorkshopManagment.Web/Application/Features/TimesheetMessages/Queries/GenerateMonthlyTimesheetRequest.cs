@@ -10,7 +10,8 @@ public record GenerateMonthlyTimesheetRequest : IRequest;
 
 public class GenerateMonthlyTimesheetRequestHandler(
     IUnitOfWork unitOfWork,
-    IDateTimeProvider provider, ILogger<GenerateMonthlyTimesheetRequestHandler> logger) : IRequestHandler<GenerateMonthlyTimesheetRequest>
+    IDateTimeProvider provider,
+    ILogger<GenerateMonthlyTimesheetRequestHandler> logger) : IRequestHandler<GenerateMonthlyTimesheetRequest>
 {
     public async Task Handle(
         GenerateMonthlyTimesheetRequest request,
@@ -22,6 +23,7 @@ public class GenerateMonthlyTimesheetRequestHandler(
             null)
         {
             logger.LogError($"{nameof(Timesheet)} with {provider.CurrentMonthStart} already exist");
+
             return;
         }
 

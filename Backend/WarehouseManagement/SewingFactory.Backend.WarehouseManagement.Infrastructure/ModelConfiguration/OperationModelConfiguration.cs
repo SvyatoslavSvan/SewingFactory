@@ -4,23 +4,22 @@ using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfiguration.Base;
 
-namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfiguration
+namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfiguration;
+
+public class OperationModelConfiguration : IdentityModelConfigurationBase<Operation>
 {
-    public class OperationModelConfiguration : IdentityModelConfigurationBase<Operation>
+    protected override void AddBuilder(EntityTypeBuilder<Operation> builder)
     {
-        protected override void AddBuilder(EntityTypeBuilder<Operation> builder)
-        {
-            builder.HasOne(o => o.Owner)
-                .WithMany(p => p.Operations).HasForeignKey(x => x.OwnerId)
-                .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(navigationExpression: o => o.Owner)
+            .WithMany(navigationExpression: p => p.Operations).HasForeignKey(foreignKeyExpression: x => x.OwnerId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasDiscriminator<string>("OperationType")     
-                .HasValue<ReceiveOperation>("Receive")
-                .HasValue<SaleOperation>("Sale")
-                .HasValue<WriteOffOperation>("WriteOff")
-                .HasValue<InternalTransferOperation>("InternalTransfer");
-        }
-
-        protected override string TableName() => "Operations";
+        builder.HasDiscriminator<string>("OperationType")
+            .HasValue<ReceiveOperation>("Receive")
+            .HasValue<SaleOperation>("Sale")
+            .HasValue<WriteOffOperation>("WriteOff")
+            .HasValue<InternalTransferOperation>("InternalTransfer");
     }
+
+    protected override string TableName() => "Operations";
 }

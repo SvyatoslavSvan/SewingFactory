@@ -15,14 +15,14 @@ public class WorkDayTests
     {
         var employee = new RateBasedEmployee("Ivan", "ID123", new Money(1000m), new Department("Dept"));
         var workDay = new WorkDay(0, employee, new DateOnly(2025, 1, 1));
-        Assert.Throws<ArgumentOutOfRangeException>(() => workDay.Hours = invalidHours);
+        Assert.Throws<ArgumentOutOfRangeException>(testCode: () => workDay.Hours = invalidHours);
     }
 
     [Fact]
     public void Constructor_ShouldThrow_WhenEmployeeIsNull() =>
         // Act & Assert
-        Assert.Throws<SewingFactoryArgumentNullException>(() =>
-        new WorkDay(8, null!, new DateOnly(2025, 1, 1)));
+        Assert.Throws<SewingFactoryArgumentNullException>(testCode: () =>
+            new WorkDay(8, null!, new DateOnly(2025, 1, 1)));
 
     [Fact]
     public void Hours_SetWithinRange_ShouldUpdateValue()

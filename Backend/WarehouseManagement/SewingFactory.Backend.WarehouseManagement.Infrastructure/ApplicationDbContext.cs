@@ -11,7 +11,7 @@ using SewingFactory.Backend.WarehouseManagement.Infrastructure.Base;
 namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
 {
     /// <summary>
-    /// Database context for current application
+    ///     Database context for current application
     /// </summary>
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContextBase(options)
     {
@@ -54,7 +54,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
         /// </param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+            optionsBuilder.ConfigureWarnings(warningsConfigurationBuilderAction: x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 
             base.OnConfiguring(optionsBuilder);
         }
@@ -62,8 +62,8 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure
 }
 
 /// <summary>
-/// ATTENTION!
-/// It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
+///     ATTENTION!
+///     It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
 /// </summary>
 public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
@@ -71,8 +71,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=WarehouseDb;Username=postgres;Password=1234;Include Error Detail=true");
+
         return new ApplicationDbContext(optionsBuilder.Options);
     }
 }
-
-#nullable restore

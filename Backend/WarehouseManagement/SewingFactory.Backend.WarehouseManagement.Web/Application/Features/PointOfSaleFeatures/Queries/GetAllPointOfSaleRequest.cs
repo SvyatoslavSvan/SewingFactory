@@ -5,13 +5,12 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Qu
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries
-{
-    public record GetAllPointOfSalesRequest(ClaimsPrincipal User)
-        : GetAllRequest<PointOfSale, PointOfSaleReadViewModel>(User);
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 
-    public sealed class GetAllPointOfSalesHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
-        : GetAllRequestHandler<PointOfSale, PointOfSaleReadViewModel>(unitOfWork, mapper);
-}
+public record GetAllPointOfSalesRequest(ClaimsPrincipal User)
+    : GetAllRequest<PointOfSale, PointOfSaleReadViewModel>(User);
+
+public sealed class GetAllPointOfSalesHandler(
+    IUnitOfWork unitOfWork,
+    IMapper mapper)
+    : GetAllRequestHandler<PointOfSale, PointOfSaleReadViewModel>(unitOfWork, mapper);

@@ -89,19 +89,21 @@ public class WorkshopDocumentMappingProfile : Profile
                 memberOptions: opt => opt.MapFrom(mapExpression: x => x.Name))
             .ForMember(destinationMember: x => x.CountOfModelsInvolved,
                 memberOptions: opt => opt.MapFrom(mapExpression: x => x.CountOfModelsInvolved))
-            .ForMember(x => x.Employees, o => o.Ignore())
-            .ForMember(x => x.GarmentModel, o => o.Ignore())
-            .ForMember(x => x.Tasks, o => o.Ignore())
-            .ForMember(x => x.Department, o => o.Ignore());
+            .ForMember(destinationMember: x => x.Employees, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.GarmentModel, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.Tasks, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.Department, memberOptions: o => o.Ignore());
 
-        ; CreateMap<UpdateEmployeeTaskRepeatViewModel, EmployeeTaskRepeat>()
-            .ConstructUsing((src, ctx) =>
+        ;
+        CreateMap<UpdateEmployeeTaskRepeatViewModel, EmployeeTaskRepeat>()
+            .ConstructUsing(ctor: (src, ctx) =>
             {
                 var dict = (Dictionary<Guid, Employee>)ctx.Items["EmployeesById"];
                 if (!dict.TryGetValue(src.EmployeeId, out var emp))
                 {
                     throw new KeyNotFoundException($"Employee {src.EmployeeId} not loaded");
                 }
+
                 var repeat = new EmployeeTaskRepeat(emp, src.RepeatsCount);
 
                 if (src.Id != Guid.Empty)
@@ -113,7 +115,7 @@ public class WorkshopDocumentMappingProfile : Profile
                 }
 
                 return repeat;
-            }).ForAllOtherMembers(x => x.Ignore());
+            }).ForAllOtherMembers(memberOptions: x => x.Ignore());
 
         ;
     }

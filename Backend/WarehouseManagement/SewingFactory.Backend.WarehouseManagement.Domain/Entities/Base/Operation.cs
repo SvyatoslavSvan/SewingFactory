@@ -9,11 +9,10 @@ public abstract class Operation : Identity
     private int _quantity;
 
     /// <summary>
-    /// default constructor for EF Core
+    ///     default constructor for EF Core
     /// </summary>
     protected Operation()
     {
-        
     }
 
     protected Operation(PointOfSale owner, int quantity, DateOnly date)
@@ -33,10 +32,11 @@ public abstract class Operation : Identity
         get => _quantity;
         set
         {
-            if(value < 0)
+            if (value < 0)
             {
                 throw new SewingFactoryArgumentException(nameof(Quantity));
             }
+
             _quantity = value;
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.ViewModels;
 using SewingFactory.Common.Domain.ValueObjects;
@@ -26,6 +27,7 @@ public class GarmentModelHandlersTests
         uow.DbContext.GarmentModels.Add(gm);
 
         await uow.DbContext.SaveChangesAsync();
+
         return uow;
     }
 
@@ -35,17 +37,13 @@ public class GarmentModelHandlersTests
         var sp = TestHelpers.BuildServices();
         var uow = await SeedAsync(sp);
 
-        var catId = await uow.DbContext.GarmentCategories.Select(x => x.Id).FirstAsync();
+        var catId = await uow.DbContext.GarmentCategories.Select(selector: x => x.Id).FirstAsync();
 
-        var createVm = new GarmentModelCreateViewModel
-        {
-            Name = "Jeans-Slim",
-            CategoryId = catId
-        };
+        var createVm = new GarmentModelCreateViewModel { Name = "Jeans-Slim", CategoryId = catId };
 
         var handler = new CreateGarmentModelHandler(uow, sp.GetRequiredService<IMapper>());
 
-        var res = await handler.Handle(new(createVm, Fake), default);
+        var res = await handler.Handle(new CreateRequest<GarmentModelCreateViewModel, GarmentModel, GarmentModelReadViewModel>(createVm, Fake), default);
 
         Assert.True(res.Ok);
         Assert.Equal("Jeans-Slim", res.Result!.Name);
@@ -58,10 +56,10 @@ public class GarmentModelHandlersTests
         var sp = TestHelpers.BuildServices();
         var uow = await SeedAsync(sp);
 
-        var id = await uow.DbContext.GarmentModels.Select(x => x.Id).FirstAsync();
+        var id = await uow.DbContext.GarmentModels.Select(selector: x => x.Id).FirstAsync();
         var handler = new GetGarmentModelByIdHandler(uow, sp.GetRequiredService<IMapper>());
 
-        var res = await handler.Handle(new(Fake, id), default);
+        var res = await handler.Handle(new GetByIdRequest<GarmentModel, GarmentModelReadViewModel>(Fake, id), default);
 
         Assert.True(res.Ok);
         Assert.Equal(id, res.Result!.Id);
@@ -73,16 +71,11 @@ public class GarmentModelHandlersTests
         var sp = TestHelpers.BuildServices();
         var uow = await SeedAsync(sp);
 
-        var model = await uow.DbContext.GarmentModels.AsNoTracking().Include(garmentModel => garmentModel.Category).FirstAsync();
-        var editVm = new GarmentModelEditViewModel
-        {
-            Id = model.Id,
-            Name = "Basic Tee V2",
-            CategoryId = model.Category.Id
-        };
+        var model = await uow.DbContext.GarmentModels.AsNoTracking().Include(navigationPropertyPath: garmentModel => garmentModel.Category).FirstAsync();
+        var editVm = new GarmentModelEditViewModel { Id = model.Id, Name = "Basic Tee V2", CategoryId = model.Category.Id };
 
         var handler = new UpdateGarmentModelHandler(uow, sp.GetRequiredService<IMapper>());
-        var res = await handler.Handle(new(editVm, Fake), default);
+        var res = await handler.Handle(new UpdateRequest<GarmentModelEditViewModel, GarmentModel>(editVm, Fake), default);
 
         Assert.True(res.Ok);
         var reloaded = await uow.DbContext.GarmentModels.FindAsync(model.Id);
@@ -95,13 +88,13 @@ public class GarmentModelHandlersTests
         var sp = TestHelpers.BuildServices();
         var uow = await SeedAsync(sp);
 
-        var id = await uow.DbContext.GarmentModels.Select(x => x.Id).FirstAsync();
-        uow.DbContext.ChangeTracker.Clear();                         // важливо!
+        var id = await uow.DbContext.GarmentModels.Select(selector: x => x.Id).FirstAsync();
+        uow.DbContext.ChangeTracker.Clear(); // важливо!
 
         var delVm = new GarmentModelDeleteViewModel { Id = id };
         var handler = new DeleteGarmentModelHandler(uow);
 
-        var res = await handler.Handle(new(delVm, Fake), default);
+        var res = await handler.Handle(new DeleteRequest<GarmentModelDeleteViewModel, GarmentModel>(delVm, Fake), default);
 
         Assert.True(res.Ok);
         Assert.Empty(uow.DbContext.GarmentModels);

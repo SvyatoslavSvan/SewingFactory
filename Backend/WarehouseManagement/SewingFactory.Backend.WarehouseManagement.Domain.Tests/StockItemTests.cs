@@ -8,7 +8,6 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Tests;
 /// </summary>
 public sealed class StockItemTests
 {
-    
     [Fact(DisplayName = "PointOfSale setter rejects null")]
     public void PointOfSale_Null_Throws()
     {
@@ -48,7 +47,7 @@ public sealed class StockItemTests
         item.ReduceQuantity(5);
 
         Assert.Equal(0, item.Quantity);
-        Assert.Equal(2, item.ShortageQuantity);          
+        Assert.Equal(2, item.ShortageQuantity);
     }
 
     [Fact(DisplayName = "IncreaseQuantity positive value increases quantity and clears shortage")]
@@ -57,13 +56,13 @@ public sealed class StockItemTests
         var (pos, model, _) = TestFixture.CreatePOS();
         var item = new StockItem(2, pos, model);
 
-        item.ReduceQuantity(3);                          
+        item.ReduceQuantity(3);
         Assert.Equal(1, item.ShortageQuantity);
 
         item.IncreaseQuantity(5);
 
         Assert.Equal(5, item.Quantity);
-        Assert.Equal(0, item.ShortageQuantity);          
+        Assert.Equal(0, item.ShortageQuantity);
     }
 
     [Fact(DisplayName = "IncreaseQuantity negative value throws")]
@@ -72,6 +71,6 @@ public sealed class StockItemTests
         var (pos, model, _) = TestFixture.CreatePOS();
         var item = new StockItem(2, pos, model);
 
-        Assert.Throws<SewingFactoryArgumentException>(() => item.IncreaseQuantity(-1));
+        Assert.Throws<SewingFactoryArgumentException>(testCode: () => item.IncreaseQuantity(-1));
     }
 }

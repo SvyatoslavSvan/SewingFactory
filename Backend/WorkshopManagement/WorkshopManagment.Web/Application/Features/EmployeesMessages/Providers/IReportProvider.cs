@@ -1,9 +1,8 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.Providers
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.Providers;
+
+public interface IReportProvider
 {
-    public interface IReportProvider
-    {
-        public Task<byte[]> GetReportAsync(IList<Salary> salaries);
-    }
+    public Task<byte[]> GetReportAsync(IList<Salary> salaries);
 }

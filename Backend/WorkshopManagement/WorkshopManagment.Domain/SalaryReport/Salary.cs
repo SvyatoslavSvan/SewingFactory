@@ -10,10 +10,13 @@ public class Salary(
     Employee employee,
     Money additionalPayment)
 {
-    public Salary(Money payment,
+    public Salary(
+        Money payment,
         Money premium,
         Employee employee)
-        : this(payment, premium, employee, new Money(0)) { }
+        : this(payment, premium, employee, new Money(0))
+    {
+    }
 
 
     public Money Payment { get; set; } = payment;

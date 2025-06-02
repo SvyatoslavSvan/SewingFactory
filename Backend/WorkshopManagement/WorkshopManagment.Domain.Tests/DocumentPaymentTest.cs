@@ -18,22 +18,22 @@ public class DocumentPaymentTests
         var processPrice = new Money(100m);
         var process = new Process("Sew", dept, processPrice);
         var garmentModel = new GarmentModel(
-            name: "Model1",
+            "Model1",
             "desc",
-            processes: [process],
-            category: category,
-            image: null);
+            [process],
+            category,
+            null);
 
         var docDate = new DateOnly(2025, 5, 1);
         var document = WorkshopDocument.CreateInstance(
-            name: "Doc1",
-            countOfModelsInvolved: 1,
-            date: docDate,
-            garmentModel: garmentModel,
-            department: dept);
+            "Doc1",
+            1,
+            docDate,
+            garmentModel,
+            dept);
 
         var employee = new RateBasedEmployee("Ivan", "EMP001", new Money(0), dept);
-        var repeat = new EmployeeTaskRepeat(employee, repeats: 2);
+        var repeat = new EmployeeTaskRepeat(employee, 2);
 
         document.Tasks.First().AddEmployeeRepeat(repeat);
         document.RecalculateEmployees();
@@ -46,7 +46,7 @@ public class DocumentPaymentTests
         var payment = ((IHasDocuments)employee).DocumentPayment(range);
 
         // ---------- Assert ----------
-         //2  * 100 = 200
+        //2  * 100 = 200
         Assert.Equal(200m, payment.Amount);
     }
 }

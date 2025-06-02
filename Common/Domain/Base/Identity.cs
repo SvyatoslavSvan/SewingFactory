@@ -1,13 +1,12 @@
-﻿namespace SewingFactory.Common.Domain.Base
+﻿namespace SewingFactory.Common.Domain.Base;
+
+/// <summary>
+///     Identifier
+/// </summary>
+public abstract class Identity : IHaveId
 {
     /// <summary>
-    /// Identifier
+    ///     Identifier
     /// </summary>
-    public abstract class Identity : IHaveId
-    {
-        /// <summary>
-        /// Identifier
-        /// </summary>
-        public Guid Id { get; }
-    }
+    public Guid Id { get; }
 }

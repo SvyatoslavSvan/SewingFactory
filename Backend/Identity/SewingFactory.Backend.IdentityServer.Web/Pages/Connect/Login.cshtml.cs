@@ -7,65 +7,65 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SewingFactory.Backend.IdentityServer.Infrastructure;
 using SewingFactory.Backend.IdentityServer.Web.Application.Services;
 
-namespace SewingFactory.Backend.IdentityServer.Web.Pages.Connect
-{
-    [AllowAnonymous]
-    public class LoginModel : PageModel
-    {
-        private readonly IAccountService _accountService;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+namespace SewingFactory.Backend.IdentityServer.Web.Pages.Connect;
 
-        public LoginModel(IAccountService accountService,
-            SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+[AllowAnonymous]
+public class LoginModel : PageModel
+{
+    private readonly IAccountService _accountService;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public LoginModel(
+        IAccountService accountService,
+        SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager)
+    {
+        _accountService = accountService;
+        _signInManager = signInManager;
+        _userManager = userManager;
+    }
+
+    [BindProperty(SupportsGet = true)] public string ReturnUrl { get; set; } = null!;
+
+    [BindProperty] public LoginViewModel? Input { get; set; }
+
+    public void OnGet() => Input = new LoginViewModel { ReturnUrl = ReturnUrl };
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid)
         {
-            _accountService = accountService;
-            _signInManager = signInManager;
-            _userManager = userManager;
+            return Page();
         }
 
-        [BindProperty(SupportsGet = true)] public string ReturnUrl { get; set; } = null!;
-
-        [BindProperty] public LoginViewModel? Input { get; set; }
-
-        public void OnGet() => Input = new LoginViewModel { ReturnUrl = ReturnUrl };
-
-        public async Task<IActionResult> OnPostAsync()
+        if (Input != null)
         {
-            if (!ModelState.IsValid)
+            var user = await _userManager.FindByNameAsync(Input.UserName);
+            if (user == null)
             {
+                ModelState.AddModelError("UserName", "User not found");
+
                 return Page();
             }
 
-            if (Input != null)
+            var signInResult = await _signInManager.PasswordSignInAsync(user, Input.Password, true, false);
+            if (signInResult.Succeeded)
             {
-                var user = await _userManager.FindByNameAsync(Input.UserName);
-                if (user == null)
-                {
-                    ModelState.AddModelError("UserName", "User not found");
+                var principal = await _accountService.GetPrincipalByIdAsync(user.Id.ToString());
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                    return Page();
+                if (Url.IsLocalUrl(ReturnUrl))
+                {
+                    return Redirect(ReturnUrl);
                 }
 
-                var signInResult = await _signInManager.PasswordSignInAsync(user, Input.Password, true, false);
-                if (signInResult.Succeeded)
-                {
-                    var principal = await _accountService.GetPrincipalByIdAsync(user.Id.ToString());
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                    if (Url.IsLocalUrl(ReturnUrl))
-                    {
-                        return Redirect(ReturnUrl);
-                    }
-
-                    return RedirectToPage("/swagger");
-                }
+                return RedirectToPage("/swagger");
             }
-
-            ModelState.AddModelError("UserName", "User not found");
-
-            return Page();
         }
+
+        ModelState.AddModelError("UserName", "User not found");
+
+        return Page();
     }
 }

@@ -9,12 +9,12 @@ public class GarmentModelModelConfiguration : IdentityModelConfigurationBase<Gar
 {
     protected override void AddBuilder(EntityTypeBuilder<GarmentModel> builder)
     {
-        builder.OwnsOne(x => x.Price);
+        builder.OwnsOne(navigationExpression: x => x.Price);
 
         builder.Property<Guid>("CategoryId").IsRequired();
 
-        builder.HasOne(x => x.Category)
-            .WithMany(x => x.Products)
+        builder.HasOne(navigationExpression: x => x.Category)
+            .WithMany(navigationExpression: x => x.Products)
             .HasForeignKey("CategoryId")
             .OnDelete(DeleteBehavior.Restrict);
     }

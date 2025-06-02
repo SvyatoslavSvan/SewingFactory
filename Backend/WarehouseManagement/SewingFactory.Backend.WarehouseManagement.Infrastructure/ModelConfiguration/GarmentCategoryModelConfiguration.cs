@@ -7,8 +7,8 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfigur
 
 public class GarmentCategoryModelConfiguration : IdentityModelConfigurationBase<GarmentCategory>
 {
-    protected override void AddBuilder(EntityTypeBuilder<GarmentCategory> builder) => builder.HasMany(x => x.Products)
-        .WithOne(x => x.Category)
+    protected override void AddBuilder(EntityTypeBuilder<GarmentCategory> builder) => builder.HasMany(navigationExpression: x => x.Products)
+        .WithOne(navigationExpression: x => x.Category)
         .OnDelete(DeleteBehavior.Restrict);
 
     protected override string TableName() => "GarmentCategories";

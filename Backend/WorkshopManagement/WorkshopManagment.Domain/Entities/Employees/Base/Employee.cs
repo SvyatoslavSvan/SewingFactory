@@ -12,12 +12,12 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Bas
 /// </summary>
 public abstract class Employee : NamedIdentity, IHasDocuments
 {
-    private string _internalId = null!;
-    private Department _department = null!;
     private readonly List<WorkshopDocument> _documents;
+    private Department _department = null!;
+    private string _internalId = null!;
 
     /// <summary>
-    /// Default constructor for EF Core
+    ///     Default constructor for EF Core
     /// </summary>
     protected Employee() => _documents = new List<WorkshopDocument>();
 
@@ -53,12 +53,12 @@ public abstract class Employee : NamedIdentity, IHasDocuments
         set => _department = value ?? throw new SewingFactoryArgumentNullException(nameof(value));
     }
 
+    public IEnumerable<WorkshopDocument> Documents => _documents;
+
     public virtual Salary CalculateSalary(DateRange dateRange)
     {
         var documentPart = ((IHasDocuments)this).DocumentPayment(dateRange);
 
         return new Salary(documentPart, Money.Zero, this);
     }
-
-    public IEnumerable<WorkshopDocument> Documents => _documents;
 }

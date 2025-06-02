@@ -7,8 +7,8 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfigur
 
 public class PointOfSaleModelConfiguration : IdentityModelConfigurationBase<PointOfSale>
 {
-    protected override void AddBuilder(EntityTypeBuilder<PointOfSale> builder) => builder.HasMany(x => x.StockItems)
-        .WithOne(x => x.PointOfSale)
+    protected override void AddBuilder(EntityTypeBuilder<PointOfSale> builder) => builder.HasMany(navigationExpression: x => x.StockItems)
+        .WithOne(navigationExpression: x => x.PointOfSale)
         .OnDelete(DeleteBehavior.Cascade);
 
     protected override string TableName() => "PointsOfSale";

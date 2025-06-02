@@ -13,15 +13,15 @@ public class EmployeeTaskRepeatConfiguration : IdentityModelConfigurationBase<Em
     {
         builder.Property(propertyExpression: x => x.Repeats).IsRequired();
         builder
-            .HasOne(r => r.WorkShopEmployee)
-            .WithMany()                    
+            .HasOne(navigationExpression: r => r.WorkShopEmployee)
+            .WithMany()
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
-            .HasOne(r => r.WorkshopTask)
-            .WithMany(t => t.EmployeeTaskRepeats)
+            .HasOne(navigationExpression: r => r.WorkshopTask)
+            .WithMany(navigationExpression: t => t.EmployeeTaskRepeats)
             .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade); 
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

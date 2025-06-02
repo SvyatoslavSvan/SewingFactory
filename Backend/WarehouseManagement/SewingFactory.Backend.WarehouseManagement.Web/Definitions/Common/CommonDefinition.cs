@@ -1,29 +1,28 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Common
+namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Common;
+
+/// <summary>
+///     AspNetCore common configuration
+/// </summary>
+public class CommonDefinition : AppDefinition
 {
     /// <summary>
-    /// AspNetCore common configuration
+    ///     Configure application for current microservice
     /// </summary>
-    public class CommonDefinition : AppDefinition
-    {
-        /// <summary>
-        /// Configure application for current microservice
-        /// </summary>
-        /// <param name="app"></param>
-        public override void ConfigureApplication(WebApplication app)
-            => app.UseHttpsRedirection();
+    /// <param name="app"></param>
+    public override void ConfigureApplication(WebApplication app)
+        => app.UseHttpsRedirection();
 
-        /// <summary>
-        /// Configure services for current microservice
-        /// </summary>
-        /// <param name="builder"></param>
-        public override void ConfigureServices(WebApplicationBuilder builder)
-        {
-            builder.Services.AddLocalization();
-            builder.Services.AddHttpContextAccessor();
-            builder.Services.AddResponseCaching();
-            builder.Services.AddMemoryCache();
-        }
+    /// <summary>
+    ///     Configure services for current microservice
+    /// </summary>
+    /// <param name="builder"></param>
+    public override void ConfigureServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddLocalization();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddResponseCaching();
+        builder.Services.AddMemoryCache();
     }
 }

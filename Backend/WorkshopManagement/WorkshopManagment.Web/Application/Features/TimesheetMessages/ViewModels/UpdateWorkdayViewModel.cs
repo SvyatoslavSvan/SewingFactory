@@ -4,6 +4,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Time
 
 public class UpdateWorkdayViewModel : IIdentityViewModel
 {
-    public Guid Id { get; set; }
     public int Hours { get; set; }
+    public Guid Id { get; set; }
 }

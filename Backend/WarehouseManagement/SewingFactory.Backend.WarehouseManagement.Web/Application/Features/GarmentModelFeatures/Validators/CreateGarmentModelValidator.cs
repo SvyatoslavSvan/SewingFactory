@@ -5,15 +5,17 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Garment
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.Validators;
 
-public class CreateGarmentModelValidator : AbstractValidator<CreateRequest<GarmentModelCreateViewModel, GarmentModel,GarmentModelReadViewModel>>
+public class CreateGarmentModelValidator : AbstractValidator<CreateRequest<GarmentModelCreateViewModel, GarmentModel, GarmentModelReadViewModel>>
 {
     public CreateGarmentModelValidator()
     {
-        RuleFor(x => x.Model.Name)
+        RuleFor(expression: x => x.Model.Name)
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(100).WithMessage("Name must not exceed 100 characters.");
-        RuleFor(x => x.Model.Price)
+
+        RuleFor(expression: x => x.Model.Price)
             .GreaterThan(0).WithMessage("Price must be greater than zero");
-        RuleFor(x => x.Model.CategoryId).NotEmpty();
+
+        RuleFor(expression: x => x.Model.CategoryId).NotEmpty();
     }
 }

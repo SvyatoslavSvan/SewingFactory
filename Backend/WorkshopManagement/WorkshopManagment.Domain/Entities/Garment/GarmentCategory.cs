@@ -13,7 +13,6 @@ public sealed class GarmentCategory : NamedIdentity
 
     public GarmentCategory(string name) : base(name)
     {
-        
     }
 
     public GarmentCategory(string name, List<GarmentModel> garmentModels) : base(name) => _garmentModels = garmentModels;

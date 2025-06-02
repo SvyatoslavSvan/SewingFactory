@@ -2,14 +2,13 @@
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.ViewModels;
 using SewingFactory.Backend.WarehouseManagement.Web.Endpoints.Base;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Endpoints
+namespace SewingFactory.Backend.WarehouseManagement.Web.Endpoints;
+
+public class GarmentModelRouter : CommandRouter<GarmentModel,
+    GarmentModelReadViewModel,
+    GarmentModelCreateViewModel,
+    GarmentModelEditViewModel,
+    GarmentModelDeleteViewModel,
+    GarmentModelReadViewModel>
 {
-    public class GarmentModelRouter : CommandRouter<GarmentModel,
-        GarmentModelReadViewModel,
-        GarmentModelCreateViewModel,
-        GarmentModelEditViewModel,
-        GarmentModelDeleteViewModel,
-        GarmentModelReadViewModel>
-    {
-    }
 }

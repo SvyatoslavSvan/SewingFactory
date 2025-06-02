@@ -1,5 +1,4 @@
-﻿using Calabonga.Microservices.Core;
-using Calabonga.Utils.Extensions;
+﻿using Calabonga.Utils.Extensions;
 using MediatR;
 using System.Security.Claims;
 

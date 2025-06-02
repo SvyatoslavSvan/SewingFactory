@@ -7,11 +7,11 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems
 
 public sealed class WorkshopDocument : NamedIdentity
 {
+    private readonly Department _department = null!;
     private readonly List<Employee> _employees;
     private readonly List<WorkshopTask> _tasks;
     private int _countOfModelsInvolved;
     private GarmentModel _garmentModel = null!;
-    private readonly Department _department = null!;
 
 
     /// <summary>
@@ -32,31 +32,6 @@ public sealed class WorkshopDocument : NamedIdentity
         Date = date;
         _tasks = tasks;
         _employees = tasks.SelectMany(selector: task => task.EmployeeTaskRepeats).Select(selector: repeat => repeat.WorkShopEmployee).Distinct().ToList();
-    }
-
-    public void RecalculateEmployees()
-    {
-        var newEmployees = _tasks
-            .SelectMany(selector: t => t.EmployeesInvolved)
-            .DistinctBy(keySelector: e => e.Id)
-            .ToList();
-
-        var toRemove = _employees
-            .Where(predicate: old => newEmployees.All(predicate: ne => ne.Id != old.Id))
-            .ToList();
-
-        foreach (var old in toRemove)
-        {
-            _employees.Remove(old);
-        }
-
-        foreach (var emp in newEmployees)
-        {
-            if (_employees.All(predicate: e => e.Id != emp.Id))
-            {
-                _employees.Add(emp);
-            }
-        }
     }
 
     public int CountOfModelsInvolved
@@ -92,6 +67,31 @@ public sealed class WorkshopDocument : NamedIdentity
     public IReadOnlyList<WorkshopTask> Tasks => _tasks;
 
     public IReadOnlyList<Employee> Employees => _employees;
+
+    public void RecalculateEmployees()
+    {
+        var newEmployees = _tasks
+            .SelectMany(selector: t => t.EmployeesInvolved)
+            .DistinctBy(keySelector: e => e.Id)
+            .ToList();
+
+        var toRemove = _employees
+            .Where(predicate: old => newEmployees.All(predicate: ne => ne.Id != old.Id))
+            .ToList();
+
+        foreach (var old in toRemove)
+        {
+            _employees.Remove(old);
+        }
+
+        foreach (var emp in newEmployees)
+        {
+            if (_employees.All(predicate: e => e.Id != emp.Id))
+            {
+                _employees.Add(emp);
+            }
+        }
+    }
 
     public static WorkshopDocument CreateInstance(
         string name,

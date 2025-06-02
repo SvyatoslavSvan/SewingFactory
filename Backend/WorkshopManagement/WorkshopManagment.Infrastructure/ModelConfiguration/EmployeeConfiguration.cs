@@ -13,10 +13,10 @@ public class EmployeeConfiguration : IdentityModelConfigurationBase<Employee>
     {
         builder.Property(propertyExpression: x => x.Name).IsRequired();
         builder.Property(propertyExpression: x => x.InternalId).IsRequired();
-        builder.HasOne(x => x.Department).WithMany(x => x.Employees);
-        builder.HasMany(x => x.Documents).WithMany(x => x.Employees);
+        builder.HasOne(navigationExpression: x => x.Department).WithMany(navigationExpression: x => x.Employees);
+        builder.HasMany(navigationExpression: x => x.Documents).WithMany(navigationExpression: x => x.Employees);
         builder
-            .Navigation(e => e.Documents)
+            .Navigation(navigationExpression: e => e.Documents)
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasField("_documents");
     }

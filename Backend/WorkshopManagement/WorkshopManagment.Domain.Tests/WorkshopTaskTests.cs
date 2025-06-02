@@ -62,6 +62,6 @@ public class WorkshopTaskTests
         var task = new WorkshopTask(process);
         var otherEmp = new RateBasedEmployee("X", "ID2", new Money(0), process.Department);
         // Employee not added to task
-        Assert.Throws<SewingFactoryInvalidOperationException>(() => task.CalculatePaymentForEmployee(otherEmp));
+        Assert.Throws<SewingFactoryInvalidOperationException>(testCode: () => task.CalculatePaymentForEmployee(otherEmp));
     }
 }

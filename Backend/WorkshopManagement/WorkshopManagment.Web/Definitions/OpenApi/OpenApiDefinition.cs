@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.OpenApi;
 
 /// <summary>
-/// Swagger definition for application
+///     Swagger definition for application
 /// </summary>
 public class OpenApiDefinition : AppDefinition
 {
@@ -26,11 +26,10 @@ public class OpenApiDefinition : AppDefinition
 
     public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
+        builder.Services.Configure<ApiBehaviorOptions>(configureOptions: options => { options.SuppressModelStateInvalidFilter = true; });
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddOpenApi(options =>
+        builder.Services.AddOpenApi(configureOptions: options =>
         {
-            
             options.AddSchemaTransformer<PolymorphicSchemaTransformer>();
             options.AddDocumentTransformer<OAuth2SecuritySchemeTransformer>();
         });
@@ -47,7 +46,7 @@ public class OpenApiDefinition : AppDefinition
 
         app.MapOpenApi();
 
-        app.UseSwaggerUI(settings =>
+        app.UseSwaggerUI(setupAction: settings =>
         {
             settings.SwaggerEndpoint(_openApiConfig, $"{AppData.ServiceName} v.{AppVersion}");
 

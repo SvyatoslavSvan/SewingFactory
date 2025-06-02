@@ -1,13 +1,12 @@
-﻿namespace SewingFactory.Common.Domain.Base
+﻿namespace SewingFactory.Common.Domain.Base;
+
+/// <summary>
+///     Identifier common interface
+/// </summary>
+public interface IHaveId
 {
     /// <summary>
-    /// Identifier common interface
+    ///     Identifier
     /// </summary>
-    public interface IHaveId
-    {
-        /// <summary>
-        /// Identifier
-        /// </summary>
-        Guid Id { get; }
-    }
+    Guid Id { get; }
 }

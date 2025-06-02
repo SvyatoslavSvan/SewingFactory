@@ -2,5 +2,5 @@
 
 public interface IDateTimeProvider
 {
-    public DateOnly CurrentMonthStart { get;}
+    public DateOnly CurrentMonthStart { get; }
 }

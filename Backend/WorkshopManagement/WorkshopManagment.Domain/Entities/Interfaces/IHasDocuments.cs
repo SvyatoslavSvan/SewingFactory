@@ -2,23 +2,22 @@
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Common.Domain.ValueObjects;
 
-namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces
+namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
+
+public interface IHasDocuments
 {
-    public interface IHasDocuments
+    public IEnumerable<WorkshopDocument> Documents { get; }
+
+    public Money DocumentPayment(DateRange period)
     {
-        public IEnumerable<WorkshopDocument> Documents { get; }
-
-        public Money DocumentPayment(DateRange period)
+        if (this is not Employee employee)
         {
-            if (this is not Employee employee)
-            {
-                throw new InvalidOperationException("IHasDocuments Implements just Employee");
-            }
-
-            return Documents
-                .Where(d => period.Contains(d.Date))
-                .Aggregate(Money.Zero,
-                    (sum, doc) => sum + doc.CalculatePaymentForEmployee(employee));
+            throw new InvalidOperationException("IHasDocuments Implements just Employee");
         }
+
+        return Documents
+            .Where(predicate: d => period.Contains(d.Date))
+            .Aggregate(Money.Zero,
+                func: (sum, doc) => sum + doc.CalculatePaymentForEmployee(employee));
     }
 }

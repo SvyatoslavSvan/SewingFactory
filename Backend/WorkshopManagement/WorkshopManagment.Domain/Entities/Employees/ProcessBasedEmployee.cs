@@ -23,8 +23,9 @@ public class ProcessBasedEmployee : Employee, IHasPremium
 
     public override Salary CalculateSalary(DateRange dateRange)
     {
-        var baseSalary =  base.CalculateSalary(dateRange);
+        var baseSalary = base.CalculateSalary(dateRange);
         baseSalary.Premium = ((IHasPremium)this).PremiumPayment(baseSalary.Payment);
+
         return baseSalary;
     }
 }

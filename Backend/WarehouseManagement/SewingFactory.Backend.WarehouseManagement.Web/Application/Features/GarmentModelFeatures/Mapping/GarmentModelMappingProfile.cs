@@ -9,11 +9,11 @@ public sealed class GarmentModelMappingProfile : AutoMapper.Profile
     public GarmentModelMappingProfile()
     {
         CreateMap<GarmentModel, GarmentModelReadViewModel>()
-            .ForMember(x => x.Price,
-                opt => opt.MapFrom(mapExpression: src => src.Price.Amount));
+            .ForMember(destinationMember: x => x.Price,
+                memberOptions: opt => opt.MapFrom(mapExpression: src => src.Price.Amount));
 
         CreateMap<GarmentModelCreateViewModel, GarmentModel>()
-            .ConstructUsing((
+            .ConstructUsing(ctor: (
                     src,
                     ctx) =>
                 new GarmentModel(
@@ -21,17 +21,17 @@ public sealed class GarmentModelMappingProfile : AutoMapper.Profile
                     ctx.Mapper.Map<GarmentCategory>(src.CategoryId),
                     Money.Zero
                 ))
-            .ForMember(x => x.Category,
-                o => o.Ignore());
+            .ForMember(destinationMember: x => x.Category,
+                memberOptions: o => o.Ignore());
 
         CreateMap<GarmentModelEditViewModel, GarmentModel>()
-            .ForMember(d => d.Id,
-                opt => opt.Ignore())
-            .ForMember(d => d.Price,
-                opt => opt.MapFrom(mapExpression: src => new Money(src.Price)))
-            .ForMember(d => d.Category,
-                opt => opt.MapFrom(s => s.CategoryId))
-            .ForMember(x => x.Name,
-                o => o.MapFrom(x => x.Name));
+            .ForMember(destinationMember: d => d.Id,
+                memberOptions: opt => opt.Ignore())
+            .ForMember(destinationMember: d => d.Price,
+                memberOptions: opt => opt.MapFrom(mapExpression: src => new Money(src.Price)))
+            .ForMember(destinationMember: d => d.Category,
+                memberOptions: opt => opt.MapFrom(mapExpression: s => s.CategoryId))
+            .ForMember(destinationMember: x => x.Name,
+                memberOptions: o => o.MapFrom(mapExpression: x => x.Name));
     }
 }

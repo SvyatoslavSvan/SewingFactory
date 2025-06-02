@@ -2,56 +2,56 @@
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Authorizations
+namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Authorizations;
+
+/// <summary>
+///     Identity helper for Requests operations
+/// </summary>
+public sealed class UserIdentity
 {
-    /// <summary>
-    /// Identity helper for Requests operations
-    /// </summary>
-    public sealed class UserIdentity
+    private static readonly Lazy<UserIdentity> _lazy = new(valueFactory: () => new UserIdentity());
+    private UserIdentity() { }
+
+    public static UserIdentity Instance => _lazy.Value;
+
+    public IIdentity? User
     {
-        private UserIdentity() { }
-
-        public static UserIdentity Instance => _lazy.Value;
-
-        public void Configure(IHttpContextAccessor httpContextAccessor)
+        get
         {
-            ContextAccessor = httpContextAccessor ?? throw new MicroserviceArgumentNullException(nameof(IHttpContextAccessor));
-            IsInitialized = true;
-        }
-
-        public IIdentity? User
-        {
-            get
+            if (IsInitialized)
             {
-                if (IsInitialized)
-                {
-                    return ContextAccessor.HttpContext!.User.Identity != null
-                           && ContextAccessor.HttpContext != null
-                           && ContextAccessor.HttpContext.User.Identity.IsAuthenticated
-                        ? ContextAccessor.HttpContext.User.Identity
-                        : null;
-                }
-                throw new MicroserviceArgumentNullException($"{nameof(UserIdentity)} has not been initialized. Please use {nameof(UserIdentity)}.Instance.Configure(...) in Configure Application method in Startup.cs");
+                return ContextAccessor.HttpContext!.User.Identity != null
+                       && ContextAccessor.HttpContext != null
+                       && ContextAccessor.HttpContext.User.Identity.IsAuthenticated
+                    ? ContextAccessor.HttpContext.User.Identity
+                    : null;
             }
-        }
 
-        public IEnumerable<Claim> Claims
+            throw new MicroserviceArgumentNullException(
+                $"{nameof(UserIdentity)} has not been initialized. Please use {nameof(UserIdentity)}.Instance.Configure(...) in Configure Application method in Startup.cs");
+        }
+    }
+
+    public IEnumerable<Claim> Claims
+    {
+        get
         {
-            get
+            if (User != null)
             {
-                if (User != null)
-                {
-                    return ContextAccessor.HttpContext!.User.Claims;
-                }
-                return Enumerable.Empty<Claim>();
+                return ContextAccessor.HttpContext!.User.Claims;
             }
+
+            return Enumerable.Empty<Claim>();
         }
+    }
 
-        private static readonly Lazy<UserIdentity> _lazy = new(() => new UserIdentity());
+    private bool IsInitialized { get; set; }
 
-        private bool IsInitialized { get; set; }
+    private static IHttpContextAccessor ContextAccessor { get; set; } = null!;
 
-        private static IHttpContextAccessor ContextAccessor { get; set; } = null!;
-
+    public void Configure(IHttpContextAccessor httpContextAccessor)
+    {
+        ContextAccessor = httpContextAccessor ?? throw new MicroserviceArgumentNullException(nameof(IHttpContextAccessor));
+        IsInitialized = true;
     }
 }

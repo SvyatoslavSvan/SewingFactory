@@ -1,39 +1,37 @@
 ﻿using SewingFactory.Common.Domain.Exceptions;
 
-namespace SewingFactory.Common.Domain.Base
+namespace SewingFactory.Common.Domain.Base;
+
+/// <summary>
+///     NamedIdentity dictionary for selector
+/// </summary>
+public abstract class NamedIdentity : Identity
 {
+    private string _name = null!;
+
+
     /// <summary>
-    /// NamedIdentity dictionary for selector
+    ///     Default constructor for EF Core
     /// </summary>
-    public abstract class NamedIdentity : Identity
+    protected NamedIdentity()
     {
-        private string _name = null!;
+    }
 
+    protected NamedIdentity(string name)
+    {
+        Name = name;
+    }
 
-        /// <summary>
-        /// Default constructor for EF Core
-        /// </summary>
-        protected NamedIdentity()  {  }
-
-        protected NamedIdentity(string name)
+    /// <summary>
+    ///     Entity name
+    /// </summary>
+    public virtual string Name
+    {
+        get => _name;
+        protected set
         {
-            Name = name;
-        }
-
-        /// <summary>
-        /// Entity name
-        /// </summary>
-        public virtual string Name
-        {
-            get => _name;
-            protected set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new SewingFactoryArgumentNullException(nameof(value));
-                }
-                _name = value;
-            } 
+            if (string.IsNullOrWhiteSpace(value)) throw new SewingFactoryArgumentNullException(nameof(value));
+            _name = value;
         }
     }
 }

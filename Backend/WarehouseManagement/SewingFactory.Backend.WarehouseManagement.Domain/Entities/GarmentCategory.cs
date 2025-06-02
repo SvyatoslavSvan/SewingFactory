@@ -7,7 +7,7 @@ public sealed class GarmentCategory : NamedIdentity
     private readonly List<GarmentModel> _products;
 
     /// <summary>
-    /// Default constructor for EF Core
+    ///     Default constructor for EF Core
     /// </summary>
     private GarmentCategory() => _products = [];
 

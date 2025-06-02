@@ -6,13 +6,12 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Qu
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.ViewModels;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.Queries
-{
-    public record GetAllGarmentModelsRequest(ClaimsPrincipal User)
-        : GetAllRequest<GarmentModel, GarmentModelReadViewModel>(User);
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.Queries;
 
-    public sealed class GetAllGarmentModelsHandler(
-        IUnitOfWork<ApplicationDbContext> unitOfWork,
-        IMapper mapper)
-        : GetAllRequestHandler<GarmentModel, GarmentModelReadViewModel>(unitOfWork, mapper);
-}
+public record GetAllGarmentModelsRequest(ClaimsPrincipal User)
+    : GetAllRequest<GarmentModel, GarmentModelReadViewModel>(User);
+
+public sealed class GetAllGarmentModelsHandler(
+    IUnitOfWork<ApplicationDbContext> unitOfWork,
+    IMapper mapper)
+    : GetAllRequestHandler<GarmentModel, GarmentModelReadViewModel>(unitOfWork, mapper);

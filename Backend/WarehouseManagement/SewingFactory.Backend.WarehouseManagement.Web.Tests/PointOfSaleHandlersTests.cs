@@ -110,31 +110,19 @@ public sealed class PointOfSaleHandlersTests
 
         var pos = new PointOfSale("Main");
         pos.AddStockItem(model);
-        pos.StockItems.Single().IncreaseQuantity(4);      
+        pos.StockItems.Single().IncreaseQuantity(4);
 
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
         await new ReceiveRequestHandler(uow).Handle(
             new ReceiveRequest(
-                new CreateOperationViewModel
-                {
-                    PointOfSaleId = pos.Id,
-                    GarmentModelId = model.Id,
-                    Quantity = 2,
-                    Date = new DateOnly(2025, 5, 10)
-                },
+                new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 2, Date = new DateOnly(2025, 5, 10) },
                 FakeUser), default);
 
         await new SellRequestRequestHandler(uow).Handle(
             new SellRequest(
-                new CreateOperationViewModel
-                {
-                    PointOfSaleId = pos.Id,
-                    GarmentModelId = model.Id,
-                    Quantity = 1,
-                    Date = new DateOnly(2025, 5, 11)
-                },
+                new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 1, Date = new DateOnly(2025, 5, 11) },
                 FakeUser), default);
 
         // --- act ---
@@ -148,7 +136,7 @@ public sealed class PointOfSaleHandlersTests
         Assert.Equal("Main", vm.Name);
 
         Assert.Single(vm.StockItems);
-        Assert.Equal(5, vm.StockItems.First().Quantity);      // 4 + 2 – 1
+        Assert.Equal(5, vm.StockItems.First().Quantity); // 4 + 2 – 1
 
         Assert.Equal(2, vm.Operations.Count);
         Assert.Single(vm.Operations.OfType<ReadReceiveOperationViewModel>());
@@ -166,17 +154,11 @@ public sealed class PointOfSaleHandlersTests
         var model = new GarmentModel("Classic", cat, Money.Zero);
 
         var pos = new PointOfSale("Main");
-        pos.AddStockItem(model);                     // qty = 0
+        pos.AddStockItem(model); // qty = 0
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vm = new CreateOperationViewModel
-        {
-            PointOfSaleId = pos.Id,
-            GarmentModelId = model.Id,
-            Quantity = 5,
-            Date = new DateOnly(2025, 5, 22)
-        };
+        var vm = new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 5, Date = new DateOnly(2025, 5, 22) };
 
         var handler = new ReceiveRequestHandler(uow);
         var res = await handler.Handle(new ReceiveRequest(vm, FakeUser), default);
@@ -184,9 +166,10 @@ public sealed class PointOfSaleHandlersTests
         Assert.True(res.Ok);
 
         var qty = await uow.DbContext.Set<StockItem>()
-            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
-            .Select(x => x.Quantity)
+            .Where(predicate: x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(selector: x => x.Quantity)
             .SingleAsync();
+
         Assert.Equal(5, qty);
     }
 
@@ -206,13 +189,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vm = new CreateOperationViewModel
-        {
-            PointOfSaleId = pos.Id,
-            GarmentModelId = model.Id,
-            Quantity = 3,
-            Date = new DateOnly(2025, 5, 22)
-        };
+        var vm = new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 3, Date = new DateOnly(2025, 5, 22) };
 
         var handler = new SellRequestRequestHandler(uow);
         var res = await handler.Handle(new SellRequest(vm, FakeUser), default);
@@ -220,9 +197,10 @@ public sealed class PointOfSaleHandlersTests
         Assert.True(res.Ok);
 
         var qty = await uow.DbContext.Set<StockItem>()
-            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
-            .Select(x => x.Quantity)
+            .Where(predicate: x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(selector: x => x.Quantity)
             .SingleAsync();
+
         Assert.Equal(7, qty);
     }
 
@@ -242,13 +220,7 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vm = new CreateOperationViewModel
-        {
-            PointOfSaleId = pos.Id,
-            GarmentModelId = model.Id,
-            Quantity = 2,
-            Date = new DateOnly(2025, 5, 22)
-        };
+        var vm = new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 2, Date = new DateOnly(2025, 5, 22) };
 
         var handler = new WriteOffRequestHandler(uow);
         var res = await handler.Handle(new WriteOffRequest(vm, FakeUser), default);
@@ -256,9 +228,10 @@ public sealed class PointOfSaleHandlersTests
         Assert.True(res.Ok);
 
         var qty = await uow.DbContext.Set<StockItem>()
-            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
-            .Select(x => x.Quantity)
+            .Where(predicate: x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(selector: x => x.Quantity)
             .SingleAsync();
+
         Assert.Equal(4, qty);
     }
 
@@ -296,12 +269,13 @@ public sealed class PointOfSaleHandlersTests
         Assert.True(res.Ok);
 
         var senderQty = await uow.DbContext.Set<StockItem>()
-            .Where(x => x.PointOfSale.Id == sender.Id && x.GarmentModel.Id == model.Id)
-            .Select(x => x.Quantity)
+            .Where(predicate: x => x.PointOfSale.Id == sender.Id && x.GarmentModel.Id == model.Id)
+            .Select(selector: x => x.Quantity)
             .SingleAsync();
+
         var receiverQty = await uow.DbContext.Set<StockItem>()
-            .Where(x => x.PointOfSale.Id == receiver.Id && x.GarmentModel.Id == model.Id)
-            .Select(x => x.Quantity)
+            .Where(predicate: x => x.PointOfSale.Id == receiver.Id && x.GarmentModel.Id == model.Id)
+            .Select(selector: x => x.Quantity)
             .SingleAsync();
 
         Assert.Equal(3, senderQty);
@@ -319,31 +293,24 @@ public sealed class PointOfSaleHandlersTests
 
         var pos = new PointOfSale("Main");
         pos.AddStockItem(model);
-        pos.StockItems.Single().IncreaseQuantity(2);          
+        pos.StockItems.Single().IncreaseQuantity(2);
 
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vmSell = new CreateOperationViewModel
-        {
-            PointOfSaleId = pos.Id,
-            GarmentModelId = model.Id,
-            Quantity = 5,                               
-            Date = new DateOnly(2025, 5, 22)
-        };
+        var vmSell = new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 5, Date = new DateOnly(2025, 5, 22) };
 
         var sellHandler = new SellRequestRequestHandler(uow);
         var sellRes = await sellHandler.Handle(new SellRequest(vmSell, FakeUser), default);
         Assert.True(sellRes.Ok);
 
         var afterSell = await uow.DbContext.Set<StockItem>()
-            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
-            .Select(x => new { x.Quantity, x.ShortageQuantity })
+            .Where(predicate: x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(selector: x => new { x.Quantity, x.ShortageQuantity })
             .SingleAsync();
 
         Assert.Equal(0, afterSell.Quantity);
-        Assert.Equal(3, afterSell.ShortageQuantity);          
-
+        Assert.Equal(3, afterSell.ShortageQuantity);
     }
 
     [Fact]
@@ -362,34 +329,22 @@ public sealed class PointOfSaleHandlersTests
         uow.DbContext.AddRange(cat, model, pos);
         await uow.DbContext.SaveChangesAsync();
 
-        var vmSell = new CreateOperationViewModel
-        {
-            PointOfSaleId = pos.Id,
-            GarmentModelId = model.Id,
-            Quantity = 5,
-            Date = new DateOnly(2025, 5, 22)
-        };
+        var vmSell = new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 5, Date = new DateOnly(2025, 5, 22) };
         await new SellRequestRequestHandler(uow)
             .Handle(new SellRequest(vmSell, FakeUser), default);
 
-        var vmReceive = new CreateOperationViewModel
-        {
-            PointOfSaleId = pos.Id,
-            GarmentModelId = model.Id,
-            Quantity = 4,
-            Date = new DateOnly(2025, 5, 23)
-        };
+        var vmReceive = new CreateOperationViewModel { PointOfSaleId = pos.Id, GarmentModelId = model.Id, Quantity = 4, Date = new DateOnly(2025, 5, 23) };
         var receiveRes = await new ReceiveRequestHandler(uow)
             .Handle(new ReceiveRequest(vmReceive, FakeUser), default);
 
         Assert.True(receiveRes.Ok);
 
         var final = await uow.DbContext.Set<StockItem>()
-            .Where(x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
-            .Select(x => new { x.Quantity, x.ShortageQuantity })
+            .Where(predicate: x => x.PointOfSale.Id == pos.Id && x.GarmentModel.Id == model.Id)
+            .Select(selector: x => new { x.Quantity, x.ShortageQuantity })
             .SingleAsync();
 
-        Assert.Equal(4, final.Quantity);          
-        Assert.Equal(0, final.ShortageQuantity);  
+        Assert.Equal(4, final.Quantity);
+        Assert.Equal(0, final.ShortageQuantity);
     }
 }

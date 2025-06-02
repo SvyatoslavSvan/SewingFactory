@@ -1,9 +1,9 @@
-﻿using System.Reflection;
-using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 using SewingFactory.Common.Domain.ValueObjects;
+using System.Reflection;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Tests;
 
@@ -17,6 +17,7 @@ public class RateAndPremiumPaymentTests
 
         var tsProp = typeof(RateBasedEmployee)
             .GetProperty("Timesheets", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
         Assert.NotNull(tsProp);
         var tsCollection = tsProp.GetValue(employee) as ICollection<Timesheet>;
         Assert.NotNull(tsCollection);

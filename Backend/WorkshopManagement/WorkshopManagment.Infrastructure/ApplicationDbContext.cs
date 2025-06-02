@@ -35,6 +35,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<WorkshopDocument> WorkshopDocuments { get; set; }
     public DbSet<WorkshopTask> WorkshopTasks { get; set; }
     public DbSet<Department> Departments { get; set; }
+
     /// <summary>
     ///     <para>
     ///         Override this method to configure the database (and other options) to be used for this context.
@@ -74,8 +75,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 }
 
 /// <summary>
-/// ATTENTION!
-/// It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
+///     ATTENTION!
+///     It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
 /// </summary>
 public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
@@ -83,6 +84,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=WorkshopDb;Username=postgres;Password=1234");
+
         return new ApplicationDbContext(optionsBuilder.Options);
     }
 }

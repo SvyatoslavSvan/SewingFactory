@@ -3,51 +3,50 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.ViewModels;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Mapping
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Mapping;
+
+public class TimesheetMappingProfile : Profile
 {
-    public class TimesheetMappingProfile : Profile
+    public TimesheetMappingProfile()
     {
-        public TimesheetMappingProfile()
-        {
-            CreateMap<Timesheet, TimesheetViewModel>()
-                .ForMember(d => d.Date,
-                    o => o.MapFrom(s => s.Date))
-                .ForMember(d => d.DaysCount,
-                    o => o.MapFrom(s => s.DaysCount))
-                .ForMember(d => d.Employees,
-                    o => o.MapFrom(s =>
-                        s.WorkDays
-                            .GroupBy(w => w.Employee)
-                            .Select(g => g.Key)));
+        CreateMap<Timesheet, TimesheetViewModel>()
+            .ForMember(destinationMember: d => d.Date,
+                memberOptions: o => o.MapFrom(mapExpression: s => s.Date))
+            .ForMember(destinationMember: d => d.DaysCount,
+                memberOptions: o => o.MapFrom(mapExpression: s => s.DaysCount))
+            .ForMember(destinationMember: d => d.Employees,
+                memberOptions: o => o.MapFrom(mapExpression: s =>
+                    s.WorkDays
+                        .GroupBy(w => w.Employee)
+                        .Select(g => g.Key)));
 
-            CreateMap<RateBasedEmployee, TimesheetEmployeeViewModel>()
-                .ForMember(d => d.EmployeeName,
-                    o => o.MapFrom(e => e.Name))
-                .ForMember(d => d.WorkDays,
-                    o => o.MapFrom((
-                            e,
-                            _,
-                            _,
-                            ctx) =>
-                        ((Timesheet)ctx.Items["Timesheet"])
-                        .WorkDays
-                        .Where(w => w.Employee.Id == e.Id)));
+        CreateMap<RateBasedEmployee, TimesheetEmployeeViewModel>()
+            .ForMember(destinationMember: d => d.EmployeeName,
+                memberOptions: o => o.MapFrom(mapExpression: e => e.Name))
+            .ForMember(destinationMember: d => d.WorkDays,
+                memberOptions: o => o.MapFrom(mappingFunction: (
+                        e,
+                        _,
+                        _,
+                        ctx) =>
+                    ((Timesheet)ctx.Items["Timesheet"])
+                    .WorkDays
+                    .Where(predicate: w => w.Employee.Id == e.Id)));
 
-            CreateMap<WorkDay, ReadWorkDayViewModel>()
-                .ForMember(d => d.Date,
-                    o => o.MapFrom(w => w.Date))
-                .ForMember(d => d.Hours,
-                    o => o.MapFrom(w => w.Hours))
-                .ForMember(x => x.Id,
-                    opt => opt.MapFrom(x => x.Id));
+        CreateMap<WorkDay, ReadWorkDayViewModel>()
+            .ForMember(destinationMember: d => d.Date,
+                memberOptions: o => o.MapFrom(mapExpression: w => w.Date))
+            .ForMember(destinationMember: d => d.Hours,
+                memberOptions: o => o.MapFrom(mapExpression: w => w.Hours))
+            .ForMember(destinationMember: x => x.Id,
+                memberOptions: opt => opt.MapFrom(mapExpression: x => x.Id));
 
-            CreateMap<UpdateWorkdayViewModel, WorkDay>()
-                .ForMember(d => d.Hours,
-                    o => o.MapFrom(w => w.Hours))
-                .ForMember(x => x.Date,
-                    opt => opt.Ignore())
-                .ForMember(x => x.Employee,
-                    opt => opt.Ignore());
-        }
+        CreateMap<UpdateWorkdayViewModel, WorkDay>()
+            .ForMember(destinationMember: d => d.Hours,
+                memberOptions: o => o.MapFrom(mapExpression: w => w.Hours))
+            .ForMember(destinationMember: x => x.Date,
+                memberOptions: opt => opt.Ignore())
+            .ForMember(destinationMember: x => x.Employee,
+                memberOptions: opt => opt.Ignore());
     }
 }

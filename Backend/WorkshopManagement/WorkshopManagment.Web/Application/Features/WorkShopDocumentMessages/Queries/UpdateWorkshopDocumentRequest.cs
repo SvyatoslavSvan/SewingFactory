@@ -39,7 +39,7 @@ public sealed class UpdateWorkshopDocumentHandler(
                 include: queryable => queryable
                     .Include(navigationPropertyPath: workshopDocument => workshopDocument.Tasks)
                     .ThenInclude(navigationPropertyPath: task => task.EmployeeTaskRepeats)
-                    .ThenInclude(x => x.WorkShopEmployee).Include(x => x.Employees),
+                    .ThenInclude(navigationPropertyPath: x => x.WorkShopEmployee).Include(navigationPropertyPath: x => x.Employees),
                 trackingType: TrackingType.Tracking);
 
         if (document is null)
@@ -52,15 +52,15 @@ public sealed class UpdateWorkshopDocumentHandler(
         _mapper.Map(request.Model,
             document);
 
-        var employeesInvolvedIds = request.Model.WorkshopTasks.SelectMany(x => x.EmployeeRepeats)
-            .Select(x => x.EmployeeId)
+        var employeesInvolvedIds = request.Model.WorkshopTasks.SelectMany(selector: x => x.EmployeeRepeats)
+            .Select(selector: x => x.EmployeeId)
             .Distinct().ToList();
 
         var employeesInvolved = await unitOfWork.GetRepository<Employee>()
             .GetAllAsync(predicate: x => employeesInvolvedIds.Contains(x.Id),
                 trackingType: TrackingType.Tracking);
 
-        var employeesDictionary = employeesInvolved.ToDictionary(x => x.Id);
+        var employeesDictionary = employeesInvolved.ToDictionary(keySelector: x => x.Id);
 
         foreach (var taskVm in request.Model.WorkshopTasks)
         {
@@ -73,7 +73,8 @@ public sealed class UpdateWorkshopDocumentHandler(
             }
 
             var employeeTaskRepeats = _mapper.Map<List<EmployeeTaskRepeat>>(taskVm.EmployeeRepeats,
-                opt => opt.Items["EmployeesById"] = employeesDictionary);
+                opts: opt => opt.Items["EmployeesById"] = employeesDictionary);
+
             task.ReplaceRepeats(employeeTaskRepeats);
         }
 

@@ -13,7 +13,7 @@ public class TimesheetTests
     {
         var date = new DateOnly(2025, 1, 1);
         var employees = new List<RateBasedEmployee>();
-        Assert.Throws<SewingFactoryArgumentException>(() => Timesheet.CreateInstance(employees, date));
+        Assert.Throws<SewingFactoryArgumentException>(testCode: () => Timesheet.CreateInstance(employees, date));
     }
 
     [Fact]

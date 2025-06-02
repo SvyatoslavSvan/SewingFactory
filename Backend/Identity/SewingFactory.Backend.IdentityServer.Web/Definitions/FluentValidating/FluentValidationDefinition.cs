@@ -2,25 +2,24 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SewingFactory.Backend.IdentityServer.Web.Definitions.FluentValidating
+namespace SewingFactory.Backend.IdentityServer.Web.Definitions.FluentValidating;
+
+/// <summary>
+///     FluentValidation registration as Application definition
+/// </summary>
+public class FluentValidationDefinition : AppDefinition
 {
     /// <summary>
-    /// FluentValidation registration as Application definition
+    ///     Configure services for current application
     /// </summary>
-    public class FluentValidationDefinition : AppDefinition
+    /// <param name="builder"></param>
+    public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        /// <summary>
-        /// Configure services for current application
-        /// </summary>
-        /// <param name="builder"></param>
-        public override void ConfigureServices(WebApplicationBuilder builder)
+        builder.Services.Configure<ApiBehaviorOptions>(configureOptions: options =>
         {
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
-            builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-        }
+        builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
     }
 }

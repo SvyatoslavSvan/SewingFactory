@@ -15,15 +15,15 @@ public static class TestHelpers
     {
         var services = new ServiceCollection();
 
-        services.AddDbContext<ApplicationDbContext>(o =>
-            o.UseInMemoryDatabase(Guid.NewGuid().ToString()));   
+        services.AddDbContext<ApplicationDbContext>(optionsAction: o =>
+            o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
         services.AddUnitOfWork<ApplicationDbContext>();
 
         services.AddTransient<GarmentCategoryStubConverter>();
 
         services.AddAutoMapper(
-            (sp, cfg) =>
+            configAction: (sp, cfg) =>
             {
                 cfg.ConstructServicesUsing(sp.GetService);
                 cfg.AddProfile<GarmentCategoryProfile>();

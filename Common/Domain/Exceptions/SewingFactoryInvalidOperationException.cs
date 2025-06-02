@@ -3,8 +3,12 @@
 public class SewingFactoryInvalidOperationException : InvalidOperationException
 {
     public SewingFactoryInvalidOperationException(string message)
-        : base($"The operation is invalid: {message}") { }
+        : base($"The operation is invalid: {message}")
+    {
+    }
 
     public SewingFactoryInvalidOperationException(string message, Exception innerException)
-        : base($"The operation is invalid: {message}", innerException) { }
+        : base($"The operation is invalid: {message}", innerException)
+    {
+    }
 }

@@ -68,7 +68,7 @@ public sealed class ClosedXmlReportProvider : IReportProvider
 
             var total = sal.Payment + sal.Premium + sal.AdditionalPayment;
             ws.Cell(row, 6).Value = Round(total);
-            ws.Cell(row, 7).Value = Round(total); 
+            ws.Cell(row, 7).Value = Round(total);
 
             row++;
         }

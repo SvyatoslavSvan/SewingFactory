@@ -4,7 +4,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Time
 
 public class ReadWorkDayViewModel : IIdentityViewModel
 {
-    public DateOnly Date { get; init; }          
+    public DateOnly Date { get; init; }
     public int Hours { get; init; }
     public Guid Id { get; set; }
 }

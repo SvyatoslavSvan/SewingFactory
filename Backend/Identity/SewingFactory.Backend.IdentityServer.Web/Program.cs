@@ -32,15 +32,15 @@ try
 {
     // configure logger (Serilog)
     Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
+        .MinimumLevel.Debug()
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .CreateLogger();
 
     // created builder
     var builder = WebApplication.CreateBuilder(args);
-    builder.Host.UseSerilog((context, configuration) =>
+    builder.Host.UseSerilog(configureLogger: (context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
 
     // adding definitions for application
@@ -69,6 +69,7 @@ catch (Exception ex)
     }
 
     Log.Fatal(ex, "Unhandled exception");
+
     throw;
 }
 finally

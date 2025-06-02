@@ -7,17 +7,17 @@ public class StockItemModelConfiguration : IdentityModelConfigurationBase<StockI
 {
     protected override void AddBuilder(EntityTypeBuilder<StockItem> builder)
     {
-        builder.Property(x => x.Quantity).IsRequired();
+        builder.Property(propertyExpression: x => x.Quantity).IsRequired();
 
         builder.Property<Guid>("PointOfSaleId").IsRequired();
         builder.Property<Guid>("GarmentModelId").IsRequired();
 
-        builder.HasOne(x => x.PointOfSale)
-            .WithMany(x => x.StockItems)
+        builder.HasOne(navigationExpression: x => x.PointOfSale)
+            .WithMany(navigationExpression: x => x.StockItems)
             .HasForeignKey("PointOfSaleId")
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(x => x.GarmentModel)
+        builder.HasOne(navigationExpression: x => x.GarmentModel)
             .WithMany()
             .HasForeignKey("GarmentModelId")
             .OnDelete(DeleteBehavior.Restrict);

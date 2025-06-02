@@ -6,11 +6,9 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Tests;
 public class DepartmentTests
 {
     [Fact]
-    public void Constructor_ShouldThrow_WhenNameIsEmpty()
-    {
+    public void Constructor_ShouldThrow_WhenNameIsEmpty() =>
         // Act & Assert
-        Assert.Throws<SewingFactoryArgumentNullException>(() => new Department(string.Empty));
-    }
+        Assert.Throws<SewingFactoryArgumentNullException>(testCode: () => new Department(string.Empty));
 
     [Fact]
     public void Constructor_ShouldSetName_WhenNameIsValid()

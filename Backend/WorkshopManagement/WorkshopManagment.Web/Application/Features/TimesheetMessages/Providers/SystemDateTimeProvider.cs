@@ -1,21 +1,21 @@
 ﻿using TimeZoneConverter;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Providers
-{
-    public class SystemDateTimeProvider : IDateTimeProvider
-    {
-        private static readonly TimeZoneInfo _kyivZone =
-            TZConvert.GetTimeZoneInfo("Europe/Kyiv");
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Providers;
 
-        public DateOnly CurrentMonthStart
+public class SystemDateTimeProvider : IDateTimeProvider
+{
+    private static readonly TimeZoneInfo _kyivZone =
+        TZConvert.GetTimeZoneInfo("Europe/Kyiv");
+
+    public DateOnly CurrentMonthStart
+    {
+        get
         {
-            get
-            {
-                var nowKiev = TimeZoneInfo.ConvertTimeFromUtc(
-                    DateTime.UtcNow,
-                    _kyivZone);
-                return new DateOnly(nowKiev.Year, nowKiev.Month, 1);
-            }
+            var nowKiev = TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow,
+                _kyivZone);
+
+            return new DateOnly(nowKiev.Year, nowKiev.Month, 1);
         }
     }
 }

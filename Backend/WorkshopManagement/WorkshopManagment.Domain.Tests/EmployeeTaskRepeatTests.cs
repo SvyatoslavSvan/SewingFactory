@@ -9,18 +9,16 @@ namespace SewingFactory.Backend.WorkshopManagement.Domain.Tests;
 public class EmployeeTaskRepeatTests
 {
     [Fact]
-    public void Constructor_ShouldThrow_WhenEmployeeIsNull()
-    {
+    public void Constructor_ShouldThrow_WhenEmployeeIsNull() =>
         // Repeats = 1, Employee = null
-        Assert.Throws<SewingFactoryArgumentNullException>(() => new EmployeeTaskRepeat(null!, 1));
-    }
+        Assert.Throws<SewingFactoryArgumentNullException>(testCode: () => new EmployeeTaskRepeat(null!, 1));
 
     [Fact]
     public void Repeats_SetNegative_ShouldThrow()
     {
         var emp = new RateBasedEmployee("Name", "IntID", new Money(500m), new Department("Dept"));
         var repeat = new EmployeeTaskRepeat(emp, 2);
-        Assert.Throws<SewingFactoryArgumentException>(() => repeat.Repeats = -5);
+        Assert.Throws<SewingFactoryArgumentException>(testCode: () => repeat.Repeats = -5);
     }
 
     [Fact]
@@ -28,6 +26,6 @@ public class EmployeeTaskRepeatTests
     {
         var emp = new RateBasedEmployee("N", "ID", new Money(100m), new Department("D"));
         var repeat = new EmployeeTaskRepeat(emp, 1);
-        Assert.Throws<SewingFactoryArgumentNullException>(() => repeat.WorkshopTask = null!);
+        Assert.Throws<SewingFactoryArgumentNullException>(testCode: () => repeat.WorkshopTask = null!);
     }
 }

@@ -2,15 +2,14 @@
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.Providers;
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Providers;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.Providers
+namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.Providers;
+
+public class ProviderDefinition : AppDefinition
 {
-    public class ProviderDefinition : AppDefinition
+    public override void ConfigureServices(
+        WebApplicationBuilder builder)
     {
-        public override void ConfigureServices(
-            WebApplicationBuilder builder)
-        {
-            builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
-            builder.Services.AddTransient<IReportProvider, ClosedXmlReportProvider>();
-        }
+        builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+        builder.Services.AddTransient<IReportProvider, ClosedXmlReportProvider>();
     }
 }

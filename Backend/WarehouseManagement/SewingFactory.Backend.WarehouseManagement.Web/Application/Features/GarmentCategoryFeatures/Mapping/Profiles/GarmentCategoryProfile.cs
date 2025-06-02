@@ -14,18 +14,18 @@ public sealed class GarmentCategoryProfile : AutoMapper.Profile
         CreateMap<GarmentCategory, GarmentCategoryReadViewModel>();
 
         CreateMap<GarmentCategoryCreateViewModel, GarmentCategory>()
-            .ConstructUsing(src => new GarmentCategory(
+            .ConstructUsing(ctor: src => new GarmentCategory(
                 src.Name,
                 new List<GarmentModel>()
-            )).ForMember(x => x.Products, opt => opt.Ignore());
+            )).ForMember(destinationMember: x => x.Products, memberOptions: opt => opt.Ignore());
 
         CreateMap<GarmentCategoryEditViewModel, GarmentCategory>()
-            .ForMember(dest => dest.Products,
-                opt => opt.Ignore())
-            .ForMember(dest => dest.Id,
-                opt => opt.Ignore())
-            .ForMember(x => x.Products,
-                opt => opt.Ignore())
+            .ForMember(destinationMember: dest => dest.Products,
+                memberOptions: opt => opt.Ignore())
+            .ForMember(destinationMember: dest => dest.Id,
+                memberOptions: opt => opt.Ignore())
+            .ForMember(destinationMember: x => x.Products,
+                memberOptions: opt => opt.Ignore())
             ;
     }
 }

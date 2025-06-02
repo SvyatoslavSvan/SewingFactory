@@ -3,54 +3,53 @@ using SewingFactory.Backend.IdentityServer.Infrastructure;
 using SewingFactory.Backend.IdentityServer.Web.Application.Features.Profile.ViewModels;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.IdentityServer.Web.Application.Features.Profile
+namespace SewingFactory.Backend.IdentityServer.Web.Application.Features.Profile;
+
+/// <summary>
+///     Mapper Configuration for entity ApplicationUser
+/// </summary>
+public sealed class ProfilesMapperConfiguration : AutoMapper.Profile
 {
-    /// <summary>
-    /// Mapper Configuration for entity ApplicationUser
-    /// </summary>
-    public sealed class ProfilesMapperConfiguration : AutoMapper.Profile
+    /// <inheritdoc />
+    public ProfilesMapperConfiguration()
     {
-        /// <inheritdoc />
-        public ProfilesMapperConfiguration()
-        {
-            CreateMap<RegisterViewModel, ApplicationUser>()
-                .ForMember(x => x.UserName, o => o.MapFrom(p => p.Email))
-                .ForMember(x => x.Email, o => o.MapFrom(p => p.Email))
-                .ForMember(x => x.EmailConfirmed, o => o.MapFrom(src => true))
-                .ForMember(x => x.FirstName, o => o.MapFrom(p => p.FirstName))
-                .ForMember(x => x.LastName, o => o.MapFrom(p => p.LastName))
-                .ForMember(x => x.PhoneNumberConfirmed, o => o.MapFrom(src => true))
-                .ForMember(x => x.ApplicationUserProfileId, o => o.Ignore())
-                .ForMember(x => x.ApplicationUserProfile, o => o.Ignore())
-                .ForMember(x => x.Id, o => o.Ignore())
-                .ForMember(x => x.NormalizedUserName, o => o.Ignore())
-                .ForMember(x => x.NormalizedEmail, o => o.Ignore())
-                .ForMember(x => x.PasswordHash, o => o.Ignore())
-                .ForMember(x => x.SecurityStamp, o => o.Ignore())
-                .ForMember(x => x.ConcurrencyStamp, o => o.Ignore())
-                .ForMember(x => x.PhoneNumber, o => o.Ignore())
-                .ForMember(x => x.TwoFactorEnabled, o => o.Ignore())
-                .ForMember(x => x.LockoutEnd, o => o.Ignore())
-                .ForMember(x => x.LockoutEnabled, o => o.Ignore())
-                .ForMember(x => x.AccessFailedCount, o => o.Ignore());
+        CreateMap<RegisterViewModel, ApplicationUser>()
+            .ForMember(destinationMember: x => x.UserName, memberOptions: o => o.MapFrom(mapExpression: p => p.Email))
+            .ForMember(destinationMember: x => x.Email, memberOptions: o => o.MapFrom(mapExpression: p => p.Email))
+            .ForMember(destinationMember: x => x.EmailConfirmed, memberOptions: o => o.MapFrom(mapExpression: src => true))
+            .ForMember(destinationMember: x => x.FirstName, memberOptions: o => o.MapFrom(mapExpression: p => p.FirstName))
+            .ForMember(destinationMember: x => x.LastName, memberOptions: o => o.MapFrom(mapExpression: p => p.LastName))
+            .ForMember(destinationMember: x => x.PhoneNumberConfirmed, memberOptions: o => o.MapFrom(mapExpression: src => true))
+            .ForMember(destinationMember: x => x.ApplicationUserProfileId, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.ApplicationUserProfile, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.Id, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.NormalizedUserName, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.NormalizedEmail, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.PasswordHash, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.SecurityStamp, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.ConcurrencyStamp, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.PhoneNumber, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.TwoFactorEnabled, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.LockoutEnd, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.LockoutEnabled, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.AccessFailedCount, memberOptions: o => o.Ignore());
 
-            CreateMap<RegisterViewModel, ApplicationUserProfile>()
-                .ForMember(x => x.Id, o => o.Ignore())
-                .ForMember(x => x.Permissions, o => o.Ignore())
-                .ForMember(x => x.ApplicationUser, o => o.Ignore())
-                .ForMember(x => x.CreatedAt, o => o.Ignore())
-                .ForMember(x => x.CreatedBy, o => o.Ignore())
-                .ForMember(x => x.UpdatedAt, o => o.Ignore())
-                .ForMember(x => x.UpdatedBy, o => o.Ignore());
+        CreateMap<RegisterViewModel, ApplicationUserProfile>()
+            .ForMember(destinationMember: x => x.Id, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.Permissions, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.ApplicationUser, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.CreatedAt, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.CreatedBy, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.UpdatedAt, memberOptions: o => o.Ignore())
+            .ForMember(destinationMember: x => x.UpdatedBy, memberOptions: o => o.Ignore());
 
-            CreateMap<ClaimsIdentity, UserProfileViewModel>()
-                .ForMember(x => x.Id, o => o.MapFrom(claims => ClaimsHelper.GetValue<Guid>(claims, ClaimTypes.NameIdentifier)))
-                .ForMember(x => x.PositionName, o => o.MapFrom(claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.Actor)))
-                .ForMember(x => x.FirstName, o => o.MapFrom(claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.GivenName)))
-                .ForMember(x => x.LastName, o => o.MapFrom(claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.Surname)))
-                .ForMember(x => x.Roles, o => o.MapFrom(claims => ClaimsHelper.GetValues<string>(claims, ClaimTypes.Role)))
-                .ForMember(x => x.Email, o => o.MapFrom(claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.Name)))
-                .ForMember(x => x.PhoneNumber, o => o.MapFrom(claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.MobilePhone)));
-        }
+        CreateMap<ClaimsIdentity, UserProfileViewModel>()
+            .ForMember(destinationMember: x => x.Id, memberOptions: o => o.MapFrom(mapExpression: claims => ClaimsHelper.GetValue<Guid>(claims, ClaimTypes.NameIdentifier)))
+            .ForMember(destinationMember: x => x.PositionName, memberOptions: o => o.MapFrom(mapExpression: claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.Actor)))
+            .ForMember(destinationMember: x => x.FirstName, memberOptions: o => o.MapFrom(mapExpression: claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.GivenName)))
+            .ForMember(destinationMember: x => x.LastName, memberOptions: o => o.MapFrom(mapExpression: claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.Surname)))
+            .ForMember(destinationMember: x => x.Roles, memberOptions: o => o.MapFrom(mapExpression: claims => ClaimsHelper.GetValues<string>(claims, ClaimTypes.Role)))
+            .ForMember(destinationMember: x => x.Email, memberOptions: o => o.MapFrom(mapExpression: claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.Name)))
+            .ForMember(destinationMember: x => x.PhoneNumber, memberOptions: o => o.MapFrom(mapExpression: claims => ClaimsHelper.GetValue<string>(claims, ClaimTypes.MobilePhone)));
     }
 }

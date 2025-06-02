@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<InvariantGlobalization>false</InvariantGlobalization>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<WarningsAsErrors>enable</WarningsAsErrors>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors>enable</WarningsAsErrors>
+    </PropertyGroup>
 
-	<ItemGroup>	  <ProjectReference Include="..\..\..\Common\Domain\SewingFactory.Common.Domain.csproj" />
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Common\Domain\SewingFactory.Common.Domain.csproj"/>
 
-		
-	</ItemGroup>
+
+    </ItemGroup>
 
 </Project>

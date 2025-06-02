@@ -1,5 +1,4 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
-using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport;
@@ -28,9 +27,9 @@ public sealed class RateBasedEmployee : Employee, IHasRate, IHasPremium
         Premium = premium;
     }
 
-    public Money Rate { get; set; }
-
     public Percent Premium { get; set; }
+
+    public Money Rate { get; set; }
 
     public IReadOnlyList<Timesheet> Timesheets => _timesheets;
 
@@ -39,7 +38,7 @@ public sealed class RateBasedEmployee : Employee, IHasRate, IHasPremium
         var baseSalary = base.CalculateSalary(dateRange);
         baseSalary.Payment += ((IHasRate)this).RatePayment(dateRange);
         baseSalary.Premium = ((IHasPremium)this).PremiumPayment(baseSalary.Payment);
+
         return baseSalary;
     }
-
 }

@@ -4,14 +4,13 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Qu
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries
-{
-    public record DeletePointOfSaleRequest(
-        PointOfSaleDeleteViewModel Model,
-        ClaimsPrincipal User)
-        : DeleteRequest<PointOfSaleDeleteViewModel, PointOfSale>(Model, User);
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 
-    public sealed class DeletePointOfSaleHandler(
-        IUnitOfWork unitOfWork)
-        : DeleteRequestHandler<PointOfSaleDeleteViewModel, PointOfSale>(unitOfWork);
-}
+public sealed record DeletePointOfSaleRequest(
+    PointOfSaleDeleteViewModel Model,
+    ClaimsPrincipal User)
+    : DeleteRequest<PointOfSaleDeleteViewModel, PointOfSale>(Model, User);
+
+public sealed class DeletePointOfSaleHandler(
+    IUnitOfWork unitOfWork)
+    : DeleteRequestHandler<PointOfSaleDeleteViewModel, PointOfSale>(unitOfWork);

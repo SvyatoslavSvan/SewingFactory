@@ -17,6 +17,6 @@ public class ProcessConfiguration : IdentityModelConfigurationBase<Process>
             b.Property(propertyExpression: p => p.Amount).HasColumnName("PriceAmount");
         });
 
-        builder.HasOne(x => x.Department).WithMany(x => x.Processes);
+        builder.HasOne(navigationExpression: x => x.Department).WithMany(navigationExpression: x => x.Processes);
     }
 }

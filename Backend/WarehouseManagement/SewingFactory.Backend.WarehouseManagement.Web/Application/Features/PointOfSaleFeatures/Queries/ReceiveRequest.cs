@@ -9,49 +9,47 @@ using SewingFactory.Common.Domain.Exceptions;
 using System.Security.Claims;
 using Operation = Calabonga.OperationResults.Operation;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
+
+public sealed record ReceiveRequest(
+    CreateOperationViewModel Model,
+    ClaimsPrincipal User
+) : IRequest<OperationEmpty<SewingFactoryNotFoundException, Exception>>;
+
+public sealed class ReceiveRequestHandler(
+    IUnitOfWork<ApplicationDbContext> unitOfWork
+) : IRequestHandler<ReceiveRequest, OperationEmpty<SewingFactoryNotFoundException, Exception>>
 {
-    public record ReceiveRequest(
-        CreateOperationViewModel Model,
-        ClaimsPrincipal User
-    ) : IRequest<OperationEmpty<SewingFactoryNotFoundException, Exception>>;
-
-    public sealed class ReceiveRequestHandler(
-        IUnitOfWork<ApplicationDbContext> unitOfWork
-    ) : IRequestHandler<ReceiveRequest, OperationEmpty<SewingFactoryNotFoundException, Exception>>
+    public async Task<OperationEmpty<SewingFactoryNotFoundException, Exception>> Handle(
+        ReceiveRequest request,
+        CancellationToken cancellationToken)
     {
-        public async Task<OperationEmpty<SewingFactoryNotFoundException, Exception>> Handle(
-            ReceiveRequest request,
-            CancellationToken cancellationToken)
-        {
-            var db = unitOfWork.DbContext;
+        var db = unitOfWork.DbContext;
 
-            var pair = await db.Set<PointOfSale>()
-                .Include(ps => ps.StockItems)
-                .ThenInclude(si => si.GarmentModel)
-                .Include(ps => ps.Operations)
-                .Where(ps => ps.Id == request.Model.PointOfSaleId)
-                .GroupBy(ps => 1)
-                .Select(g => new
-                {
-                    PointOfSale = g.First(),  
-                    GarmentModel = db.Set<GarmentModel>()
-                        .Single(gm => gm.Id == request.Model.GarmentModelId)
-                })
-                .SingleAsync(cancellationToken);
-
-            pair.PointOfSale.Receive(pair.GarmentModel, request.Model.Quantity, request.Model.Date);
-
-            await unitOfWork.SaveChangesAsync();
-            if (!unitOfWork.Result.Ok)
+        var pair = await db.Set<PointOfSale>()
+            .Include(navigationPropertyPath: ps => ps.StockItems)
+            .ThenInclude(navigationPropertyPath: si => si.GarmentModel)
+            .Include(navigationPropertyPath: ps => ps.Operations)
+            .Where(predicate: ps => ps.Id == request.Model.PointOfSaleId)
+            .GroupBy(keySelector: ps => 1)
+            .Select(selector: g => new
             {
-                return Operation.Error(unitOfWork.Result.Exception
-                                       ?? new SewingFactoryDatabaseSaveException(
-                                           $"{nameof(PointOfSale)} error while saving {nameof(PointOfSale.Receive)} operation"));
-            }
+                PointOfSale = g.First(),
+                GarmentModel = db.Set<GarmentModel>()
+                    .Single(gm => gm.Id == request.Model.GarmentModelId)
+            })
+            .SingleAsync(cancellationToken);
 
-            return Operation.Result();
+        pair.PointOfSale.Receive(pair.GarmentModel, request.Model.Quantity, request.Model.Date);
+
+        await unitOfWork.SaveChangesAsync();
+        if (!unitOfWork.Result.Ok)
+        {
+            return Operation.Error(unitOfWork.Result.Exception
+                                   ?? new SewingFactoryDatabaseSaveException(
+                                       $"{nameof(PointOfSale)} error while saving {nameof(PointOfSale.Receive)} operation"));
         }
-    }
 
+        return Operation.Result();
+    }
 }

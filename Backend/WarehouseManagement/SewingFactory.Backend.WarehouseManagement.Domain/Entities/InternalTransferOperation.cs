@@ -8,12 +8,14 @@ public sealed class InternalTransferOperation : Operation
     private PointOfSale _receiver = null!;
 
     /// <summary>
-    /// default constructor for EF Core
+    ///     default constructor for EF Core
     /// </summary>
-    private InternalTransferOperation() 
-    {  }
+    private InternalTransferOperation()
+    {
+    }
 
-    public InternalTransferOperation(PointOfSale owner,
+    public InternalTransferOperation(
+        PointOfSale owner,
         int quantity,
         DateOnly date,
         PointOfSale receiver) : base(owner,

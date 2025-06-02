@@ -2,22 +2,22 @@
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
-namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces
+namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Interfaces;
+
+public interface IHasSalaryPercentage
 {
-    public interface IHasSalaryPercentage
+    public Percent SalaryPercentage { get; set; }
+
+    public Money SalaryPercentagePayment(DateRange period)
     {
-        public Percent SalaryPercentage { get; set; }
-
-        public Money SalaryPercentagePayment(DateRange period)
+        if (this is not Employee employee)
         {
-            if (this is not Employee employee)
-            {
-                throw new SewingFactoryInvalidOperationException("IHasSalaryPercentage can be implemented only in employee type");
-            }
-            var deptTotal = employee.Department.Employees.Where(x => x.Id != employee.Id)
-                .Sum(e => e.CalculateSalary(period).Payment.Amount);
-
-            return new Money(deptTotal * SalaryPercentage.ToDecimal());
+            throw new SewingFactoryInvalidOperationException("IHasSalaryPercentage can be implemented only in employee type");
         }
+
+        var deptTotal = employee.Department.Employees.Where(predicate: x => x.Id != employee.Id)
+            .Sum(selector: e => e.CalculateSalary(period).Payment.Amount);
+
+        return new Money(deptTotal * SalaryPercentage.ToDecimal());
     }
 }

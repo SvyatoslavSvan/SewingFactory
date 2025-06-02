@@ -59,7 +59,7 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-    protected async Task<Operation<TUpdateViewModel,SewingFactoryNotFoundException, SewingFactoryDatabaseSaveException>> Update(
+    protected async Task<Operation<TUpdateViewModel, SewingFactoryNotFoundException, SewingFactoryDatabaseSaveException>> Update(
         [FromBody] TUpdateViewModel model,
         [FromServices] IMediator mediator,
         HttpContext context)

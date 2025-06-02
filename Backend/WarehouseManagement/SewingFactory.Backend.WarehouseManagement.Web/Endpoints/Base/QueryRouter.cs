@@ -25,7 +25,7 @@ public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-    protected async Task<Operation<IEnumerable<TReadViewModel>,Exception>> GetAll(
+    protected async Task<Operation<IEnumerable<TReadViewModel>, Exception>> GetAll(
         [FromServices] IMediator mediator,
         HttpContext context)
         => await mediator.Send(new GetAllRequest<TEntity, TReadViewModel>(
@@ -47,7 +47,7 @@ public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-    protected async Task<Operation<TDetailsReadViewModel,SewingFactoryNotFoundException>> GetById(
+    protected async Task<Operation<TDetailsReadViewModel, SewingFactoryNotFoundException>> GetById(
         [FromServices] IMediator mediator,
         HttpContext context, Guid id)
         => await mediator.Send(new GetByIdRequest<TEntity, TDetailsReadViewModel>(

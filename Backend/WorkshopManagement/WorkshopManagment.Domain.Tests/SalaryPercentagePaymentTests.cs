@@ -20,24 +20,24 @@ public class SalaryPercentagePaymentTests
         var processPrice = new Money(100m);
         var process = new Process("Sew", department, processPrice);
         var garmentModel = new GarmentModel(
-            name: "Model1",
+            "Model1",
             "desc",
-            processes: [process],
-            category: category,
-            image: null);
+            [process],
+            category,
+            null);
 
         var docDate = new DateOnly(2025, 5, 1);
         var document = WorkshopDocument.CreateInstance(
-            name: "Doc1",
-            countOfModelsInvolved: 1,
-            date: docDate,
-            garmentModel: garmentModel,
-            department: department);
+            "Doc1",
+            1,
+            docDate,
+            garmentModel,
+            department);
 
         var employee = new ProcessBasedEmployee("Ivan", "EMP001", department, new Percent(0));
         department.AddEmployee(employee);
         var technologist = new Technologist("tech", "EMP002", new Percent(10), department);
-        var repeat = new EmployeeTaskRepeat(employee, repeats: 2);
+        var repeat = new EmployeeTaskRepeat(employee, 2);
 
         document.Tasks.First().AddEmployeeRepeat(repeat);
         document.RecalculateEmployees();
@@ -61,6 +61,7 @@ public class SalaryPercentagePaymentTests
             .GetField("<Id>k__BackingField",
                 BindingFlags.Instance | BindingFlags.NonPublic)!
             .SetValue(employee, Guid.NewGuid());
+
         typeof(Identity)
             .GetField("<Id>k__BackingField",
                 BindingFlags.Instance | BindingFlags.NonPublic)!

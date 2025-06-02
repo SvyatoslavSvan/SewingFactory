@@ -59,6 +59,4 @@ public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
         _processes.Clear();
         _processes.AddRange(processes);
     }
-
-
 }

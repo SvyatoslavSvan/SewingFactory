@@ -1,5 +1,4 @@
-﻿using Calabonga.Microservices.Core;
-using Calabonga.Utils.Extensions;
+﻿using Calabonga.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 

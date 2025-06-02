@@ -9,13 +9,14 @@ public class UpdateGarmentModelValidator : AbstractValidator<UpdateRequest<Garme
 {
     public UpdateGarmentModelValidator()
     {
-        RuleFor(x => x.Model.Name)
+        RuleFor(expression: x => x.Model.Name)
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(100).WithMessage("Name must not exceed 100 characters.");
-        RuleFor(x => x.Model.Price)
+
+        RuleFor(expression: x => x.Model.Price)
             .GreaterThan(0);
 
-        RuleFor(x => x.Model.Id).NotEmpty();
-        RuleFor(x => x.Model.CategoryId).NotEmpty();
+        RuleFor(expression: x => x.Model.Id).NotEmpty();
+        RuleFor(expression: x => x.Model.CategoryId).NotEmpty();
     }
 }

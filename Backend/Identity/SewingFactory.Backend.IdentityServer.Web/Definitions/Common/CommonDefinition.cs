@@ -1,35 +1,34 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
 
-namespace SewingFactory.Backend.IdentityServer.Web.Definitions.Common
+namespace SewingFactory.Backend.IdentityServer.Web.Definitions.Common;
+
+/// <summary>
+///     AspNetCore common configuration
+/// </summary>
+public class CommonDefinition : AppDefinition
 {
     /// <summary>
-    /// AspNetCore common configuration
+    ///     Configure services for current application
     /// </summary>
-    public class CommonDefinition : AppDefinition
+    /// <param name="builder"></param>
+    public override void ConfigureServices(WebApplicationBuilder builder)
     {
-        /// <summary>
-        /// Configure services for current application
-        /// </summary>
-        /// <param name="builder"></param>
-        public override void ConfigureServices(WebApplicationBuilder builder)
-        {
-            builder.Services.AddLocalization();
-            builder.Services.AddHttpContextAccessor();
-            builder.Services.AddResponseCaching();
-            builder.Services.AddMemoryCache();
-            builder.Services.AddMvc();
-            builder.Services.AddRazorPages();
-        }
+        builder.Services.AddLocalization();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddResponseCaching();
+        builder.Services.AddMemoryCache();
+        builder.Services.AddMvc();
+        builder.Services.AddRazorPages();
+    }
 
-        /// <summary>
-        /// Configure application for current application
-        /// </summary>
-        /// <param name="app"></param>
-        public override void ConfigureApplication(WebApplication app)
-        {
-            app.UseHttpsRedirection();
-            app.MapRazorPages();
-            app.MapDefaultControllerRoute();
-        }
+    /// <summary>
+    ///     Configure application for current application
+    /// </summary>
+    /// <param name="app"></param>
+    public override void ConfigureApplication(WebApplication app)
+    {
+        app.UseHttpsRedirection();
+        app.MapRazorPages();
+        app.MapDefaultControllerRoute();
     }
 }

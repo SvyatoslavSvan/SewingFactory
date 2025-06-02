@@ -5,9 +5,8 @@ using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.Base.Que
 using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.ViewModels;
 using System.Security.Claims;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Queries
-{
-    public record UpdateWorkdayRequest(UpdateWorkdayViewModel Model,ClaimsPrincipal User) : UpdateRequest<UpdateWorkdayViewModel, WorkDay>(Model, User);
+namespace SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Queries;
 
-    public class UpdateWorkDayRequestHandler(IUnitOfWork unitOfWork, IMapper mapper) : UpdateRequestHandler<UpdateWorkdayViewModel, WorkDay>(unitOfWork, mapper);
-}
+public record UpdateWorkdayRequest(UpdateWorkdayViewModel Model, ClaimsPrincipal User) : UpdateRequest<UpdateWorkdayViewModel, WorkDay>(Model, User);
+
+public class UpdateWorkDayRequestHandler(IUnitOfWork unitOfWork, IMapper mapper) : UpdateRequestHandler<UpdateWorkdayViewModel, WorkDay>(unitOfWork, mapper);

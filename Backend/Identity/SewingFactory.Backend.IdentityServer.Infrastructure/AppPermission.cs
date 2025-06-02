@@ -1,32 +1,29 @@
-﻿
+﻿using SewingFactory.Common.Domain.Base;
 
-using SewingFactory.Common.Domain.Base;
+namespace SewingFactory.Backend.IdentityServer.Infrastructure;
 
-namespace SewingFactory.Backend.IdentityServer.Infrastructure
+/// <summary>
+///     User permission for application
+/// </summary>
+public class AppPermission : Auditable
 {
     /// <summary>
-    /// User permission for application
+    ///     Application User profile identifier
     /// </summary>
-    public class AppPermission : Auditable
-    {
-        /// <summary>
-        /// Application User profile identifier
-        /// </summary>
-        public Guid ApplicationUserProfileId { get; set; }
+    public Guid ApplicationUserProfileId { get; set; }
 
-        /// <summary>
-        /// Application User Profile
-        /// </summary>
-        public virtual ApplicationUserProfile? ApplicationUserProfile { get; set; }
+    /// <summary>
+    ///     Application User Profile
+    /// </summary>
+    public virtual ApplicationUserProfile? ApplicationUserProfile { get; set; }
 
-        /// <summary>
-        /// Authorize attribute policy name
-        /// </summary>
-        public string PolicyName { get; set; } = null!;
+    /// <summary>
+    ///     Authorize attribute policy name
+    /// </summary>
+    public string PolicyName { get; set; } = null!;
 
-        /// <summary>
-        /// Description for current permission
-        /// </summary>
-        public string Description { get; set; } = null!;
-    }
+    /// <summary>
+    ///     Description for current permission
+    /// </summary>
+    public string Description { get; set; } = null!;
 }

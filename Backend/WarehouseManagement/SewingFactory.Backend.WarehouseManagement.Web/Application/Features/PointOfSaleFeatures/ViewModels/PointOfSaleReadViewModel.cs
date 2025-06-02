@@ -1,10 +1,9 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.ViewModels;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Base;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
+
+public class PointOfSaleReadViewModel : PointOfSaleViewModel, IIdentityViewModel
 {
-    public class PointOfSaleReadViewModel : PointOfSaleViewModel, IIdentityViewModel
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

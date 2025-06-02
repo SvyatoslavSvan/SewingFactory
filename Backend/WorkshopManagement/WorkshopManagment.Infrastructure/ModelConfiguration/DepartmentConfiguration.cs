@@ -2,18 +2,17 @@
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure.ModelConfiguration.Base;
 
-namespace SewingFactory.Backend.WorkshopManagement.Infrastructure.ModelConfiguration
-{
-    internal class DepartmentConfiguration : IdentityModelConfigurationBase<Department>
-    {
-        protected override void AddBuilder(EntityTypeBuilder<Department> builder)
-        {
-            builder.Property(x => x.Name).IsRequired();
-            builder.HasMany(d => d.Employees).WithOne(e => e.Department);
-            builder.HasMany(d => d.Documents).WithOne(w => w.Department);
-            builder.HasMany(d => d.Processes).WithOne(p => p.Department);
-        }
+namespace SewingFactory.Backend.WorkshopManagement.Infrastructure.ModelConfiguration;
 
-        protected override string TableName() => "Departments";
+internal class DepartmentConfiguration : IdentityModelConfigurationBase<Department>
+{
+    protected override void AddBuilder(EntityTypeBuilder<Department> builder)
+    {
+        builder.Property(propertyExpression: x => x.Name).IsRequired();
+        builder.HasMany(navigationExpression: d => d.Employees).WithOne(navigationExpression: e => e.Department);
+        builder.HasMany(navigationExpression: d => d.Documents).WithOne(navigationExpression: w => w.Department);
+        builder.HasMany(navigationExpression: d => d.Processes).WithOne(navigationExpression: p => p.Department);
     }
+
+    protected override string TableName() => "Departments";
 }
