@@ -1,6 +1,8 @@
-﻿namespace SewingFactory.Common.Domain.ValueObjects;
+﻿using SewingFactory.Common.Domain.Interfaces;
 
-public sealed class Money
+namespace SewingFactory.Common.Domain.ValueObjects;
+
+public sealed class Money : IPrototype<Money>
 {
     private decimal _amount;
 
@@ -45,4 +47,6 @@ public sealed class Money
     {
         return new Money(money.Amount * multiplier);
     }
+
+    public Money Clone() => new(_amount);
 }

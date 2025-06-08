@@ -11,7 +11,7 @@ public sealed class GarmentModelTests
     public void Category_Null_Throws()
     {
         var category = new GarmentCategory("Outerwear", []);
-        var model = new GarmentModel("Jacket", category, default);
+        var model = new GarmentModel("Jacket", category, null!);
 
         Assert.Throws<ArgumentNullException>(testCode: () => model.Category = null!);
     }

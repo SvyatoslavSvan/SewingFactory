@@ -12,7 +12,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Receive increases stock and logs an operation")]
     public void Receive_Increments_Stock_And_Adds_Operation()
     {
-        var (pos, model, stock) = TestFixture.CreatePOS(0);
+        var (pos, model, stock) = TestFixture.CreatePointOfSale(0);
 
         pos.Receive(model, 5, new DateOnly(2025, 5, 22));
 
@@ -23,7 +23,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Sell reduces stock and logs an operation")]
     public void Sell_Reduces_Stock_And_Adds_Operation()
     {
-        var (pos, model, stock) = TestFixture.CreatePOS();
+        var (pos, model, stock) = TestFixture.CreatePointOfSale();
 
         pos.Sell(model.Id, 4, new DateOnly(2025, 5, 22));
 
@@ -35,7 +35,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Sell with insufficient stock records shortage and zeroes qty")]
     public void Sell_Insufficient_Stock_Records_Shortage()
     {
-        var (pos, model, stock) = TestFixture.CreatePOS(1);
+        var (pos, model, stock) = TestFixture.CreatePointOfSale(1);
 
         pos.Sell(model.Id, 5, new DateOnly(2025, 5, 22));
 
@@ -48,7 +48,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Write-off reduces stock and logs an operation")]
     public void WriteOff_Reduces_Stock_And_Adds_Operation()
     {
-        var (pos, model, stock) = TestFixture.CreatePOS(3);
+        var (pos, model, stock) = TestFixture.CreatePointOfSale(3);
 
         pos.WriteOff(model.Id, 2, DateOnly.FromDateTime(DateTime.Today));
 
@@ -60,7 +60,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Transfer moves stock, updates both POS and logs correct operations")]
     public void Transfer_Moves_Stock_Between_Points_And_Logs_Operations()
     {
-        var (sender, model, senderStock) = TestFixture.CreatePOS(8);
+        var (sender, model, senderStock) = TestFixture.CreatePointOfSale(8);
         var receiver = new PointOfSale("Receiver");
         receiver.AddStockItem(model);
         var receiverStock = receiver.StockItems.First();
@@ -80,14 +80,14 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "AddStockItem throws when the model already exists in POS")]
     public void AddStockItem_DuplicateModel_Throws()
     {
-        var (pos, model, _) = TestFixture.CreatePOS();
+        var (pos, model, _) = TestFixture.CreatePointOfSale();
         Assert.Throws<SewingFactoryInvalidOperationException>(testCode: () => pos.AddStockItem(model));
     }
 
     [Fact(DisplayName = "Sell fails when model is not found in stock")]
     public void Sell_Nonexistent_Model_Throws()
     {
-        var (pos, _, _) = TestFixture.CreatePOS();
+        var (pos, _, _) = TestFixture.CreatePointOfSale();
         var missingId = Guid.NewGuid();
 
         Assert.Throws<SewingFactoryInvalidOperationException>(
@@ -97,7 +97,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Write-off fails when model is not found in stock")]
     public void WriteOff_Nonexistent_Model_Throws()
     {
-        var (pos, _, _) = TestFixture.CreatePOS();
+        var (pos, _, _) = TestFixture.CreatePointOfSale();
         var missingId = Guid.NewGuid();
 
         Assert.Throws<SewingFactoryInvalidOperationException>(
@@ -107,7 +107,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Write-off with insufficient stock records shortage and zeroes qty")]
     public void WriteOff_Insufficient_Stock_Records_Shortage()
     {
-        var (pos, model, stock) = TestFixture.CreatePOS(1);
+        var (pos, model, stock) = TestFixture.CreatePointOfSale(1);
 
         pos.WriteOff(model.Id, 5, new DateOnly(2025, 5, 22));
 
@@ -133,7 +133,7 @@ public sealed class PointOfSaleTests
     [Fact(DisplayName = "Transfer with insufficient stock records shortage on sender, delivers to receiver")]
     public void Transfer_Insufficient_Stock_Records_Shortage()
     {
-        var (sender, model, senderStock) = TestFixture.CreatePOS(2);
+        var (sender, model, senderStock) = TestFixture.CreatePointOfSale(2);
         var receiver = new PointOfSale("Receiver");
         receiver.AddStockItem(model);
         var receiverStock = receiver.StockItems.First();

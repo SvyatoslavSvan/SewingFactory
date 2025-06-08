@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 
-public record CreatePointOfSaleRequest(
+public sealed record CreatePointOfSaleRequest(
     PointOfSaleCreateViewModel Model,
     ClaimsPrincipal User)
     : CreateRequest<PointOfSaleCreateViewModel, PointOfSale, PointOfSaleDetailsReadViewModel>(Model, User);

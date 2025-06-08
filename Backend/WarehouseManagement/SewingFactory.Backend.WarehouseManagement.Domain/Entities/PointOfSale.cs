@@ -1,6 +1,7 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
 using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.Exceptions;
+using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 
@@ -30,14 +31,14 @@ public sealed class PointOfSale(string name) : NamedIdentity(name)
     {
         var stockItem = GetOrThrowStockItemByModelId(modelId);
         stockItem.ReduceQuantity(quantityToSell);
-        _operations.Add(new SaleOperation(this, quantityToSell, date));
+        _operations.Add(new SaleOperation(this, quantityToSell, date, stockItem));
     }
 
     public void WriteOff(Guid modelId, int quantityToWriteOff, DateOnly date)
     {
         var stockItem = GetOrThrowStockItemByModelId(modelId);
         stockItem.ReduceQuantity(quantityToWriteOff);
-        _operations.Add(new WriteOffOperation(this, quantityToWriteOff, date));
+        _operations.Add(new WriteOffOperation(this, quantityToWriteOff, date, stockItem));
     }
 
     public void Receive(GarmentModel model, int quantityToReceive, DateOnly date)
@@ -45,14 +46,15 @@ public sealed class PointOfSale(string name) : NamedIdentity(name)
         var stockItem = _stockItems.FirstOrDefault(predicate: x => x.GarmentModel.Id == model.Id);
         if (stockItem is null)
         {
-            _stockItems.Add(new StockItem(quantityToReceive, this, model));
+            stockItem = new StockItem(quantityToReceive, this, model);
+            _stockItems.Add(stockItem);
         }
         else
         {
             stockItem.IncreaseQuantity(quantityToReceive);
         }
 
-        _operations.Add(new ReceiveOperation(this, quantityToReceive, date));
+        _operations.Add(new ReceiveOperation(this, quantityToReceive, date, stockItem));
     }
 
     public void Transfer(GarmentModel model, int quantityToTransfer, DateOnly date, PointOfSale receiver)
@@ -60,7 +62,7 @@ public sealed class PointOfSale(string name) : NamedIdentity(name)
         var stockItem = GetOrThrowStockItemByModelId(model.Id);
         stockItem.ReduceQuantity(quantityToTransfer);
         receiver.Receive(model, quantityToTransfer, date);
-        _operations.Add(new InternalTransferOperation(this, quantityToTransfer, date, receiver));
+        _operations.Add(new InternalTransferOperation(this, quantityToTransfer, date, receiver, stockItem));
     }
 
     private StockItem GetOrThrowStockItemByModelId(Guid modelId)
@@ -73,4 +75,6 @@ public sealed class PointOfSale(string name) : NamedIdentity(name)
 
         return stockItem;
     }
+    
+    
 }

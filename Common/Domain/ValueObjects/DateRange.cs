@@ -45,16 +45,5 @@ public sealed class DateRange
         return date >= _start && date <= _end;
     }
 
-    public Expression<Func<TEntity, bool>> ToExpression<TEntity>(
-        Expression<Func<TEntity, DateOnly>> dateSelector)
-    {
-        var p = dateSelector.Parameters[0];
-        var member = dateSelector.Body;
-        var s = Expression.Constant(Start, typeof(DateOnly));
-        var e = Expression.Constant(End, typeof(DateOnly));
-        var body = Expression.AndAlso(
-            Expression.GreaterThanOrEqual(member, s),
-            Expression.LessThanOrEqual(member, e));
-        return Expression.Lambda<Func<TEntity, bool>>(body, p);
-    }
+    public override string ToString() => _start + " - " + _end;
 }

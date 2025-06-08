@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.ValueObjects;
@@ -12,7 +13,7 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;
 
-public class GetLeftOversReportRequestHandlerTests
+public sealed class GetLeftOversReportRequestHandlerTests
 {
     private static void SetId(object entity, Guid id) // AAA
         => typeof(Identity)

@@ -11,7 +11,7 @@ public sealed class StockItemTests
     [Fact(DisplayName = "PointOfSale setter rejects null")]
     public void PointOfSale_Null_Throws()
     {
-        var (pos, model, _) = TestFixture.CreatePOS();
+        var (pos, model, _) = TestFixture.CreatePointOfSale();
         var item = new StockItem(1, pos, model);
 
         Assert.Throws<SewingFactoryArgumentNullException>(testCode: () => item.PointOfSale = null!);
@@ -20,7 +20,7 @@ public sealed class StockItemTests
     [Fact(DisplayName = "GarmentModel setter rejects null")]
     public void GarmentModel_Null_Throws()
     {
-        var (pos, model, _) = TestFixture.CreatePOS();
+        var (pos, model, _) = TestFixture.CreatePointOfSale();
         var item = new StockItem(1, pos, model);
 
         Assert.Throws<SewingFactoryArgumentNullException>(testCode: () => item.GarmentModel = null!);
@@ -29,7 +29,7 @@ public sealed class StockItemTests
     [Fact(DisplayName = "ReduceQuantity with sufficient stock decreases quantity and clears shortage")]
     public void ReduceQuantity_Sufficient_Decrements_And_Clears_Shortage()
     {
-        var (pos, model, _) = TestFixture.CreatePOS();
+        var (pos, model, _) = TestFixture.CreatePointOfSale();
         var item = new StockItem(10, pos, model);
 
         item.ReduceQuantity(4);
@@ -41,7 +41,7 @@ public sealed class StockItemTests
     [Fact(DisplayName = "ReduceQuantity with insufficient stock sets shortage and zeroes quantity")]
     public void ReduceQuantity_Insufficient_Sets_Shortage_And_Zero_Quantity()
     {
-        var (pos, model, _) = TestFixture.CreatePOS();
+        var (pos, model, _) = TestFixture.CreatePointOfSale();
         var item = new StockItem(3, pos, model);
 
         item.ReduceQuantity(5);
@@ -53,7 +53,7 @@ public sealed class StockItemTests
     [Fact(DisplayName = "IncreaseQuantity positive value increases quantity and clears shortage")]
     public void IncreaseQuantity_Positive_IncreasesQuantity_And_Clears_Shortage()
     {
-        var (pos, model, _) = TestFixture.CreatePOS();
+        var (pos, model, _) = TestFixture.CreatePointOfSale();
         var item = new StockItem(2, pos, model);
 
         item.ReduceQuantity(3);
@@ -68,7 +68,7 @@ public sealed class StockItemTests
     [Fact(DisplayName = "IncreaseQuantity negative value throws")]
     public void IncreaseQuantity_Negative_Throws()
     {
-        var (pos, model, _) = TestFixture.CreatePOS();
+        var (pos, model, _) = TestFixture.CreatePointOfSale();
         var item = new StockItem(2, pos, model);
 
         Assert.Throws<SewingFactoryArgumentException>(testCode: () => item.IncreaseQuantity(-1));

@@ -14,7 +14,7 @@ internal static class TestFixture
     /// </summary>
     internal static (PointOfSale pos,
         GarmentModel model,
-        StockItem stock) CreatePOS(int initialQty = 10)
+        StockItem stock) CreatePointOfSale(int initialQty = 10)
     {
         var category = new GarmentCategory("T-Shirts", []);
         var model = new GarmentModel("Classic Tee", category, Money.Zero);

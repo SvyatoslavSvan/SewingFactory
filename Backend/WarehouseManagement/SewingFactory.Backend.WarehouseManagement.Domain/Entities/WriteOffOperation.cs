@@ -8,8 +8,10 @@ public sealed class WriteOffOperation : Operation
     {
     }
 
-    public WriteOffOperation(PointOfSale owner, int quantity, DateOnly date)
-        : base(owner, quantity, date)
+    public WriteOffOperation(PointOfSale owner, int quantity, DateOnly date, StockItem stockItem)
+        : base(owner, quantity, date, stockItem)
     {
     }
+
+    public override string DisplayName => "Списання";
 }

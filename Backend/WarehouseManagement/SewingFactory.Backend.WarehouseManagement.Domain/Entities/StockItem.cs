@@ -1,4 +1,5 @@
-﻿using SewingFactory.Common.Domain.Base;
+﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
@@ -7,6 +8,7 @@ public sealed class StockItem : Identity
 {
     private GarmentModel _garmentModel = null!;
     private PointOfSale _pointOfSale = null!;
+    private readonly List<Operation> _operations = null!;
 
     /// <summary>
     ///     default constructor for EF Core
@@ -35,12 +37,15 @@ public sealed class StockItem : Identity
         get => _garmentModel;
         set => _garmentModel = value ?? throw new SewingFactoryArgumentNullException(nameof(GarmentModel));
     }
-
+    
+    public IReadOnlyList<Operation> Operations => _operations;
+    
     public int Quantity { get; private set; }
 
     public int ShortageQuantity { get; private set; }
 
     public decimal SumOfStock => (Quantity + ShortageQuantity) * _garmentModel.Price.Amount;
+    public void AddOperation(Operation operation) => _operations.Add(operation);
 
     public void ReduceQuantity(int quantityToReduce)
     {

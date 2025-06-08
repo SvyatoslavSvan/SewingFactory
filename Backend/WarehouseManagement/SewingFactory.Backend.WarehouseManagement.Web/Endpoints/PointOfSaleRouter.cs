@@ -8,6 +8,7 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOf
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.StockItems;
 using SewingFactory.Backend.WarehouseManagement.Web.Endpoints.Base;
 using SewingFactory.Common.Domain.Exceptions;
+using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Endpoints;
 
@@ -19,15 +20,45 @@ public class PointOfSaleRouter
         PointOfSaleDeleteViewModel,
         PointOfSaleDetailsReadViewModel>
 {
-    public override void ConfigureApplication(WebApplication app)
+    public override void ConfigureApplication(
+        WebApplication app)
     {
         base.ConfigureApplication(app);
-        app.MapPost(Prefix + "/addStockItem", AddStockItem).WithTags(_featureGroupName);
-        app.MapPost(Prefix + "/sell", Sell).WithTags(_featureGroupName);
-        app.MapPost(Prefix + "/writeOff", WriteOff).WithTags(_featureGroupName);
-        app.MapPost(Prefix + "/receive", Receive).WithTags(_featureGroupName);
-        app.MapPost(Prefix + "/internalTransfer", InternalTransfer).WithTags(_featureGroupName);
-        app.MapGet(Prefix + "/leftOversReport", GetLeftOversReport).WithTags(_featureGroupName);
+        app.MapPost(Prefix + "/addStockItem",
+                AddStockItem)
+            .WithTags(_featureGroupName);
+
+        app.MapPost(Prefix + "/sell",
+                Sell)
+            .WithTags(_featureGroupName);
+
+        app.MapPost(Prefix + "/writeOff",
+                WriteOff)
+            .WithTags(_featureGroupName);
+
+        app.MapPost(Prefix + "/receive",
+                Receive)
+            .WithTags(_featureGroupName);
+
+        app.MapPost(Prefix + "/internalTransfer",
+                InternalTransfer)
+            .WithTags(_featureGroupName);
+
+        app.MapGet(Prefix + "/leftOversReport",
+                GetLeftOversReport)
+            .WithTags(_featureGroupName);
+        
+        app.MapGet(Prefix + "/allOperationForStockReport",
+                GetAllOperationForStockReport)
+            .WithTags(_featureGroupName);
+        
+        app.MapGet(Prefix + "/allSalesForGarmentModelReport",
+                GetAllSalesForGarmentModelReport)
+            .WithTags(_featureGroupName);
+        
+        app.MapGet(Prefix + "/allOperationForPointOfSaleReport",
+                GetAllOperationForPointOfSaleReport)
+            .WithTags(_featureGroupName);
     }
 
 
@@ -40,7 +71,8 @@ public class PointOfSaleRouter
             [FromBody] AddStockItemViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-        => await mediator.Send(new AddStockItemRequest(model, context.User));
+        => await mediator.Send(new AddStockItemRequest(model,
+            context.User));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -51,7 +83,8 @@ public class PointOfSaleRouter
             [FromBody] CreateOperationViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-        => await mediator.Send(new SellRequest(model, context.User));
+        => await mediator.Send(new SellRequest(model,
+            context.User));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -62,7 +95,8 @@ public class PointOfSaleRouter
             [FromBody] CreateOperationViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-        => await mediator.Send(new WriteOffRequest(model, context.User));
+        => await mediator.Send(new WriteOffRequest(model,
+            context.User));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -73,7 +107,8 @@ public class PointOfSaleRouter
             [FromBody] CreateOperationViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-        => await mediator.Send(new ReceiveRequest(model, context.User));
+        => await mediator.Send(new ReceiveRequest(model,
+            context.User));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -84,16 +119,65 @@ public class PointOfSaleRouter
             [FromBody] CreateInternalTransferViewModel model,
             [FromServices] IMediator mediator,
             HttpContext context)
-        => await mediator.Send(new InternalTransferRequest(model, context.User));
+        => await mediator.Send(new InternalTransferRequest(model,
+            context.User));
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-    public async Task<IResult> GetLeftOversReport(
-        [FromServices] IMediator mediator, [FromQuery] Guid pointOfSaleId,
+    private static async Task<IResult> GetLeftOversReport(
+        [FromServices] IMediator mediator,
+        [FromQuery] Guid pointOfSaleId,
         HttpContext context)
-        => await mediator.Send(new GetLeftOversReportRequest(context.User, pointOfSaleId),
+        => await mediator.Send(new GetLeftOversReportRequest(context.User,
+                pointOfSaleId),
             context.RequestAborted);
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
+    private static async Task<IResult> GetAllOperationForStockReport(
+        [FromServices] IMediator mediator,
+        [FromQuery] Guid pointOfSaleId,
+        [FromQuery] Guid garmentModelId,
+        [FromQuery] DateOnly start,
+        [FromQuery] DateOnly end,
+        HttpContext context)
+        => await mediator.Send(new AllOperationForStockReportRequest(context.User, new DateRange(start, end),
+                pointOfSaleId,garmentModelId),
+            context.RequestAborted);
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
+    private static async Task<IResult> GetAllSalesForGarmentModelReport(
+        [FromServices] IMediator mediator,
+        [FromQuery] Guid garmentModelId,
+        [FromQuery] DateOnly start,
+        [FromQuery] DateOnly end,
+        HttpContext context)
+        => await mediator.Send(new AllSalesForGarmentModelReportRequest(context.User, new DateRange(start, end),garmentModelId),
+            context.RequestAborted);
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
+    private static async Task<IResult> GetAllOperationForPointOfSaleReport(
+        [FromServices] IMediator mediator,
+        [FromQuery] Guid pointOfSaleId,
+        [FromQuery] DateOnly start,
+        [FromQuery] DateOnly end,
+        HttpContext context)
+        => await mediator.Send(new AllOperationForPointOfSaleReportRequest(context.User,
+                pointOfSaleId,new DateRange(start, end)),
+            context.RequestAborted);
+
 }

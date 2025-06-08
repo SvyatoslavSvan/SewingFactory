@@ -1,6 +1,6 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides;
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 
 public interface ILeftoverReportProvider
 {

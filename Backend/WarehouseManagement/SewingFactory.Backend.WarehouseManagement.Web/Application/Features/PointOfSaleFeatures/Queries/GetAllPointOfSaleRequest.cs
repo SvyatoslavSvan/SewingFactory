@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 
-public record GetAllPointOfSalesRequest(ClaimsPrincipal User)
+public sealed record GetAllPointOfSalesRequest(ClaimsPrincipal User)
     : GetAllRequest<PointOfSale, PointOfSaleReadViewModel>(User);
 
 public sealed class GetAllPointOfSalesHandler(

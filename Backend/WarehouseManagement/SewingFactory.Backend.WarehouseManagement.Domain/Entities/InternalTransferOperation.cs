@@ -5,7 +5,7 @@ namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 
 public sealed class InternalTransferOperation : Operation
 {
-    private PointOfSale _receiver = null!;
+    private readonly PointOfSale _receiver = null!;
 
     /// <summary>
     ///     default constructor for EF Core
@@ -18,9 +18,9 @@ public sealed class InternalTransferOperation : Operation
         PointOfSale owner,
         int quantity,
         DateOnly date,
-        PointOfSale receiver) : base(owner,
+        PointOfSale receiver, StockItem stockItem) : base(owner,
         quantity,
-        date)
+        date,stockItem)
     {
         Receiver = receiver;
         ReceiverId = receiver.Id;
@@ -29,8 +29,9 @@ public sealed class InternalTransferOperation : Operation
     public PointOfSale Receiver
     {
         get => _receiver;
-        set => _receiver = value ?? throw new SewingFactoryArgumentNullException(nameof(Receiver));
+        init => _receiver = value ?? throw new SewingFactoryArgumentNullException(nameof(Receiver));
     }
 
     public Guid ReceiverId { get; private set; }
+    public override string DisplayName => "Переміщення";
 }

@@ -12,7 +12,7 @@ using Operation = Calabonga.OperationResults.Operation;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
 
-public record AddStockItemRequest(
+public sealed record AddStockItemRequest(
     AddStockItemViewModel Model,
     ClaimsPrincipal User) : IRequest<Operation<StockItemReadViewModel, SewingFactoryNotFoundException, Exception>>;
 

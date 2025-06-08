@@ -1,10 +1,11 @@
 ﻿using ClosedXML.Excel;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 using TimeZoneConverter;
 
-namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides;
+namespace SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Implementations;
 
-public class LeftoverReportProvider : ILeftoverReportProvider
+public sealed class LeftoverReportProvider : ILeftoverReportProvider
 {
     public byte[] Build(PointOfSale pointOfSale)
     {

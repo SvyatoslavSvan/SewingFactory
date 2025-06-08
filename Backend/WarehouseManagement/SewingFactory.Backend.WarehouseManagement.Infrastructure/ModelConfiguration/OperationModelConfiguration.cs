@@ -8,10 +8,21 @@ namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfigur
 
 public class OperationModelConfiguration : IdentityModelConfigurationBase<Operation>
 {
-    protected override void AddBuilder(EntityTypeBuilder<Operation> builder)
+    protected override void AddBuilder(
+        EntityTypeBuilder<Operation> builder)
     {
+        builder.OwnsOne(x => x.PriceOnOperationDate);
+        builder.Ignore(x => x.DisplayName);
+        builder.Ignore(x => x.HistoricalSum);
+        builder.Ignore(x => x.CurrentSum);
+        
         builder.HasOne(navigationExpression: o => o.Owner)
-            .WithMany(navigationExpression: p => p.Operations).HasForeignKey(foreignKeyExpression: x => x.OwnerId)
+            .WithMany(navigationExpression: p => p.Operations)
+            .HasForeignKey(foreignKeyExpression: x => x.OwnerId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasOne(x => x.StockItem)
+            .WithMany(x => x.Operations)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasDiscriminator<string>("OperationType")
@@ -21,5 +32,6 @@ public class OperationModelConfiguration : IdentityModelConfigurationBase<Operat
             .HasValue<InternalTransferOperation>("InternalTransfer");
     }
 
-    protected override string TableName() => "Operations";
+    protected override string TableName()
+        => "Operations";
 }

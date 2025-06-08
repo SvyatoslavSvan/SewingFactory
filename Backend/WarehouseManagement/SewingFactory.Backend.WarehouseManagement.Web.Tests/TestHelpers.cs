@@ -6,6 +6,8 @@ using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Garment
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.Mapping.Profiles;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.Mapping;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Mapping.Profiles;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Implementations;
+using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;
 
@@ -21,7 +23,9 @@ public static class TestHelpers
         services.AddUnitOfWork<ApplicationDbContext>();
 
         services.AddTransient<GarmentCategoryStubConverter>();
-
+        services.AddTransient<IAllOperationForPointOfSaleReportProvider, AllOperationForPointOfSaleReportProvider>();
+        services.AddTransient<IAllOperationForStockReportProvider,      AllOperationForStockReportProvider>();
+        services.AddTransient<IAllSalesForGarmentModelReportProvider,   AllSalesForGarmentModelReportProvider>();
         services.AddAutoMapper(
             configAction: (sp, cfg) =>
             {
@@ -30,6 +34,7 @@ public static class TestHelpers
                 cfg.AddProfile<GarmentModelMappingProfile>();
                 cfg.AddProfile<PointOfSaleMappingProfile>();
                 cfg.AddProfile<OperationMappingProfile>();
+                
             },
             typeof(GarmentCategoryProfile).Assembly);
 
