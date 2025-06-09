@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
-using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations.Base;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfiguration.Base;
 
 namespace SewingFactory.Backend.WarehouseManagement.Infrastructure.ModelConfiguration;

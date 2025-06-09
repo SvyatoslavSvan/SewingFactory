@@ -1,8 +1,9 @@
-﻿using SewingFactory.Common.Domain.Base;
+﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
+using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations.Base;
 
 public abstract class Operation : Identity
 {
@@ -33,7 +34,7 @@ public abstract class Operation : Identity
 
     public Guid OwnerId { get; protected init; }
 
-    
+
     public int Quantity
     {
         get => _quantity;
@@ -59,10 +60,10 @@ public abstract class Operation : Identity
         get => _stockStockItem;
         init => _stockStockItem = value ?? throw new SewingFactoryArgumentNullException(nameof(StockItem));
     }
-    
+
     public decimal CurrentSum => Quantity * StockItem.GarmentModel.Price.Amount;
-    
+
     public decimal HistoricalSum => Quantity * PriceOnOperationDate.Amount;
-    
+
     public abstract string DisplayName { get; }
 }

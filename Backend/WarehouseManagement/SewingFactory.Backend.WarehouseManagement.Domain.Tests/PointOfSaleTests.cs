@@ -1,4 +1,7 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 

@@ -1,5 +1,6 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
-using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations.Base;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Operations;
 using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 

@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 using SewingFactory.Common.Domain.ValueObjects;
 

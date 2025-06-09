@@ -1,6 +1,7 @@
-﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations.Base;
 
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
 
 public sealed class WriteOffOperation : Operation
 {

@@ -1,14 +1,16 @@
-﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations.Base;
 using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.Exceptions;
 
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
 
 public sealed class StockItem : Identity
 {
+    private readonly List<Operation> _operations = null!;
     private GarmentModel _garmentModel = null!;
     private PointOfSale _pointOfSale = null!;
-    private readonly List<Operation> _operations = null!;
+    private int _quantity;
 
     /// <summary>
     ///     default constructor for EF Core
@@ -37,10 +39,22 @@ public sealed class StockItem : Identity
         get => _garmentModel;
         set => _garmentModel = value ?? throw new SewingFactoryArgumentNullException(nameof(GarmentModel));
     }
-    
+
     public IReadOnlyList<Operation> Operations => _operations;
-    
-    public int Quantity { get; private set; }
+
+    public int Quantity
+    {
+        get => _quantity;
+        private set
+        {
+            if (value < 0)
+            {
+                throw new SewingFactoryArgumentException(nameof(Quantity), $"{nameof(Quantity)} cannot be negative.");
+            }
+
+            _quantity = value;
+        }
+    }
 
     public int ShortageQuantity { get; private set; }
 

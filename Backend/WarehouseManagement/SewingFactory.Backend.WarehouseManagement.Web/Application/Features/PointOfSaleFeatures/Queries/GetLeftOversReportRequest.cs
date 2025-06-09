@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 using System.Security.Claims;
@@ -22,7 +23,7 @@ public class GetLeftOversReportRequestHandler(
         CancellationToken cancellationToken)
     {
         var pointOfSale = await unitOfWork.GetRepository<PointOfSale>()
-            .GetFirstOrDefaultAsync(predicate: x => x.Id == request.PointOfSaleId,
+            .GetFirstOrDefaultAsync(predicate: pointOfSale => pointOfSale.Id == request.PointOfSaleId,
                 include: queryable => queryable.Include(navigationPropertyPath: pointOfSale => pointOfSale.StockItems)
                     .ThenInclude(navigationPropertyPath: stockItem => stockItem.GarmentModel)
                     .ThenInclude(navigationPropertyPath: garmentModel => garmentModel.Category),

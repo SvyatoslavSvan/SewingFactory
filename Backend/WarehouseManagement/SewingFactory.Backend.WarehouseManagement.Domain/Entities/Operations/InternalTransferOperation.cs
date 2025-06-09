@@ -1,7 +1,8 @@
-﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations.Base;
 using SewingFactory.Common.Domain.Exceptions;
 
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
 
 public sealed class InternalTransferOperation : Operation
 {
@@ -20,7 +21,7 @@ public sealed class InternalTransferOperation : Operation
         DateOnly date,
         PointOfSale receiver, StockItem stockItem) : base(owner,
         quantity,
-        date,stockItem)
+        date, stockItem)
     {
         Receiver = receiver;
         ReceiverId = receiver.Id;

@@ -3,6 +3,8 @@ using Calabonga.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Operations;
 using SewingFactory.Common.Domain.Exceptions;
@@ -24,20 +26,20 @@ public sealed class InternalTransferRequestHandler(
         InternalTransferRequest request,
         CancellationToken cancellationToken)
     {
-        var db = unitOfWork.DbContext;
-        var pair = await db.Set<PointOfSale>()
-            .Include(navigationPropertyPath: ps => ps.StockItems)
-            .ThenInclude(navigationPropertyPath: si => si.GarmentModel)
-            .Include(navigationPropertyPath: ps => ps.Operations)
+        var context = unitOfWork.DbContext;
+        var pair = await context.Set<PointOfSale>()
+            .Include(navigationPropertyPath: pointOfSale => pointOfSale.StockItems)
+            .ThenInclude(navigationPropertyPath: stockItem => stockItem.GarmentModel)
+            .Include(navigationPropertyPath: pointOfSale => pointOfSale.Operations)
             .Where(predicate: ps => ps.Id == request.Model.PointOfSaleId
                                     || ps.Id == request.Model.ReceiverId)
             .GroupBy(keySelector: ps => 1)
-            .Select(selector: g => new
+            .Select(selector: group => new
             {
-                Owner = g.First(ps => ps.Id == request.Model.PointOfSaleId),
-                Receiver = g.First(ps => ps.Id == request.Model.ReceiverId),
-                GarmentModel = db.Set<GarmentModel>()
-                    .Single(gm => gm.Id == request.Model.GarmentModelId)
+                Owner = group.First(pointOfSale => pointOfSale.Id == request.Model.PointOfSaleId),
+                Receiver = group.First(pointOfSale => pointOfSale.Id == request.Model.ReceiverId),
+                GarmentModel = context.Set<GarmentModel>()
+                    .Single(garmentModel => garmentModel.Id == request.Model.GarmentModelId)
             })
             .SingleAsync(cancellationToken);
 

@@ -4,6 +4,8 @@ using Calabonga.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.StockItems;
 using SewingFactory.Common.Domain.Exceptions;
@@ -27,15 +29,15 @@ public sealed class AddStockItemRequestHandler(
         var dbContext = unitOfWork.DbContext;
 
         var pair = await (
-                from ps in dbContext.Set<PointOfSale>()
+                from pointOfSale in dbContext.Set<PointOfSale>()
                     .AsTracking()
-                    .Where(predicate: ps => ps.Id == request.Model.PointOfSaleId)
-                    .Include(navigationPropertyPath: x => x.StockItems)
-                    .ThenInclude(navigationPropertyPath: x => x.GarmentModel)
-                from gm in dbContext.Set<GarmentModel>()
+                    .Where(predicate: pointOfSale => pointOfSale.Id == request.Model.PointOfSaleId)
+                    .Include(navigationPropertyPath: pointOfSale => pointOfSale.StockItems)
+                    .ThenInclude(navigationPropertyPath: stockItem => stockItem.GarmentModel)
+                from garmentModel in dbContext.Set<GarmentModel>()
                     .AsTracking()
-                    .Where(gm => gm.Id == request.Model.GarmentModelId)
-                select new { PointOfSale = ps, GarmentModel = gm })
+                    .Where(garmentModel => garmentModel.Id == request.Model.GarmentModelId)
+                select new { PointOfSale = pointOfSale, GarmentModel = garmentModel })
             .FirstOrDefaultAsync(cancellationToken);
 
         if (pair is null)

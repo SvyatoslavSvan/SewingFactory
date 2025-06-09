@@ -1,4 +1,5 @@
 ﻿using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
 
 namespace SewingFactory.Backend.WarehouseManagement.Domain.Tests;
 

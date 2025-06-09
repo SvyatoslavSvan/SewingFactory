@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 using SewingFactory.Common.Domain.ValueObjects;
 using System.Security.Claims;
@@ -16,8 +18,8 @@ public sealed class AllOperationForPointOfSaleReportRequestHandler(IAllOperation
     {
         var pointOfSale = await unitOfWork.GetRepository<PointOfSale>()
             .GetFirstOrDefaultAsync(predicate: x => x.Id == request.PointOfSaleId,
-                include: q => q.Include(x => x.Operations.Where(o => o.Date >= request.dateRange.Start && o.Date <= request.dateRange.End))
-                    .Include(x => x.Operations)
+                include: q => q.Include(x => x.Operations.Where(operation => operation.Date >= request.dateRange.Start && operation.Date <= request.dateRange.End))
+                    .Include(pointOfSale => pointOfSale.Operations)
                     .ThenInclude(x => (x as InternalTransferOperation)!.Receiver));
 
         if (pointOfSale is null)

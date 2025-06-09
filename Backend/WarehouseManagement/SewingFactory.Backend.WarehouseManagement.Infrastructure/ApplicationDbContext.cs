@@ -4,7 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
-using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Base;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations.Base;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure.Base;
 

@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
@@ -26,24 +28,24 @@ public sealed class AllOperationForStockReportRequestHandler(
     {
         var data = await unitOfWork.GetRepository<PointOfSale>()
             .GetFirstOrDefaultAsync(
-                selector: pos => new
+                selector: pointOfSale => new
                 {
-                    PointOfSale = pos,
-                    GarmentModel = pos.Operations
-                        .Where(op => op.StockItem.GarmentModel.Id == request.GarmentModelId)
-                        .OrderByDescending(op => op.Date) 
-                        .Select(op => op.StockItem.GarmentModel)
+                    PointOfSale = pointOfSale,
+                    GarmentModel = pointOfSale.Operations
+                        .Where(operation => operation.StockItem.GarmentModel.Id == request.GarmentModelId)
+                        .OrderByDescending(operation => operation.Date) 
+                        .Select(operation => operation.StockItem.GarmentModel)
                         .FirstOrDefault()
                 },
-                predicate: pos => pos.Id == request.PointOfSaleId,
-                include: q => q
-                    .Include(p => p.Operations
-                        .Where(o => o.Date >= request.Range.Start
-                                    && o.Date <= request.Range.End))
-                    .ThenInclude(o => o.StockItem)
-                    .ThenInclude(si => si.GarmentModel)
-                    .Include(p => p.Operations)
-                    .ThenInclude(o => (o as InternalTransferOperation)!.Receiver),
+                predicate: pointOfSale => pointOfSale.Id == request.PointOfSaleId,
+                include: queryable => queryable
+                    .Include(pointOfSale => pointOfSale.Operations
+                        .Where(operation => operation.Date >= request.Range.Start
+                                    && operation.Date <= request.Range.End))
+                    .ThenInclude(operation => operation.StockItem)
+                    .ThenInclude(stockItem => stockItem.GarmentModel)
+                    .Include(pointOfSale => pointOfSale.Operations)
+                    .ThenInclude(operation => (operation as InternalTransferOperation)!.Receiver),
                 trackingType: TrackingType.NoTrackingWithIdentityResolution);
 
 

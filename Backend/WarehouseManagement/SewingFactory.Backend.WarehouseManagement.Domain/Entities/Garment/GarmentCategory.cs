@@ -1,6 +1,6 @@
 ﻿using SewingFactory.Common.Domain.Base;
 
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
 
 public sealed class GarmentCategory : NamedIdentity
 {

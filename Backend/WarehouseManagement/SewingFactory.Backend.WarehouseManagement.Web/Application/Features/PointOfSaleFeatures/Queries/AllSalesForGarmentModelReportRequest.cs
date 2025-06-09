@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Operations;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
 using SewingFactory.Common.Domain.ValueObjects;
 using System.Security.Claims;
@@ -16,13 +17,13 @@ public sealed class AllSalesForGarmentModelReportRequestHandler(IAllSalesForGarm
     public async Task<IResult> Handle(AllSalesForGarmentModelReportRequest request, CancellationToken cancellationToken)
     {
         var sales = await unitOfWork.GetRepository<SaleOperation>().GetAllAsync(
-            predicate: s =>
-                s.Date >= request.dateRange.Start &&
-                s.Date <= request.dateRange.End &&
-                s.StockItem.GarmentModel.Id == request.GarmentModelId,
-            include: q => q
-                .Include(s => s.StockItem)
-                .ThenInclude(si => si.GarmentModel)
+            predicate: saleOperation =>
+                saleOperation.Date >= request.dateRange.Start &&
+                saleOperation.Date <= request.dateRange.End &&
+                saleOperation.StockItem.GarmentModel.Id == request.GarmentModelId,
+            include: queryable => queryable
+                .Include(saleOperation => saleOperation.StockItem)
+                .ThenInclude(stockItem => stockItem.GarmentModel)
                 .Include(x => x.Owner),
             trackingType: TrackingType.NoTracking);
         

@@ -1,7 +1,7 @@
 ﻿using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.ValueObjects;
 
-namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+namespace SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
 
 public sealed class GarmentModel : NamedIdentity
 {

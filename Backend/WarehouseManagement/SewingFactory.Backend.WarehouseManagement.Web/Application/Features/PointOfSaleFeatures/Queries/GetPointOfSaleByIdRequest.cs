@@ -3,6 +3,7 @@ using Calabonga.OperationResults;
 using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
+using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Queries;
 using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
@@ -31,8 +32,8 @@ public sealed class GetPointOfSaleByIdHandler(
         CancellationToken cancellationToken)
     {
         var pointOfSale = await _unitOfWork.GetRepository<PointOfSale>()
-            .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Id,
-                include: x => x.Include(navigationPropertyPath: pointOfSale => pointOfSale.StockItems)
+            .GetFirstOrDefaultAsync(predicate: pointOfSale => pointOfSale.Id == request.Id,
+                include: queryable => queryable.Include(navigationPropertyPath: pointOfSale => pointOfSale.StockItems)
                     .ThenInclude(navigationPropertyPath: stockItem => stockItem.GarmentModel)
                     .Include(navigationPropertyPath: pointOfSale => pointOfSale.Operations));
 
