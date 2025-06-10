@@ -30,7 +30,7 @@ public abstract class Operation : Identity
 
     public DateOnly Date { get; init; }
 
-    public Money PriceOnOperationDate { get; init; }
+    public Money PriceOnOperationDate { get; init; } = null!;
 
     public Guid OwnerId { get; protected init; }
 

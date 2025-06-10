@@ -84,7 +84,7 @@ public sealed class AllOperationForStockReportProviderTests
         using var wb = new XLWorkbook(new MemoryStream(sut.Build(pos, model, range)));
         var ws = wb.Worksheet(1);
         const int firstDataRow = 6; 
-        var usedRows = ws.RangeUsed().RowsUsed().ToList();
+        var usedRows = ws.RangeUsed()!.RowsUsed().ToList();
         var totalRowNo = usedRows.Last().RowNumber(); 
         var bodyRows = usedRows.Where(predicate: r => r.RowNumber() >= firstDataRow &&
                                                       r.RowNumber() < totalRowNo)

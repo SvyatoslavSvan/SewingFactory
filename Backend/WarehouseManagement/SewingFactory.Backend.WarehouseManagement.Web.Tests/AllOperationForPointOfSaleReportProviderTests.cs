@@ -64,7 +64,7 @@ public sealed class AllOperationForPointOfSaleReportProviderTests
 
         using var wb = new XLWorkbook(new MemoryStream(sut.Build(pos, range)));
         var ws = wb.Worksheet(1);
-        var usedRows = ws.RangeUsed().RowsUsed().ToList();
+        var usedRows = ws.RangeUsed()!.RowsUsed().ToList();
         var dataAndTotals = usedRows.Skip(3).ToList();
         var bodyRows = dataAndTotals.Take(dataAndTotals.Count - 1).ToList();
         Assert.Equal(4, bodyRows.Count);
