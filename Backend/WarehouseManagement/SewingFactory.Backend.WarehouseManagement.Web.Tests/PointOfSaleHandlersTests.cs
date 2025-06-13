@@ -6,10 +6,10 @@ using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Queries;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.ViewModels.Operations;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.Common.Base.Queries;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Queries;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.ViewModels;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.ViewModels.Operations;
 using SewingFactory.Common.Domain.ValueObjects;
 using System.Security.Claims;
 

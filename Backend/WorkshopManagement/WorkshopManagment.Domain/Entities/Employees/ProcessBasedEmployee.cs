@@ -6,12 +6,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 
-public class ProcessBasedEmployee : Employee, IHasPremium
+public sealed class ProcessBasedEmployee : Employee, IHasPremium
 {
     /// <summary>
     ///     Default constructor for EF Core
     /// </summary>
-    protected ProcessBasedEmployee() => Premium = 0;
+    private ProcessBasedEmployee() => Premium = 0;
 
     [SetsRequiredMembers]
     public ProcessBasedEmployee(string name, string internalId, Department department) : base(name, internalId, department) => Premium = new Percent(0);

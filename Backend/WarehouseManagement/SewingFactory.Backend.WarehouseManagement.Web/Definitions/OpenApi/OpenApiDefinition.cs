@@ -10,7 +10,8 @@ namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.OpenApi;
 /// <summary>
 ///     Swagger definition for application
 /// </summary>
-public class OpenApiDefinition : AppDefinition
+// ReSharper disable once ClassNeverInstantiated.Global
+public sealed class OpenApiDefinition : AppDefinition
 {
     // -------------------------------------------------------
     // ATTENTION!

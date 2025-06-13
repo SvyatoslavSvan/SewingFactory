@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.Mapping.Converters;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.Mapping.Profiles;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentModelFeatures.Mapping;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Mapping.Profiles;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Implementations;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.GarmentCategories.Mapping.Converters;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.GarmentCategories.Mapping.Profiles;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.GarmentModels.Mapping;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Mapping.Profiles;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Provides.Implementations;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Provides.Interfaces;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;
 

@@ -1,6 +1,6 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.EmployeesMessages.Providers;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.Providers;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.Employees.Providers;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.Timesheets.Providers;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.Providers;
 

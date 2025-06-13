@@ -1,13 +1,11 @@
 ﻿using Calabonga.UnitOfWork;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
-using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Provides.Interfaces;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Queries;
 using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.ValueObjects;
 using System.Reflection;

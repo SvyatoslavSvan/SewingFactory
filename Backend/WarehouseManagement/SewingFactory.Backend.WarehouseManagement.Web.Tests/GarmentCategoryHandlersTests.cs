@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WarehouseManagement.Infrastructure;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.Base.Queries;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.Queries;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.GarmentCategoryFeatures.ViewModels;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.Common.Base.Queries;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.GarmentCategories.Queries;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.GarmentCategories.ViewModels;
 using System.Security.Claims;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;

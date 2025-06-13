@@ -1,4 +1,5 @@
-﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
+﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;

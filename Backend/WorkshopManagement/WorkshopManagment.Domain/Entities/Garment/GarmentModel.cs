@@ -1,6 +1,7 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.Interfaces;
+using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 
@@ -13,19 +14,21 @@ public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
     /// <summary>
     ///     Default constructor for EF Core
     /// </summary>
-    private GarmentModel() { }
+    private GarmentModel() => Price = Money.Zero;
 
     public GarmentModel(
         string name,
         string description,
         List<Process> processes,
         GarmentCategory category,
+        Money price,
         byte[]? image = null) : base(name)
     {
         Description = description;
         _processes = processes;
-        Image = image;
         Category = category;
+        Price = price;
+        Image = image;
     }
 
     public IReadOnlyList<Process> Processes => _processes;
@@ -50,9 +53,11 @@ public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
         set => _category = value ?? throw new SewingFactoryArgumentNullException(nameof(Category));
     }
 
+    public Money Price { get; set; }
+    
     public byte[]? Image { get; set; }
 
-    public GarmentModel Clone() => this;
+    public GarmentModel Clone() => new(Name, Description, _processes.ToList(), Category, Price, Image);
 
     public void ReplaceProcesses(IEnumerable<Process> processes)
     {

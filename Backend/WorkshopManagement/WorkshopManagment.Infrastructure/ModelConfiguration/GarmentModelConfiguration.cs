@@ -10,6 +10,7 @@ public class GarmentModelConfiguration : IdentityModelConfigurationBase<GarmentM
 
     protected override void AddBuilder(EntityTypeBuilder<GarmentModel> builder)
     {
+        builder.OwnsOne(navigationExpression: x => x.Price);
         builder.Property(propertyExpression: x => x.Name).IsRequired();
         builder.Property(propertyExpression: x => x.Description).IsRequired();
         builder.HasOne(navigationExpression: x => x.Category).WithMany(navigationExpression: x => x.GarmentModels).IsRequired();

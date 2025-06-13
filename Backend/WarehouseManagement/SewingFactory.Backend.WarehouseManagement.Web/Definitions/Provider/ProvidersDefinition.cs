@@ -1,8 +1,6 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Implementations;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Interfaces;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Queries;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Provides.Implementations;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Provides.Interfaces;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Definitions.Provider;
 

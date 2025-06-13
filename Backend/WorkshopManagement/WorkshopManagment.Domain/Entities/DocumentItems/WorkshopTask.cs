@@ -4,7 +4,7 @@ using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 
-public class WorkshopTask : Identity
+public sealed class WorkshopTask : Identity
 {
     private readonly List<EmployeeTaskRepeat> _employeeTaskRepeats;
     private WorkshopDocument _document = null!;

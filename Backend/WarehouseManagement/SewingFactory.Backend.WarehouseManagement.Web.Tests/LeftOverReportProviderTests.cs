@@ -1,9 +1,7 @@
 ﻿using ClosedXML.Excel;
-using SewingFactory.Backend.WarehouseManagement.Domain.Entities;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WarehouseManagement.Domain.Entities.Inventory;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides;
-using SewingFactory.Backend.WarehouseManagement.Web.Application.Features.PointOfSaleFeatures.Provides.Implementations;
+using SewingFactory.Backend.WarehouseManagement.Web.Features.PointOfSales.Provides.Implementations;
 using SewingFactory.Common.Domain.Base;
 using SewingFactory.Common.Domain.ValueObjects;
 using System.Reflection;
@@ -11,7 +9,7 @@ using TimeZoneConverter;
 
 namespace SewingFactory.Backend.WarehouseManagement.Web.Tests;
 
-public class LeftoverReportProviderTests
+public sealed class LeftoverReportProviderTests
 {
     private static void SetId(object entity, Guid id)
         => typeof(Identity)

@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 
-public class Technologist : Employee, IHasSalaryPercentage
+public sealed class Technologist : Employee, IHasSalaryPercentage
 {
     /// <summary>
     ///     Default constructor for EF Core

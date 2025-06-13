@@ -43,7 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Application\Features\WorkShopDocumentMessages\Mapping\Converters\"/>
+      <Folder Include="Features\Common\" />
     </ItemGroup>
 
 

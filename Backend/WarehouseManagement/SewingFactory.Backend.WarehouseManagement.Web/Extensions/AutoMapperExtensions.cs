@@ -2,7 +2,7 @@
 using AutoMapper.Configuration;
 using System.Runtime.CompilerServices;
 
-namespace SewingFactory.Backend.WorkshopManagement.Web.Extensions;
+namespace SewingFactory.Backend.WarehouseManagement.Web.Extensions;
 
 public static class AutoMapperExtensions
 {

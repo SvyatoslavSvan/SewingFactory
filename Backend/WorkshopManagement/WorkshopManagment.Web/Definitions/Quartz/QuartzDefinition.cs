@@ -1,6 +1,6 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
 using Quartz;
-using SewingFactory.Backend.WorkshopManagement.Web.Application.Features.TimesheetMessages.QuartzJobs;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.Timesheets.QuartzJobs;
 using System.Runtime.InteropServices;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.Quartz;

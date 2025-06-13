@@ -43,5 +43,9 @@
         <ProjectReference Include="..\SewingFactory.Backend.WarehouseManagement.Infrastructure\SewingFactory.Backend.WarehouseManagement.Infrastructure.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Common\" />
+    </ItemGroup>
+
 
 </Project>
