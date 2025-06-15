@@ -4,5 +4,4 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Vi
 
 public sealed class CreateGarmentModelViewModel : PostGarmentModelViewModel
 {
-    
 }

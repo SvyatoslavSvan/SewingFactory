@@ -85,13 +85,23 @@ public sealed class WorkshopDocument : NamedIdentity
             _employees.Remove(old);
         }
 
-        foreach (var emp in newEmployees)
+        foreach (var emp in newEmployees.Where(emp => _employees.All(predicate: e => e.Id != emp.Id)))
         {
-            if (_employees.All(predicate: e => e.Id != emp.Id))
-            {
-                _employees.Add(emp);
-            }
+            _employees.Add(emp);
         }
+    }
+    
+    public void UpdateTaskRepeats(IEnumerable<TaskRepeatInfo> updates)
+    {
+        foreach (var info in updates)
+        {
+            var task = _tasks.FirstOrDefault(t => t.Id == info.TaskId)
+                       ?? throw new SewingFactoryNotFoundException(
+                           $"Task {info.TaskId} not found in document {Id}");
+            
+            task.ReplaceRepeats(info.Repeats);
+        }
+        RecalculateEmployees();
     }
 
     public static WorkshopDocument CreateInstance(

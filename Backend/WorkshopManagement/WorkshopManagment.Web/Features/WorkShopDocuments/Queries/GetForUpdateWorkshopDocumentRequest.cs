@@ -10,10 +10,10 @@ using System.Security.Claims;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Queries;
 
-public record GetForUpdateWorkshopDocumentRequest(
+public sealed record GetForUpdateWorkshopDocumentRequest(
     ClaimsPrincipal User) : IRequest<OperationResult<GetForUpdateWorkshopDocumentViewModel>>;
 
-public class GetForUpdateWorkshopDocumentRequestHandler(
+public sealed class GetForUpdateWorkshopDocumentRequestHandler(
     IUnitOfWork<ApplicationDbContext> unitOfWork,
     IMapper mapper) : IRequestHandler<GetForUpdateWorkshopDocumentRequest, OperationResult<GetForUpdateWorkshopDocumentViewModel>>
 {

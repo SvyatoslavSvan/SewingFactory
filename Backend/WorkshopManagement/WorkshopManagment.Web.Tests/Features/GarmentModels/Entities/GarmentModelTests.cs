@@ -7,12 +7,12 @@ namespace SewingFactory.Backend.WorkshopManagement.Tests.Features.GarmentModels.
 
 public sealed class GarmentModelTests
 {
-    private readonly string _validName = "Test Garment";
-    private readonly string _validDescription = "Test Description";
-    private readonly List<Process> _validProcesses = new();
     private readonly GarmentCategory _category = new("Test Category");
+    private readonly Money _price = new(1000m);
+    private readonly string _validDescription = "Test Description";
     private readonly byte[] _validImage = [1, 2, 3];
-    private readonly Money _price = new Money(1000m);
+    private readonly string _validName = "Test Garment";
+    private readonly List<Process> _validProcesses = new();
 
     // Create an actual GarmentCategory instance
     // Initialize with empty processes list
@@ -103,7 +103,7 @@ public sealed class GarmentModelTests
         // Assert
         Assert.Empty(garmentModel.Processes);
     }
-    
+
     [Fact]
     public void Clone_ReturnsNewInstance()
     {

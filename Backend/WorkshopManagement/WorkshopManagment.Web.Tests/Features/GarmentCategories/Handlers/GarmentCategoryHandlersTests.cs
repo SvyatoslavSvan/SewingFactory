@@ -14,23 +14,6 @@ namespace SewingFactory.Backend.WorkshopManagement.Tests.Features.GarmentCategor
 
 public sealed class GarmentCategoryHandlersTests
 {
-
-    private static IServiceProvider BuildServices()
-    {
-        var services = new ServiceCollection();
-
-        services.AddDbContext<ApplicationDbContext>(o =>
-            o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
-
-        services.AddUnitOfWork<ApplicationDbContext>();
-        services.AddAutoMapper(
-            (sp, cfg) => cfg.ConstructServicesUsing(sp.GetService),
-            typeof(EmployeeMappingProfile).Assembly,
-            typeof(GarmentCategoryMappingProfile).Assembly);
-
-        return services.BuildServiceProvider();
-    }
-
     private readonly IServiceProvider _sp = BuildServices();
 
     private readonly ClaimsPrincipal _user = new(new ClaimsIdentity([
@@ -38,9 +21,25 @@ public sealed class GarmentCategoryHandlersTests
         new Claim(ClaimTypes.Role, "Admin")
     ]));
 
+    private static IServiceProvider BuildServices()
+    {
+        var services = new ServiceCollection();
+
+        services.AddDbContext<ApplicationDbContext>(optionsAction: o =>
+            o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+
+        services.AddUnitOfWork<ApplicationDbContext>();
+        services.AddAutoMapper(
+            configAction: (sp, cfg) => cfg.ConstructServicesUsing(sp.GetService),
+            typeof(EmployeeMappingProfile).Assembly,
+            typeof(GarmentCategoryMappingProfile).Assembly);
+
+        return services.BuildServiceProvider();
+    }
+
     private static void SeedCategories(IUnitOfWork<ApplicationDbContext> uow)
     {
-        var repo = uow.GetRepository<SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment.GarmentCategory>();
+        var repo = uow.GetRepository<GarmentCategory>();
 
         repo.Insert(new GarmentCategory("Outerwear"));
         repo.Insert(new GarmentCategory("Sportswear"));
@@ -52,10 +51,10 @@ public sealed class GarmentCategoryHandlersTests
     [Fact]
     public async Task CreateGarmentCategoryHandler_Should_Create_And_Return_Category()
     {
-        var uow    = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var uow = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _sp.GetRequiredService<IMapper>();
 
-        var model   = new CreateGarmentCategoryViewModel { Name = "Kidswear" };
+        var model = new CreateGarmentCategoryViewModel { Name = "Kidswear" };
         var request = new CreateGarmentCategoryRequest(model, _user);
         var handler = new CreateGarmentCategoryHandler(uow, mapper);
 
@@ -65,7 +64,7 @@ public sealed class GarmentCategoryHandlersTests
         Assert.Equal("Kidswear", result.Result!.Name);
 
         var saved = await uow.GetRepository<
-                SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment.GarmentCategory>()
+                GarmentCategory>()
             .GetFirstOrDefaultAsync(predicate: c => c.Name == "Kidswear");
 
         Assert.NotNull(saved);
@@ -74,13 +73,14 @@ public sealed class GarmentCategoryHandlersTests
     [Fact]
     public async Task GetByIdGarmentCategoryHandler_Should_Return_Category_When_Found()
     {
-        var uow    = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var uow = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _sp.GetRequiredService<IMapper>();
 
         SeedCategories(uow);
 
-        var repo     = uow.GetRepository<
-               SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment.GarmentCategory>();
+        var repo = uow.GetRepository<
+            GarmentCategory>();
+
         var existing = await repo.GetFirstOrDefaultAsync(predicate: c => c.Name == "Outerwear");
 
         Assert.NotNull(existing);
@@ -91,14 +91,14 @@ public sealed class GarmentCategoryHandlersTests
         var result = await handler.Handle(request, CancellationToken.None);
 
         Assert.NotNull(result.Result);
-        Assert.Equal(existing.Id,   result.Result!.Id);
+        Assert.Equal(existing.Id, result.Result!.Id);
         Assert.Equal(existing.Name, result.Result.Name);
     }
 
     [Fact]
     public async Task GetAllGarmentCategoryHandler_Should_Return_All_Categories()
     {
-        var uow    = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var uow = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _sp.GetRequiredService<IMapper>();
 
         SeedCategories(uow);
@@ -114,7 +114,7 @@ public sealed class GarmentCategoryHandlersTests
     [Fact]
     public async Task GetPagedGarmentCategoryHandler_Should_Return_Paged_Categories()
     {
-        var uow    = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var uow = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _sp.GetRequiredService<IMapper>();
 
         SeedCategories(uow);
@@ -131,24 +131,20 @@ public sealed class GarmentCategoryHandlersTests
     [Fact]
     public async Task UpdateGarmentCategoryHandler_Should_Update_Category()
     {
-        var uow    = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var uow = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _sp.GetRequiredService<IMapper>();
 
         SeedCategories(uow);
 
         var repo = uow.GetRepository<
-                   SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment.GarmentCategory>();
+            GarmentCategory>();
 
         var existing = await repo.GetFirstOrDefaultAsync(
-            predicate: c => c.Name == "Sportswear",trackingType: TrackingType.NoTracking);
+            predicate: c => c.Name == "Sportswear", trackingType: TrackingType.NoTracking);
 
         Assert.NotNull(existing);
 
-        var updateVm = new UpdateGarmentCategoryViewModel
-        {
-            Id   = existing!.Id,
-            Name = "Activewear"
-        };
+        var updateVm = new UpdateGarmentCategoryViewModel { Id = existing!.Id, Name = "Activewear" };
 
         uow.DbContext.ChangeTracker.Clear();
 
@@ -173,14 +169,14 @@ public sealed class GarmentCategoryHandlersTests
         uow.DbContext.ChangeTracker.Clear();
 
         var repo = uow.GetRepository<
-                   SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment.GarmentCategory>();
+            GarmentCategory>();
 
         var victim = await repo.GetFirstOrDefaultAsync(
             predicate: c => c.Name == "Accessories", trackingType: TrackingType.NoTracking);
 
         Assert.NotNull(victim);
 
-        var delVm  = new DeleteGarmentCategoryViewModel { Id = victim!.Id };
+        var delVm = new DeleteGarmentCategoryViewModel { Id = victim!.Id };
         var request = new DeleteGarmentCategoryRequest(delVm, _user);
         var handler = new DeleteGarmentCategoryHandler(uow);
 

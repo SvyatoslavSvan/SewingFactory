@@ -20,10 +20,10 @@ public static class TestHelpers
             o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
         services.AddUnitOfWork<ApplicationDbContext>();
-        
+
         services.AddAutoMapper(
-            (sp, cfg) => cfg.ConstructServicesUsing(sp.GetService),
-            typeof(EmployeeMappingProfile).Assembly  
+            configAction: (sp, cfg) => cfg.ConstructServicesUsing(sp.GetService),
+            typeof(EmployeeMappingProfile).Assembly
         );
 
         return services.BuildServiceProvider();
@@ -52,63 +52,68 @@ public static class TestHelpers
         var repository = unitOfWork.GetRepository<Process>();
 
         var cutting = new Process("Cutting", department, new Money(5));
-        var sewing  = new Process("Sewing",  department, new Money(7));
+        var sewing = new Process("Sewing", department, new Money(7));
 
         repository.Insert(cutting);
         repository.Insert(sewing);
         unitOfWork.SaveChanges();
 
-        return [ cutting, sewing ];
+        return [cutting, sewing];
     }
 
-    public static void SeedGarmentModels(
+    public static List<GarmentModel> SeedGarmentModels(
         IUnitOfWork<ApplicationDbContext> unitOfWork,
         GarmentCategory garmentCategory,
         List<Process> processes)
     {
         var repository = unitOfWork.GetRepository<GarmentModel>();
 
-        repository.Insert(new GarmentModel(
+        var garmentModel = new GarmentModel(
             "Dress A",
             "Summer dress",
             processes,
-            garmentCategory,new Money(1000)));
+            garmentCategory, new Money(1000));
 
-        repository.Insert(new GarmentModel(
+        repository.Insert(garmentModel);
+
+        var garmentModel1 = new GarmentModel(
             "Blouse B",
             "Office blouse",
             processes,
-            garmentCategory, new Money(500)));
+            garmentCategory, new Money(500));
 
-        repository.Insert(new GarmentModel(
+        repository.Insert(garmentModel1);
+
+        var garmentModel2 = new GarmentModel(
             "Jacket C",
             "Warm jacket",
             processes,
-            garmentCategory, new Money(150)));
+            garmentCategory, new Money(150));
+
+        repository.Insert(garmentModel2);
 
         unitOfWork.SaveChanges();
+
+        return [garmentModel, garmentModel1, garmentModel2];
     }
-    
+
     public static (Department dept, GarmentModel model) SeedWorkshopDomain(
         IUnitOfWork<ApplicationDbContext> uow)
     {
-        var dept      = SeedDepartment(uow);
-        var category  = SeedGarmentCategory(uow);
-        var processes = SeedProcesses(uow, dept);
+        var department = SeedDepartment(uow);
+        var category = SeedGarmentCategory(uow);
+        var processes = SeedProcesses(uow, department);
 
-        SeedGarmentModels(uow, category, processes);
+        var garmentModels = SeedGarmentModels(uow, category, processes);
 
-        var model = uow.GetRepository<GarmentModel>()
-            .GetFirstOrDefault(predicate: _ => true)!;
-
-        return (dept, model);
+        return (department, garmentModels[1]);
     }
 
     public static WorkshopDocument SeedWorkshopDocument(
         IUnitOfWork<ApplicationDbContext> uow,
-        string     name,
-        int        countOfModels = 100,
-        DateOnly?  date          = null)
+        string name,
+        int countOfModels = 100,
+        DateOnly? date = null)
     {
         var (dept, model) = SeedWorkshopDomain(uow);
 

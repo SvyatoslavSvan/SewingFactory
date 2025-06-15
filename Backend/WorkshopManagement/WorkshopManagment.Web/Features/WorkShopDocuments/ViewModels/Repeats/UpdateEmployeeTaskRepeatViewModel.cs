@@ -2,7 +2,7 @@
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.ViewModels.Repeats;
 
-public class UpdateEmployeeTaskRepeatViewModel : IIdentityViewModel
+public sealed class UpdateEmployeeTaskRepeatViewModel : IIdentityViewModel
 {
     public Guid EmployeeId { get; set; }
     public int RepeatsCount { get; set; }

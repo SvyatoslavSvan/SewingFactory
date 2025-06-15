@@ -14,12 +14,12 @@ namespace SewingFactory.Backend.WorkshopManagement.Tests.Features.GarmentModels.
 public sealed class GarmentModelsHandlersTests
 {
     private readonly IServiceProvider _serviceProvider = TestHelpers.BuildServices();
-    
+
     private readonly ClaimsPrincipal _user = new(new ClaimsIdentity([
         new Claim(ClaimTypes.Name, "testuser"),
         new Claim(ClaimTypes.Role, "Admin")
     ]));
-    
+
     [Fact]
     public async Task CreateGarmentModelHandler_Should_Create_And_Return_GarmentModel()
     {
@@ -27,22 +27,22 @@ public sealed class GarmentModelsHandlersTests
         var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
 
-        var department       = TestHelpers.SeedDepartment(unitOfWork);
-        var garmentCategory  = TestHelpers.SeedGarmentCategory(unitOfWork);
-        var processes        = TestHelpers.SeedProcesses(unitOfWork, department);
+        var department = TestHelpers.SeedDepartment(unitOfWork);
+        var garmentCategory = TestHelpers.SeedGarmentCategory(unitOfWork);
+        var processes = TestHelpers.SeedProcesses(unitOfWork, department);
 
         var garmentCategoryId = garmentCategory.Id;
-        var processIds        = processes.Select(process => process.Id).ToList();
+        var processIds = processes.Select(selector: process => process.Id).ToList();
         unitOfWork.DbContext.ChangeTracker.Clear();
 
         var createViewModel = new CreateGarmentModelViewModel
         {
-            Name              = "T-Shirt X",
-            Description       = "Cotton T-Shirt",
+            Name = "T-Shirt X",
+            Description = "Cotton T-Shirt",
             GarmentCategoryId = garmentCategoryId,
-            ProcessesIds      = processIds,
+            ProcessesIds = processIds,
             Price = 150m,
-            Image             = null
+            Image = null
         };
 
         var request = new CreateGarmentModelRequest(createViewModel, _user);
@@ -53,8 +53,9 @@ public sealed class GarmentModelsHandlersTests
         var repository = unitOfWork.GetRepository<GarmentModel>();
         var savedModel = await repository.GetFirstOrDefaultAsync(
             predicate: model => model.Name == "T-Shirt X",
-            include:   query => query.Include(model => model.Category)
-                .Include(model => model.Processes));
+            include: query => query.Include(navigationPropertyPath: model => model.Category)
+                .Include(navigationPropertyPath: model => model.Processes));
+
         // Assert
         Assert.NotNull(result.Result);
         Assert.Equal("T-Shirt X", result.Result!.Name);
@@ -67,16 +68,16 @@ public sealed class GarmentModelsHandlersTests
     public async Task GetByIdGarmentModelHandler_Should_Return_GarmentModel_When_Found()
     {
         // Arrange
-        var unitOfWork  = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
-        var autoMapper  = _serviceProvider.GetRequiredService<IMapper>();
+        var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
 
-        var department      = TestHelpers.SeedDepartment(unitOfWork);
+        var department = TestHelpers.SeedDepartment(unitOfWork);
         var garmentCategory = TestHelpers.SeedGarmentCategory(unitOfWork);
-        var processes       = TestHelpers.SeedProcesses(unitOfWork, department);
+        var processes = TestHelpers.SeedProcesses(unitOfWork, department);
         TestHelpers.SeedGarmentModels(unitOfWork, garmentCategory, processes);
 
-        var repository          = unitOfWork.GetRepository<GarmentModel>();
-        var existingGarmentModel= await repository.GetFirstOrDefaultAsync(
+        var repository = unitOfWork.GetRepository<GarmentModel>();
+        var existingGarmentModel = await repository.GetFirstOrDefaultAsync(
             predicate: model => model.Name == "Dress A");
 
         Assert.NotNull(existingGarmentModel);
@@ -89,7 +90,7 @@ public sealed class GarmentModelsHandlersTests
 
         // Assert
         Assert.NotNull(result.Result);
-        Assert.Equal(existingGarmentModel.Id,   result.Result!.Id);
+        Assert.Equal(existingGarmentModel.Id, result.Result!.Id);
         Assert.Equal(existingGarmentModel.Name, result.Result.Name);
     }
 
@@ -97,12 +98,12 @@ public sealed class GarmentModelsHandlersTests
     public async Task GetAllGarmentModelHandler_Should_Return_All_GarmentModels()
     {
         // Arrange
-        var unitOfWork  = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
-        var autoMapper  = _serviceProvider.GetRequiredService<IMapper>();
+        var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
 
-        var department      = TestHelpers.SeedDepartment(unitOfWork);
+        var department = TestHelpers.SeedDepartment(unitOfWork);
         var garmentCategory = TestHelpers.SeedGarmentCategory(unitOfWork);
-        var processes       = TestHelpers.SeedProcesses(unitOfWork, department);
+        var processes = TestHelpers.SeedProcesses(unitOfWork, department);
         TestHelpers.SeedGarmentModels(unitOfWork, garmentCategory, processes);
 
         var request = new GetAllGarmentModelRequest(_user);
@@ -119,12 +120,12 @@ public sealed class GarmentModelsHandlersTests
     public async Task GetPagedGarmentModelHandler_Should_Return_Paged_GarmentModels()
     {
         // Arrange
-        var unitOfWork  = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
-        var autoMapper  = _serviceProvider.GetRequiredService<IMapper>();
+        var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
 
-        var department      = TestHelpers.SeedDepartment(unitOfWork);
+        var department = TestHelpers.SeedDepartment(unitOfWork);
         var garmentCategory = TestHelpers.SeedGarmentCategory(unitOfWork);
-        var processes       = TestHelpers.SeedProcesses(unitOfWork, department);
+        var processes = TestHelpers.SeedProcesses(unitOfWork, department);
         TestHelpers.SeedGarmentModels(unitOfWork, garmentCategory, processes);
 
         var request = new GetPagedGarmentModelRequest(_user, 0, 2);
@@ -142,34 +143,34 @@ public sealed class GarmentModelsHandlersTests
     public async Task UpdateGarmentModelHandler_Should_Update_GarmentModel()
     {
         // Arrange
-        var unitOfWork  = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
-        var autoMapper  = _serviceProvider.GetRequiredService<IMapper>();
+        var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
 
-        var department          = TestHelpers.SeedDepartment(unitOfWork);
-        var initialCategory     = TestHelpers.SeedGarmentCategory(unitOfWork, "Initial Category");
-        var initialProcesses    = TestHelpers.SeedProcesses(unitOfWork, department);
+        var department = TestHelpers.SeedDepartment(unitOfWork);
+        var initialCategory = TestHelpers.SeedGarmentCategory(unitOfWork, "Initial Category");
+        var initialProcesses = TestHelpers.SeedProcesses(unitOfWork, department);
         TestHelpers.SeedGarmentModels(unitOfWork, initialCategory, initialProcesses);
 
-        var repository          = unitOfWork.GetRepository<GarmentModel>();
+        var repository = unitOfWork.GetRepository<GarmentModel>();
         var trackedGarmentModel = await repository.GetFirstOrDefaultAsync(
             predicate: model => model.Name == "Dress A",
             trackingType: TrackingType.NoTracking);
 
         Assert.NotNull(trackedGarmentModel);
 
-        var newCategory  = TestHelpers.SeedGarmentCategory(unitOfWork, "Updated Category");
+        var newCategory = TestHelpers.SeedGarmentCategory(unitOfWork, "Updated Category");
         var newProcesses = TestHelpers.SeedProcesses(unitOfWork, department);
 
         unitOfWork.DbContext.ChangeTracker.Clear();
 
         var updateViewModel = new UpdateGarmentModelViewModel
         {
-            Id                = trackedGarmentModel!.Id,
-            Name              = "Dress A Updated",
-            Description       = "Updated description",
+            Id = trackedGarmentModel!.Id,
+            Name = "Dress A Updated",
+            Description = "Updated description",
             GarmentCategoryId = newCategory.Id,
-            ProcessesIds      = newProcesses.Select(selector: p => p.Id).ToList(),
-            Image             = null
+            ProcessesIds = newProcesses.Select(selector: p => p.Id).ToList(),
+            Image = null
         };
 
         var request = new UpdateGarmentModelRequest(updateViewModel, _user);
@@ -181,29 +182,29 @@ public sealed class GarmentModelsHandlersTests
         // Assert
         var updatedGarmentModel = await repository.GetFirstOrDefaultAsync(
             predicate: model => model.Id == trackedGarmentModel.Id,
-            include:   query => query.Include(m => m.Category).Include(m => m.Processes),
+            include: query => query.Include(navigationPropertyPath: m => m.Category).Include(navigationPropertyPath: m => m.Processes),
             trackingType: TrackingType.NoTracking);
 
         Assert.NotNull(updatedGarmentModel);
         Assert.Equal("Dress A Updated", updatedGarmentModel!.Name);
-        Assert.Equal(newCategory.Id,    updatedGarmentModel.Category.Id);
-        Assert.Equal(newProcesses.Count,updatedGarmentModel.Processes.Count);
+        Assert.Equal(newCategory.Id, updatedGarmentModel.Category.Id);
+        Assert.Equal(newProcesses.Count, updatedGarmentModel.Processes.Count);
     }
 
     [Fact]
     public async Task DeleteGarmentModelHandler_Should_Delete_GarmentModel()
     {
         // Arrange
-        var unitOfWork  = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
 
-        var department      = TestHelpers.SeedDepartment(unitOfWork);
+        var department = TestHelpers.SeedDepartment(unitOfWork);
         var garmentCategory = TestHelpers.SeedGarmentCategory(unitOfWork);
-        var processes       = TestHelpers.SeedProcesses(unitOfWork, department);
+        var processes = TestHelpers.SeedProcesses(unitOfWork, department);
         TestHelpers.SeedGarmentModels(unitOfWork, garmentCategory, processes);
 
         unitOfWork.DbContext.ChangeTracker.Clear();
 
-        var repository      = unitOfWork.GetRepository<GarmentModel>();
+        var repository = unitOfWork.GetRepository<GarmentModel>();
         var garmentToDelete = await repository.GetFirstOrDefaultAsync(
             predicate: model => model.Name == "Blouse B",
             trackingType: TrackingType.NoTracking);
@@ -211,8 +212,8 @@ public sealed class GarmentModelsHandlersTests
         Assert.NotNull(garmentToDelete);
 
         var deleteViewModel = new DeleteGarmentModelViewModel { Id = garmentToDelete!.Id };
-        var request         = new DeleteGarmentModelRequest(deleteViewModel, _user);
-        var handler         = new DeleteGarmentModelHandler(unitOfWork);
+        var request = new DeleteGarmentModelRequest(deleteViewModel, _user);
+        var handler = new DeleteGarmentModelHandler(unitOfWork);
 
         // Act
         await handler.Handle(request, CancellationToken.None);
@@ -223,17 +224,17 @@ public sealed class GarmentModelsHandlersTests
             trackingType: TrackingType.NoTracking);
 
         Assert.Null(deletedGarmentModel);
-        Assert.Equal(2, repository.GetAll(trackingType: TrackingType.NoTracking).Count());
+        Assert.Equal(2, repository.GetAll(TrackingType.NoTracking).Count());
     }
 
     [Fact]
     public async Task GetForCreateGarmentModelHandler_Should_Return_Categories_And_Processes()
     {
         // Arrange
-        var unitOfWork  = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
-        var autoMapper  = _serviceProvider.GetRequiredService<IMapper>();
+        var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
+        var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
 
-        var department      = TestHelpers.SeedDepartment(unitOfWork);
+        var department = TestHelpers.SeedDepartment(unitOfWork);
         var garmentCategory = TestHelpers.SeedGarmentCategory(unitOfWork);
         _ = TestHelpers.SeedProcesses(unitOfWork, department);
 

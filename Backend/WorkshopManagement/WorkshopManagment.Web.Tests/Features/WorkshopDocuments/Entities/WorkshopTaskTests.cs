@@ -30,7 +30,7 @@ public sealed class WorkshopTaskTests
         var repeat2 = new EmployeeTaskRepeat(emp, 2);
 
         task.AddEmployeeRepeat(repeat1);
-        task.AddEmployeeRepeat(repeat2); 
+        task.AddEmployeeRepeat(repeat2);
         Assert.Single(task.EmployeeTaskRepeats);
         Assert.Equal(1, task.EmployeeTaskRepeats[0].Repeats);
     }

@@ -5,7 +5,7 @@ using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Vi
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Validators;
 
-public class UpdateWorkshopDocumentValidator : AbstractValidator<UpdateRequest<UpdateWorkshopDocumentViewModel, WorkshopDocument>>
+public sealed class UpdateWorkshopDocumentValidator : AbstractValidator<UpdateRequest<UpdateWorkshopDocumentViewModel, WorkshopDocument>>
 {
     public UpdateWorkshopDocumentValidator()
     {

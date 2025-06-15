@@ -26,7 +26,7 @@ public sealed class UpdateGarmentModelHandler(
         var operation = OperationResult.CreateResult<UpdateGarmentModelViewModel>();
         var entity = await unitOfWork.GetRepository<GarmentModel>().GetFirstOrDefaultAsync(
             predicate: x => x.Id == request.Model.Id,
-            include: queryable => queryable.Include(garmentModel => garmentModel.Processes ),
+            include: queryable => queryable.Include(navigationPropertyPath: garmentModel => garmentModel.Processes),
             trackingType: TrackingType.Tracking);
 
         if (entity == null)
@@ -39,7 +39,8 @@ public sealed class UpdateGarmentModelHandler(
         _mapper.Map(request.Model, entity);
         var processes = _mapper.Map<List<Process>>(request.Model.ProcessesIds);
         entity.ReplaceProcesses(processes);
-        entity.Category = _mapper.Map<GarmentCategory>(request.Model.GarmentCategoryId);;
+        entity.Category = _mapper.Map<GarmentCategory>(request.Model.GarmentCategoryId);
+        ;
         unitOfWork.GetRepository<GarmentModel>().Update(entity);
         await unitOfWork.SaveChangesAsync();
         if (unitOfWork.Result.Ok)

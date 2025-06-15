@@ -3,7 +3,7 @@ using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Vi
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.ViewModels.Tasks;
 
-public class UpdateWorkShopTaskViewModel : IIdentityViewModel
+public sealed class UpdateWorkShopTaskViewModel : IIdentityViewModel
 {
     public List<UpdateEmployeeTaskRepeatViewModel> EmployeeRepeats { get; set; } = null!;
     public Guid Id { get; set; }

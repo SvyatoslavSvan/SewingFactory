@@ -8,7 +8,7 @@ using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Vi
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Routers;
 
-public class WorkshopDocumentRouter : CommandRouter<
+public sealed class WorkshopDocumentRouter : CommandRouter<
     WorkshopDocument,
     ReadWorkshopDocumentViewModel,
     CreateWorkshopDocumentViewModel,
@@ -28,7 +28,7 @@ public class WorkshopDocumentRouter : CommandRouter<
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-    public async Task<OperationResult<GetForCreateWorkshopDocumentViewModel>> GetForCreate(
+    private async Task<OperationResult<GetForCreateWorkshopDocumentViewModel>> GetForCreate(
         [FromServices] IMediator mediator,
         HttpContext context)
         => await mediator.Send(new GetForCreateWorkshopDocumentRequest(context.User),
@@ -38,7 +38,7 @@ public class WorkshopDocumentRouter : CommandRouter<
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
-    public async Task<OperationResult<GetForUpdateWorkshopDocumentViewModel>> GetForUpdate(
+    private async Task<OperationResult<GetForUpdateWorkshopDocumentViewModel>> GetForUpdate(
         [FromServices] IMediator mediator,
         HttpContext context)
         => await mediator.Send(new GetForUpdateWorkshopDocumentRequest(context.User),

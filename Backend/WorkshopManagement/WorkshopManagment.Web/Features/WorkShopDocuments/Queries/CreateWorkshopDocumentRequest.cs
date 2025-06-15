@@ -34,12 +34,14 @@ public sealed class CreateWorkshopDocumentHandler(
         var result = OperationResult.CreateResult<DetailsReadWorkshopDocumentViewModel>();
         var garmentModel = await _unitOfWork.GetRepository<GarmentModel>()
             .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.GarmentModelId,
-                include: x => x.Include(navigationPropertyPath: model => model.Processes),
+                include: x => x.Include(navigationPropertyPath: model => model.Processes).ThenInclude(navigationPropertyPath: process => process.Department),
                 trackingType: TrackingType.Tracking);
 
-        if (garmentModel == null)
+        var department = await _unitOfWork.GetRepository<Department>().GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.DepartmentId, trackingType: TrackingType.Tracking);
+        if (garmentModel == null || department == null)
         {
-            result.AddError($"The {nameof(GarmentModel)} was not found with key {request.Model.GarmentModelId}, unable to create {nameof(WorkshopDocument)}");
+            result.AddError(
+                $"The {nameof(GarmentModel)} or {nameof(Department)} was not found with keys {request.Model.GarmentModelId} or {request.Model.DepartmentId}, unable to create {nameof(WorkshopDocument)}");
 
             return result;
         }
@@ -48,7 +50,8 @@ public sealed class CreateWorkshopDocumentHandler(
             request.Model.CountOfModelsInvolved,
             request.Model.Date,
             garmentModel,
-            _mapper.Map<Department>(request.Model.DepartmentId));
+            department
+        );
 
         await _unitOfWork.GetRepository<WorkshopDocument>()
             .InsertAsync(document,

@@ -14,7 +14,7 @@ public sealed class WorkshopDocumentTests
         var model = new GarmentModel("ModelX", "desc", new List<Process>(), new GarmentCategory("Cat"), Money.Zero);
         var dept = new Department("Dept");
         Assert.Throws<SewingFactoryArgumentException>(testCode: () =>
-            Domain.Entities.DocumentItems.WorkshopDocument.CreateInstance("Doc1", -5, DateOnly.FromDateTime(DateTime.Now), model, dept));
+            WorkshopDocument.CreateInstance("Doc1", -5, DateOnly.FromDateTime(DateTime.Now), model, dept));
     }
 
     [Fact]
@@ -22,7 +22,7 @@ public sealed class WorkshopDocumentTests
     {
         var dept = new Department("Dept");
         Assert.Throws<NullReferenceException>(testCode: () =>
-            Domain.Entities.DocumentItems.WorkshopDocument.CreateInstance("Doc1", 1, new DateOnly(2025, 1, 1), null!, dept));
+            WorkshopDocument.CreateInstance("Doc1", 1, new DateOnly(2025, 1, 1), null!, dept));
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public sealed class WorkshopDocumentTests
             new List<Process> { proc1, proc2, procOther }, new GarmentCategory("Cat"), Money.Zero);
 
         // Act
-        var doc = Domain.Entities.DocumentItems.WorkshopDocument.CreateInstance("Doc1", 100, new DateOnly(2025, 5, 1), model, dept);
+        var doc = WorkshopDocument.CreateInstance("Doc1", 100, new DateOnly(2025, 5, 1), model, dept);
 
         // Assert: 
         Assert.Equal(model.Processes.Count, doc.Tasks.Count);
@@ -55,7 +55,7 @@ public sealed class WorkshopDocumentTests
         var dept = new Department("Dep");
         var process = new Process("Proc", dept, new Money(0));
         var model = new GarmentModel("M", "desc", new List<Process> { process }, new GarmentCategory("Cat"), Money.Zero);
-        var doc = Domain.Entities.DocumentItems.WorkshopDocument.CreateInstance("Doc", 1, DateOnly.FromDateTime(DateTime.Now), model, dept);
+        var doc = WorkshopDocument.CreateInstance("Doc", 1, DateOnly.FromDateTime(DateTime.Now), model, dept);
         var emp = new RateBasedEmployee("E", "ID", new Money(0), dept);
         Assert.Empty(doc.Employees);
 
@@ -64,7 +64,7 @@ public sealed class WorkshopDocumentTests
         doc.RecalculateEmployees();
 
         Assert.Contains(emp, doc.Employees);
-        task.ReplaceRepeats(new List<EmployeeTaskRepeat>()); 
+        task.ReplaceRepeats(new List<EmployeeTaskRepeat>());
         doc.RecalculateEmployees();
         Assert.DoesNotContain(emp, doc.Employees);
     }
@@ -75,7 +75,7 @@ public sealed class WorkshopDocumentTests
         var dept = new Department("Dep");
         var process = new Process("Proc", dept, new Money(50m));
         var model = new GarmentModel("M", "desc", new List<Process> { process }, new GarmentCategory("Cat"), Money.Zero);
-        var doc = Domain.Entities.DocumentItems.WorkshopDocument.CreateInstance("Doc", 1, new DateOnly(2025, 1, 1), model, dept);
+        var doc = WorkshopDocument.CreateInstance("Doc", 1, new DateOnly(2025, 1, 1), model, dept);
         var emp = new RateBasedEmployee("E", "ID", new Money(0), dept);
         doc.Tasks.First().AddEmployeeRepeat(new EmployeeTaskRepeat(emp, 2));
 

@@ -4,7 +4,7 @@ using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Vi
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.ViewModels.Document;
 
-public class UpdateWorkshopDocumentViewModel : WorkshopDocumentViewModel, IIdentityViewModel
+public sealed class UpdateWorkshopDocumentViewModel : WorkshopDocumentViewModel, IIdentityViewModel
 {
     public List<UpdateWorkShopTaskViewModel> WorkshopTasks { get; set; } = null!;
     public Guid Id { get; set; }

@@ -16,20 +16,19 @@ public sealed class GarmentModelMappingProfile : Profile
     public GarmentModelMappingProfile()
     {
         CreateMap<Money, decimal>()
-            .ConvertUsing(src => src.Amount);
+            .ConvertUsing(mappingExpression: src => src.Amount);
 
-        
         CreateMap<Guid, GarmentModel>().ConvertUsing<GarmentModelStubConverter>();
 
         CreateMap<CreateGarmentModelViewModel, GarmentModel>()
-            .ConstructUsing((
+            .ConstructUsing(ctor: (
                 src,
                 ctx) => new GarmentModel(src.Name,
                 src.Description,
                 ctx.Mapper.Map<List<Process>>(src.ProcessesIds),
                 ctx.Mapper.Map<GarmentCategory>(src.GarmentCategoryId),
                 new Money(src.Price)))
-            .ForAllOtherMembers(x => x.Ignore());
+            .ForAllOtherMembers(memberOptions: x => x.Ignore());
 
         CreateMap<GarmentModel, ReadGarmentModelViewModel>().ConstructUsing(ctor: x => new ReadGarmentModelViewModel { Id = x.Id, Image = x.Image, Name = x.Name });
         CreateMap<UpdateGarmentModelViewModel, GarmentModel>()

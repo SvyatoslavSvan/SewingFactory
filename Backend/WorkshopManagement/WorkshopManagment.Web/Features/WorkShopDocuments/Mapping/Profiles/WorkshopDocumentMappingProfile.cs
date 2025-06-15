@@ -12,8 +12,10 @@ using System.Reflection;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Mapping.Profiles;
 
-public class WorkshopDocumentMappingProfile : Profile
+public sealed class WorkshopDocumentMappingProfile : Profile
 {
+    public const string EmployeeDictionaryKey = "EmployeesById";
+
     public WorkshopDocumentMappingProfile()
     {
         CreateMap<EmployeeTaskRepeat, ReadEmployeeTaskRepeatViewModel>()
@@ -92,14 +94,22 @@ public class WorkshopDocumentMappingProfile : Profile
             .ForMember(destinationMember: x => x.Employees, memberOptions: o => o.Ignore())
             .ForMember(destinationMember: x => x.GarmentModel, memberOptions: o => o.Ignore())
             .ForMember(destinationMember: x => x.Tasks, memberOptions: o => o.Ignore())
-            .ForMember(destinationMember: x => x.Department, memberOptions: o => o.Ignore());
+            .ForMember(destinationMember: x => x.Department, memberOptions: o => o.Ignore())
+            .AfterMap(afterFunction: (viewModel, document, context) =>
+            {
+                document.UpdateTaskRepeats(viewModel.WorkshopTasks
+                    .Select(selector: vm => new TaskRepeatInfo(
+                        vm.Id,
+                        context.Mapper.Map<List<EmployeeTaskRepeat>>(vm.EmployeeRepeats)))
+                    .ToList());
+            });
 
         ;
         CreateMap<UpdateEmployeeTaskRepeatViewModel, EmployeeTaskRepeat>()
             .ConstructUsing(ctor: (src, ctx) =>
             {
-                var dict = (Dictionary<Guid, Employee>)ctx.Items["EmployeesById"];
-                if (!dict.TryGetValue(src.EmployeeId, out var emp))
+                var employees = (Dictionary<Guid, Employee>)ctx.Items[EmployeeDictionaryKey];
+                if (!employees.TryGetValue(src.EmployeeId, out var emp))
                 {
                     throw new KeyNotFoundException($"Employee {src.EmployeeId} not loaded");
                 }

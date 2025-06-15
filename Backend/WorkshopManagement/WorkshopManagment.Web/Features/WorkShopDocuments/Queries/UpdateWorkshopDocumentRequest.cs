@@ -6,9 +6,12 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Common.Base.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Mapping.Profiles;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.ViewModels.Document;
 using SewingFactory.Common.Domain.Exceptions;
 using System.Security.Claims;
+
+// ReSharper disable AsyncVoidLambda
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Queries;
 
@@ -49,36 +52,12 @@ public sealed class UpdateWorkshopDocumentHandler(
             return operationResult;
         }
 
+        var employeeDictionary = await GetEmployeeDictionaryFromWorkshopTasks(request);
+
         _mapper.Map(request.Model,
-            document);
-
-        var employeesInvolvedIds = request.Model.WorkshopTasks.SelectMany(selector: x => x.EmployeeRepeats)
-            .Select(selector: x => x.EmployeeId)
-            .Distinct().ToList();
-
-        var employeesInvolved = await unitOfWork.GetRepository<Employee>()
-            .GetAllAsync(predicate: x => employeesInvolvedIds.Contains(x.Id),
-                trackingType: TrackingType.Tracking);
-
-        var employeesDictionary = employeesInvolved.ToDictionary(keySelector: x => x.Id);
-
-        foreach (var taskVm in request.Model.WorkshopTasks)
-        {
-            var task = document.Tasks.FirstOrDefault(predicate: x => x.Id == taskVm.Id);
-            if (task == null)
-            {
-                operationResult.AddError(new SewingFactoryNotFoundException($"Task {taskVm.Id} not found in document {document.Id}"));
-
-                return operationResult;
-            }
-
-            var employeeTaskRepeats = _mapper.Map<List<EmployeeTaskRepeat>>(taskVm.EmployeeRepeats,
-                opts: opt => opt.Items["EmployeesById"] = employeesDictionary);
-
-            task.ReplaceRepeats(employeeTaskRepeats);
-        }
-
-        document.RecalculateEmployees();
+            document,
+            opts: opts
+                => opts.Items[WorkshopDocumentMappingProfile.EmployeeDictionaryKey] = employeeDictionary);
 
         await unitOfWork.SaveChangesAsync();
         if (!unitOfWork.Result.Ok)
@@ -91,5 +70,22 @@ public sealed class UpdateWorkshopDocumentHandler(
         operationResult.Result = request.Model;
 
         return operationResult;
+    }
+
+    private async Task<Dictionary<Guid, Employee>> GetEmployeeDictionaryFromWorkshopTasks( // materialize IDs before an EF query—EF Core can’t translate complex nested LINQ to SQL
+        UpdateRequest<UpdateWorkshopDocumentViewModel, WorkshopDocument> request)
+    {
+        var employeeIds = request.Model.WorkshopTasks
+            .SelectMany(selector: vm => vm.EmployeeRepeats.Select(selector: r => r.EmployeeId))
+            .Distinct()
+            .ToList();
+
+        var employees = await unitOfWork.GetRepository<Employee>()
+            .GetAllAsync(
+                predicate: e => employeeIds.Contains(e.Id),
+                trackingType: TrackingType.Tracking
+            );
+
+        return employees.ToDictionary(keySelector: e => e.Id);
     }
 }

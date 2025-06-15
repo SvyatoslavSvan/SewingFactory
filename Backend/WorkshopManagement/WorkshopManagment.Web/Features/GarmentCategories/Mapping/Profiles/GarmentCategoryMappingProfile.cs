@@ -11,7 +11,7 @@ public sealed class GarmentCategoryMappingProfile : Profile
     public GarmentCategoryMappingProfile()
     {
         CreateMap<Guid, GarmentCategory>().ConvertUsing<GarmentCategoryStubConverter>();
-        
+
         CreateMap<CreateGarmentCategoryViewModel, GarmentCategory>()
             .ConstructUsing(ctor: src =>
                 new GarmentCategory(src.Name, new List<GarmentModel>()))

@@ -1,10 +1,13 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 
 public sealed class Process : NamedIdentity
 {
+    private readonly List<GarmentModel> _garmentModels = null!;
+
     /// <summary>
     ///     Default constructor for EF Core
     /// </summary>
@@ -19,4 +22,6 @@ public sealed class Process : NamedIdentity
     public Money Price { get; set; } = null!;
 
     public Department Department { get; set; } = null!;
+
+    public List<GarmentModel> GarmentModels => _garmentModels;
 }

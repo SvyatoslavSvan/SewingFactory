@@ -4,7 +4,7 @@ using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Vi
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.ViewModels.Tasks;
 
-public class ReadWorkshopTaskViewModel : IIdentityViewModel
+public sealed class ReadWorkshopTaskViewModel : IIdentityViewModel
 {
     public ReadProcessViewModel Process { get; set; } = null!;
     public List<ReadEmployeeTaskRepeatViewModel>? EmployeeRepeats { get; set; } = null!;

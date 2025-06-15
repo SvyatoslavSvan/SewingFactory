@@ -3,7 +3,7 @@ using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Vi
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.ViewModels.Document;
 
-public class ReadWorkshopDocumentViewModel : WorkshopDocumentViewModel, IIdentityViewModel
+public sealed class ReadWorkshopDocumentViewModel : WorkshopDocumentViewModel, IIdentityViewModel
 {
     public Guid Id { get; set; }
 }

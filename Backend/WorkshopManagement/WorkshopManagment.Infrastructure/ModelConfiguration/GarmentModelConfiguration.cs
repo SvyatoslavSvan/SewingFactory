@@ -14,5 +14,6 @@ public class GarmentModelConfiguration : IdentityModelConfigurationBase<GarmentM
         builder.Property(propertyExpression: x => x.Name).IsRequired();
         builder.Property(propertyExpression: x => x.Description).IsRequired();
         builder.HasOne(navigationExpression: x => x.Category).WithMany(navigationExpression: x => x.GarmentModels).IsRequired();
+        builder.HasMany(x => x.Processes).WithMany(x => x.GarmentModels);
     }
 }

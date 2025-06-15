@@ -14,7 +14,7 @@ public sealed class ProcessProfile : Profile
     public ProcessProfile()
     {
         CreateMap<Guid, Process>().ConvertUsing<ProcessStubConverter>();
-        
+
         CreateMap<CreateProcessViewModel, Process>()
             .ConstructUsing(ctor: (
                 src,

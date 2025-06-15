@@ -1,5 +1,6 @@
 ﻿using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
+using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.RateItems;
 using SewingFactory.Common.Domain.Base;
@@ -119,7 +120,7 @@ public sealed class CalculateSalaryTests
 
     /* ---------- helpers ---------- */
 
-    private static void SetIds(params Domain.Entities.Employees.Base.Employee[] employees)
+    private static void SetIds(params Employee[] employees)
     {
         var idField = typeof(Identity)
             .GetField("<Id>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
