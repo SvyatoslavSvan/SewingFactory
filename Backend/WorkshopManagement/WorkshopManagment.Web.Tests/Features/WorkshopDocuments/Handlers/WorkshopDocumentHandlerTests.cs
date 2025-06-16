@@ -152,7 +152,7 @@ public sealed class WorkshopDocumentHandlerTests
     public async Task GetForUpdateWorkshopDocumentRequest_Should_Return_Employees()
     {
         // Arrange – add one employee so that lookup is not empty
-        SeedProcessBasedEmployee();
+        await SeedProcessBasedEmployee();
 
         var handler = new GetForUpdateWorkshopDocumentRequestHandler(_unitOfWork, _mapper);
         var request = new GetForUpdateWorkshopDocumentRequest(new ClaimsPrincipal());

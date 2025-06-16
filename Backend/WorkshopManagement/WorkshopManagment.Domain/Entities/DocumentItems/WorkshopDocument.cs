@@ -20,8 +20,8 @@ public sealed class WorkshopDocument : NamedIdentity
     /// </summary>
     private WorkshopDocument()
     {
-        _employees = new List<Employee>();
-        _tasks = new List<WorkshopTask>();
+        _employees = [];
+        _tasks = [];
     }
 
     private WorkshopDocument(string name, int countOfModelsInvolved, DateOnly date, GarmentModel garmentModel, Department department, List<WorkshopTask> tasks)
