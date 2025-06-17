@@ -2,10 +2,12 @@
 using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Employees.Mapping.Profiles;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategories.Mapping.Profiles;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategories.Publisher;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategories.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategories.ViewModels;
 using System.Security.Claims;
@@ -25,14 +27,14 @@ public sealed class GarmentCategoryHandlersTests
     {
         var services = new ServiceCollection();
 
-        services.AddDbContext<ApplicationDbContext>(optionsAction: o =>
+        services.AddDbContext<ApplicationDbContext>(o =>
             o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
-
         services.AddUnitOfWork<ApplicationDbContext>();
         services.AddAutoMapper(
             configAction: (sp, cfg) => cfg.ConstructServicesUsing(sp.GetService),
             typeof(EmployeeMappingProfile).Assembly,
-            typeof(GarmentCategoryMappingProfile).Assembly);
+            typeof(GarmentCategoryMappingProfile).Assembly
+        );
 
         return services.BuildServiceProvider();
     }
@@ -53,21 +55,31 @@ public sealed class GarmentCategoryHandlersTests
     {
         var uow = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _sp.GetRequiredService<IMapper>();
+        var publisherMock = SetupGarmentCategoryPublisherMock();
 
         var model = new CreateGarmentCategoryViewModel { Name = "Kidswear" };
         var request = new CreateGarmentCategoryRequest(model, _user);
-        var handler = new CreateGarmentCategoryHandler(uow, mapper);
+        var handler = new CreateGarmentCategoryHandler(uow, mapper, publisherMock.Object);;
 
         var result = await handler.Handle(request, CancellationToken.None);
 
         Assert.NotNull(result.Result);
         Assert.Equal("Kidswear", result.Result!.Name);
-
+        publisherMock.Verify(x => x.PublishCreatedAsync(It.IsAny<GarmentCategory>()), Times.Once, "Publisher was not called");
         var saved = await uow.GetRepository<
                 GarmentCategory>()
             .GetFirstOrDefaultAsync(predicate: c => c.Name == "Kidswear");
-
+        
         Assert.NotNull(saved);
+    }
+
+    private static Mock<IGarmentCategoryPublisher> SetupGarmentCategoryPublisherMock()
+    {
+        var garmentPublisherMock = new Mock<IGarmentCategoryPublisher>();
+        garmentPublisherMock
+            .Setup(x => x.PublishCreatedAsync(It.IsAny<GarmentCategory>()))
+            .Returns(Task.CompletedTask);
+        return garmentPublisherMock;
     }
 
     [Fact]
@@ -134,6 +146,7 @@ public sealed class GarmentCategoryHandlersTests
         var uow = _sp.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _sp.GetRequiredService<IMapper>();
 
+        var publisherMock = SetupGarmentCategoryPublisherMock();
         SeedCategories(uow);
 
         var repo = uow.GetRepository<
@@ -149,10 +162,10 @@ public sealed class GarmentCategoryHandlersTests
         uow.DbContext.ChangeTracker.Clear();
 
         var request = new UpdateGarmentCategoryRequest(updateVm, _user);
-        var handler = new UpdateRequestGarmentCategoryHandler(uow, mapper);
+        var handler = new UpdateRequestGarmentCategoryHandler(uow, mapper, publisherMock.Object);
 
         await handler.Handle(request, CancellationToken.None);
-
+        publisherMock.Verify(x => x.PublishUpdatedAsync(It.IsAny<GarmentCategory>()), Times.Once, "Publisher was not called");
         var updated = await repo.GetFirstOrDefaultAsync(
             predicate: c => c.Id == existing.Id, trackingType: TrackingType.NoTracking);
 

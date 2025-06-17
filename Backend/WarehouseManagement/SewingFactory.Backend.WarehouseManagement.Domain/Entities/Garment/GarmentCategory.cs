@@ -12,6 +12,8 @@ public sealed class GarmentCategory : NamedIdentity
     private GarmentCategory() => _products = [];
 
     public GarmentCategory(string name, List<GarmentModel> products) : base(name) => _products = products;
+    
+    public GarmentCategory(string name, List<GarmentModel> products, Guid id) : base(name, id) => _products = products;
 
     public IReadOnlyList<GarmentModel> Products => _products;
 }

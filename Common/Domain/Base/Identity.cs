@@ -5,6 +5,16 @@
 /// </summary>
 public abstract class Identity : IHaveId
 {
+    protected Identity()
+    {
+        
+    }
+
+    protected Identity(Guid id)
+    {
+        Id = id;
+    }
+    
     /// <summary>
     ///     Identifier
     /// </summary>

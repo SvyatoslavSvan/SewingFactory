@@ -19,6 +19,12 @@ public sealed class GarmentModel : NamedIdentity
         Category = category;
         Price = price;
     }
+    
+    public GarmentModel(string name, GarmentCategory category, Money price, Guid id) : base(name, id) 
+    {
+        Category = category;
+        Price = price;       
+    }
 
     public GarmentCategory Category
     {

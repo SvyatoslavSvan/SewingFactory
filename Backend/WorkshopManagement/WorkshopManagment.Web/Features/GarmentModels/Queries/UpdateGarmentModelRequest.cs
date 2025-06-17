@@ -6,6 +6,7 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Common.Base.Queries;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Publisher;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.ViewModels;
 using SewingFactory.Common.Domain.Exceptions;
 using System.Security.Claims;
@@ -17,7 +18,7 @@ public sealed record UpdateGarmentModelRequest(UpdateGarmentModelViewModel Model
 
 public sealed class UpdateGarmentModelHandler(
     IUnitOfWork<ApplicationDbContext> unitOfWork,
-    IMapper mapper) : UpdateRequestHandler<UpdateGarmentModelViewModel, GarmentModel>(unitOfWork, mapper)
+    IMapper mapper, IGarmentModelPublisher publisher) : UpdateRequestHandler<UpdateGarmentModelViewModel, GarmentModel>(unitOfWork, mapper)
 {
     private readonly IMapper _mapper = mapper;
 
@@ -45,11 +46,10 @@ public sealed class UpdateGarmentModelHandler(
         await unitOfWork.SaveChangesAsync();
         if (unitOfWork.Result.Ok)
         {
+            await publisher.PublishUpdatedAsync(entity);
             operation.Result = request.Model;
-
             return operation;
         }
-
         operation.AddError($"An error occurred while updating {nameof(GarmentModel)} with Id {entity.Id}.");
 
         return operation;

@@ -21,14 +21,19 @@ public abstract class NamedIdentity : Identity
     {
         Name = name;
     }
+    
+    protected NamedIdentity(string name, Guid id) : base(id)
+    {
+        Name = name;
+    }
 
     /// <summary>
     ///     Entity name
     /// </summary>
-    public virtual string Name
+    public string Name
     {
         get => _name;
-        protected set
+        set
         {
             if (string.IsNullOrWhiteSpace(value)) throw new SewingFactoryArgumentNullException(nameof(value));
             _name = value;

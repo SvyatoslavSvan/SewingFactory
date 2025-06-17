@@ -19,6 +19,8 @@ public abstract class UpdateRequestHandler<TViewModel, TEntity>(
 {
     protected const string _errorMessageFormat = "An error occurred while updating {0} with Id {1}.";
 
+    protected virtual Task AfterEntityUpdatedAsync(TEntity entity) => Task.CompletedTask;
+    
     public virtual async Task<OperationResult<TViewModel>> Handle(UpdateRequest<TViewModel, TEntity> request, CancellationToken cancellationToken)
     {
         var operation = OperationResult.CreateResult<TViewModel>();
@@ -41,7 +43,7 @@ public abstract class UpdateRequestHandler<TViewModel, TEntity>(
 
             return operation;
         }
-
+        await AfterEntityUpdatedAsync(entity);
         operation.Result = request.Model;
 
         return operation;

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using AutoMapper;
 using Calabonga.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
@@ -14,7 +8,6 @@ using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Tests.Common;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Processes.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Processes.ViewModels;
-using Xunit;
 
 namespace SewingFactory.Backend.WorkshopManagement.Tests.Features.Processes.Handlers
 {
@@ -179,7 +172,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Tests.Features.Processes.Hand
         {
             // Arrange
             var uow = GetUow();
-            var mapper = GetMapper();
+            GetMapper();
             var dept = SeedDept(uow);
             var proc = SeedProcs(uow, dept).Last();
 

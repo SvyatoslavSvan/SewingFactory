@@ -2,9 +2,12 @@
 using Calabonga.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Tests.Common;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategories.Publisher;
+using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Publisher;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.ViewModels;
 using System.Security.Claims;
@@ -26,7 +29,7 @@ public sealed class GarmentModelsHandlersTests
         // Arrange
         var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
-
+        var publisherMock = SetupGarmentModelPublisherMock();
         var department = TestHelpers.SeedDepartment(unitOfWork);
         var garmentCategory = TestHelpers.SeedGarmentCategory(unitOfWork);
         var processes = TestHelpers.SeedProcesses(unitOfWork, department);
@@ -46,7 +49,7 @@ public sealed class GarmentModelsHandlersTests
         };
 
         var request = new CreateGarmentModelRequest(createViewModel, _user);
-        var handler = new CreateGarmentModelHandler(unitOfWork, autoMapper);
+        var handler = new CreateGarmentModelHandler(unitOfWork, autoMapper, publisherMock.Object);;
 
         // Act
         var result = await handler.Handle(request, CancellationToken.None);
@@ -55,7 +58,7 @@ public sealed class GarmentModelsHandlersTests
             predicate: model => model.Name == "T-Shirt X",
             include: query => query.Include(navigationPropertyPath: model => model.Category)
                 .Include(navigationPropertyPath: model => model.Processes));
-
+        publisherMock.Verify(x => x.PublishCreatedAsync(It.IsAny<GarmentModel>()), Times.Once, "Publisher was not called");
         // Assert
         Assert.NotNull(result.Result);
         Assert.Equal("T-Shirt X", result.Result!.Name);
@@ -144,8 +147,8 @@ public sealed class GarmentModelsHandlersTests
     {
         // Arrange
         var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
-        var autoMapper = _serviceProvider.GetRequiredService<IMapper>();
-
+        var autoMapper = _serviceProvider.GetRequiredService<IMapper>(); 
+        var publisherMock = SetupGarmentModelPublisherMock();
         var department = TestHelpers.SeedDepartment(unitOfWork);
         var initialCategory = TestHelpers.SeedGarmentCategory(unitOfWork, "Initial Category");
         var initialProcesses = TestHelpers.SeedProcesses(unitOfWork, department);
@@ -174,7 +177,7 @@ public sealed class GarmentModelsHandlersTests
         };
 
         var request = new UpdateGarmentModelRequest(updateViewModel, _user);
-        var handler = new UpdateGarmentModelHandler(unitOfWork, autoMapper);
+        var handler = new UpdateGarmentModelHandler(unitOfWork, autoMapper, publisherMock.Object);
 
         // Act
         await handler.Handle(request, CancellationToken.None);
@@ -184,7 +187,7 @@ public sealed class GarmentModelsHandlersTests
             predicate: model => model.Id == trackedGarmentModel.Id,
             include: query => query.Include(navigationPropertyPath: m => m.Category).Include(navigationPropertyPath: m => m.Processes),
             trackingType: TrackingType.NoTracking);
-
+        publisherMock.Verify(x => x.PublishUpdatedAsync(It.IsAny<GarmentModel>()), Times.Once, "Publisher was not called");
         Assert.NotNull(updatedGarmentModel);
         Assert.Equal("Dress A Updated", updatedGarmentModel!.Name);
         Assert.Equal(newCategory.Id, updatedGarmentModel.Category.Id);
@@ -248,5 +251,14 @@ public sealed class GarmentModelsHandlersTests
         Assert.NotNull(result.Result);
         Assert.NotEmpty(result.Result!.GarmentCategories);
         Assert.NotEmpty(result.Result.Processes);
+    }
+    
+    private static Mock<IGarmentModelPublisher> SetupGarmentModelPublisherMock()
+    {
+        var garmentPublisherMock = new Mock<IGarmentModelPublisher>();
+        garmentPublisherMock
+            .Setup(x => x.PublishCreatedAsync(It.IsAny<GarmentModel>()))
+            .Returns(Task.CompletedTask);
+        return garmentPublisherMock;
     }
 }

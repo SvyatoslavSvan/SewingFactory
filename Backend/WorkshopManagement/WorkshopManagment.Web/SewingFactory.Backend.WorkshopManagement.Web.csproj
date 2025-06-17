@@ -15,18 +15,20 @@
         <PackageReference Include="ClosedXML" Version="0.105.0"/>
         <PackageReference Include="FluentValidation" Version="12.0.0"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0"/>
+        <PackageReference Include="MassTransit" Version="8.4.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.1" />
         <PackageReference Include="MediatR" Version="12.5.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.5"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="9.0.5"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="9.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
-        <PackageReference Include="OpenIddict.AspNetCore" Version="6.3.0"/>
+        <PackageReference Include="OpenIddict.AspNetCore" Version="6.4.0" />
         <PackageReference Include="OperationResultCore" Version="4.1.0"/>
         <PackageReference Include="Quartz" Version="3.14.0"/>
         <PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0"/>
@@ -34,11 +36,12 @@
         <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
         <PackageReference Include="TimeZoneConverter" Version="7.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Common\Messaging.Contracts\SewingFactory.Common.Messaging.Contracts.csproj" />
         <ProjectReference Include="..\WorkshopManagment.Infrastructure\SewingFactory.Backend.WorkshopManagement.Infrastructure.csproj"/>
     </ItemGroup>
 

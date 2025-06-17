@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="14.0.0"/>
+        <PackageReference Include="Calabonga.UnitOfWork" Version="6.0.0"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="OperationResultCore" Version="4.1.0" />
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SewingFactory.Backend.WarehouseManagement.Domain\SewingFactory.Backend.WarehouseManagement.Domain.csproj"/>
+        <ProjectReference Include="..\SewingFactory.Backend.WarehouseManagement.Infrastructure\SewingFactory.Backend.WarehouseManagement.Infrastructure.csproj"/>
+        <ProjectReference Include="..\SewingFactory.Backend.WarehouseManagement.Web\SewingFactory.Backend.WarehouseManagement.Web.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
+</Project>
