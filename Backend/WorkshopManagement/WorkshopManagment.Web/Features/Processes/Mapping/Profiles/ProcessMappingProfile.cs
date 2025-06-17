@@ -3,7 +3,6 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Departments.ViewModels;
-using SewingFactory.Backend.WorkshopManagement.Web.Features.Processes.Mapping.Converters;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Processes.ViewModels;
 using SewingFactory.Common.Domain.ValueObjects;
 
@@ -13,8 +12,6 @@ public sealed class ProcessProfile : Profile
 {
     public ProcessProfile()
     {
-        CreateMap<Guid, Process>().ConvertUsing<ProcessStubConverter>();
-
         CreateMap<CreateProcessViewModel, Process>()
             .ConstructUsing(ctor: (
                 src,

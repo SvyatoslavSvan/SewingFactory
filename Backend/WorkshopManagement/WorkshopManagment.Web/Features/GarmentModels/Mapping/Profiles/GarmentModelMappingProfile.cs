@@ -4,9 +4,9 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Garment;
 using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Departments.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategories.ViewModels;
-using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Mapping.Converters;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Processes.ViewModels;
+using SewingFactory.Common.Domain.Exceptions;
 using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Mapping.Profiles;
@@ -17,18 +17,23 @@ public sealed class GarmentModelMappingProfile : Profile
     {
         CreateMap<Money, decimal>()
             .ConvertUsing(mappingExpression: src => src.Amount);
-
-        CreateMap<Guid, GarmentModel>().ConvertUsing<GarmentModelStubConverter>();
-
+        
         CreateMap<CreateGarmentModelViewModel, GarmentModel>()
-            .ConstructUsing(ctor: (
-                src,
-                ctx) => new GarmentModel(src.Name,
-                src.Description,
-                ctx.Mapper.Map<List<Process>>(src.ProcessesIds),
-                ctx.Mapper.Map<GarmentCategory>(src.GarmentCategoryId),
-                new Money(src.Price)))
-            .ForAllOtherMembers(memberOptions: x => x.Ignore());
+            .ConstructUsing((src, ctx) =>
+            {
+                var loadedProcesses = ctx.Items["Processes"] as List<Process>
+                                      ?? throw new SewingFactoryInvalidOperationException("Processes not passed in mapping context");
+                var loadedCategory  = ctx.Items["Category"] as GarmentCategory
+                                      ?? throw new SewingFactoryInvalidOperationException("Category not passed in mapping context");
+
+                return new GarmentModel(
+                    src.Name,
+                    src.Description,
+                    loadedProcesses,
+                    loadedCategory,
+                    new Money(src.Price));
+            })
+            .ForAllOtherMembers(opt => opt.Ignore());
 
         CreateMap<GarmentModel, ReadGarmentModelViewModel>().ConstructUsing(ctor: x => new ReadGarmentModelViewModel { Id = x.Id, Image = x.Image, Name = x.Name });
         CreateMap<UpdateGarmentModelViewModel, GarmentModel>()

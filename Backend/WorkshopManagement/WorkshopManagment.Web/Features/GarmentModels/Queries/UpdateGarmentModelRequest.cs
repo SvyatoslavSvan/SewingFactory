@@ -25,33 +25,64 @@ public sealed class UpdateGarmentModelHandler(
     public override async Task<OperationResult<UpdateGarmentModelViewModel>> Handle(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, CancellationToken cancellationToken)
     {
         var operation = OperationResult.CreateResult<UpdateGarmentModelViewModel>();
-        var entity = await unitOfWork.GetRepository<GarmentModel>().GetFirstOrDefaultAsync(
-            predicate: x => x.Id == request.Model.Id,
-            include: queryable => queryable.Include(navigationPropertyPath: garmentModel => garmentModel.Processes),
-            trackingType: TrackingType.Tracking);
+        var garmentModel = await LoadGarmentModel(request);
 
-        if (entity == null)
+        if (garmentModel is null)
         {
             operation.AddError(new SewingFactoryNotFoundException($"GarmentModel {request.Model.Id} not found"));
 
             return operation;
         }
-
-        _mapper.Map(request.Model, entity);
-        var processes = _mapper.Map<List<Process>>(request.Model.ProcessesIds);
-        entity.ReplaceProcesses(processes);
-        entity.Category = _mapper.Map<GarmentCategory>(request.Model.GarmentCategoryId);
-        ;
-        unitOfWork.GetRepository<GarmentModel>().Update(entity);
+        
+        _mapper.Map(request.Model, garmentModel);
+        await UpdateCategory(request, garmentModel);
+        await UpdateProcesses(request, garmentModel);
+        
         await unitOfWork.SaveChangesAsync();
         if (unitOfWork.Result.Ok)
         {
-            await publisher.PublishUpdatedAsync(entity);
-            operation.Result = request.Model;
-            return operation;
+            return await Publish(request, garmentModel, operation);
         }
-        operation.AddError($"An error occurred while updating {nameof(GarmentModel)} with Id {entity.Id}.");
+        operation.AddError($"An error occurred while updating {nameof(GarmentModel)} with Id {garmentModel.Id}.");
 
         return operation;
+    }
+
+    private async Task<GarmentModel?> LoadGarmentModel(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request) => await unitOfWork.GetRepository<GarmentModel>()
+        .GetFirstOrDefaultAsync(
+            predicate: x => x.Id == request.Model.Id,
+            include: queryable => queryable.Include(navigationPropertyPath: garmentModel => garmentModel.Processes)
+                .Include(garmentModel => garmentModel.Category),
+            trackingType: TrackingType.Tracking);
+
+    private async Task<OperationResult<UpdateGarmentModelViewModel>> Publish(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel, OperationResult<UpdateGarmentModelViewModel> operation)
+    {
+        await publisher.PublishUpdatedAsync(garmentModel);
+        operation.Result = request.Model;
+        return operation;
+    }
+
+    private async Task UpdateProcesses(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel)
+    {
+        if (!garmentModel.Processes
+                .Select(p => p.Id)
+                .ToHashSet()
+                .SetEquals(request.Model.ProcessesIds))
+        {
+            garmentModel.ReplaceProcesses(await unitOfWork.GetRepository<Process>()
+                .GetAllAsync(predicate: process => request.Model.ProcessesIds.Contains(process.Id),
+                    trackingType: TrackingType.Tracking));
+        }
+    }
+
+    private async Task UpdateCategory(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel)
+    {
+        if (garmentModel.Category.Id != request.Model.GarmentCategoryId)
+        {
+            garmentModel.Category = await unitOfWork.GetRepository<GarmentCategory>()
+                                        .GetFirstOrDefaultAsync(predicate: category => category.Id == request.Model.GarmentCategoryId,
+                                            trackingType: TrackingType.Tracking) ??
+                                    throw new SewingFactoryNotFoundException($"GarmentCategory {request.Model.GarmentCategoryId} not found");
+        }
     }
 }
