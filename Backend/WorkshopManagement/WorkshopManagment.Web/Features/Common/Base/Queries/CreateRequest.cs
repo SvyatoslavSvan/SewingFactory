@@ -21,20 +21,36 @@ public abstract class CreateRequestHandler<TCreateViewModel, TEntity, TReadViewM
     public virtual async Task<OperationResult<TReadViewModel>> Handle(CreateRequest<TCreateViewModel, TEntity, TReadViewModel> request, CancellationToken cancellationToken)
     {
         var operation = OperationResult.CreateResult<TReadViewModel>();
-        var entity = mapper.Map<TEntity>(request.Model);
-        await unitOfWork.GetRepository<TEntity>().InsertAsync(entity, cancellationToken);
-        await unitOfWork.SaveChangesAsync();
+        var entity = await InsertEntity(request, cancellationToken);
         if (!unitOfWork.Result.Ok)
         {
-            operation.AddError(unitOfWork.Result.Exception
-                               ?? new SewingFactoryDatabaseSaveException($"Error while saving entity{nameof(TEntity)}"));
-
-            return operation;
+            return AddDatabaseError(operation);
         }
 
         await AfterEntityCreatedAsync(entity);
+        return MapEntityToReadViewModel(operation, entity);
+    }
+
+    private OperationResult<TReadViewModel> MapEntityToReadViewModel(OperationResult<TReadViewModel> operation, TEntity entity)
+    {
         operation.Result = mapper.Map<TReadViewModel>(entity);
 
         return operation;
+    }
+
+    private OperationResult<TReadViewModel> AddDatabaseError(OperationResult<TReadViewModel> operation)
+    {
+        operation.AddError(unitOfWork.Result.Exception
+                           ?? new SewingFactoryDatabaseSaveException($"Error while saving entity{nameof(TEntity)}"));
+
+        return operation;
+    }
+
+    private async Task<TEntity> InsertEntity(CreateRequest<TCreateViewModel, TEntity, TReadViewModel> request, CancellationToken cancellationToken)
+    {
+        var entity = mapper.Map<TEntity>(request.Model);
+        await unitOfWork.GetRepository<TEntity>().InsertAsync(entity, cancellationToken);
+        await unitOfWork.SaveChangesAsync();
+        return entity;
     }
 }
