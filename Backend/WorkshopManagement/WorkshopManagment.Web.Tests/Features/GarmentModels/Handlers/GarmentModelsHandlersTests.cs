@@ -86,7 +86,7 @@ public sealed class GarmentModelsHandlersTests
         Assert.NotNull(existingGarmentModel);
 
         var request = new GetByIdGarmentModelRequest(_user, existingGarmentModel!.Id);
-        var handler = new GetByIdGarmentModelHandler(unitOfWork, autoMapper);
+        var handler = new GetByIdGarmentModelHandler(unitOfWork.DbContext, autoMapper);
 
         // Act
         var result = await handler.Handle(request, CancellationToken.None);

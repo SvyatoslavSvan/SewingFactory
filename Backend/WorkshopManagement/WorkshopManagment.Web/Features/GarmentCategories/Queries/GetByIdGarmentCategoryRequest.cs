@@ -10,7 +10,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategorie
 
 public sealed record GetByIdGarmentCategoryRequest(ClaimsPrincipal User, Guid Id) : GetByIdRequest<GarmentCategory, ReadGarmentCategoryViewModel>(User, Id);
 
-public sealed class GetByIdGarmentCategoryHandler(IUnitOfWork<ApplicationDbContext> unitOfWork, IMapper mapper)
-    : GetByIdRequestHandler<GarmentCategory, ReadGarmentCategoryViewModel>(unitOfWork, mapper)
+public sealed class GetByIdGarmentCategoryHandler(ApplicationDbContext dbContext, IMapper mapper)
+    : GetByIdRequestHandler<GarmentCategory, ReadGarmentCategoryViewModel>(dbContext, mapper)
 {
 }

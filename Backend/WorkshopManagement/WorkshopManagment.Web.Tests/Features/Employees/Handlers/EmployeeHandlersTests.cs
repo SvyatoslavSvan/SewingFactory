@@ -85,7 +85,7 @@ public sealed class EmployeeHandlersTests
         Assert.NotNull(existing);
 
         var req = new GetByIdEmployeeRequest(_user, existing!.Id);
-        var handler = new GetByIdRequestEmployeeHandler(uow, mapper);
+        var handler = new GetByIdRequestEmployeeHandler(uow.DbContext, mapper);
 
         var res = await handler.Handle(req, CancellationToken.None);
 

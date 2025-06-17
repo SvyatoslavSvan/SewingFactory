@@ -66,14 +66,13 @@ public sealed class DepartmentHandlersTests
         // Arrange
         var unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork<ApplicationDbContext>>();
         var mapper = _serviceProvider.GetRequiredService<IMapper>();
-
         SeedTestData(unitOfWork);
 
         var repository = unitOfWork.GetRepository<Department>();
         var existingDepartment = await repository.GetFirstOrDefaultAsync(predicate: d => d.Name == "Cutting Department");
         Assert.NotNull(existingDepartment);
 
-        var handler = new GetByIdDepartmentHandler(unitOfWork, mapper);
+        var handler = new GetByIdDepartmentHandler(unitOfWork.DbContext, mapper);
         var request = new GetByIdDepartmentRequest(_claimsPrincipal, existingDepartment.Id);
 
         // Act

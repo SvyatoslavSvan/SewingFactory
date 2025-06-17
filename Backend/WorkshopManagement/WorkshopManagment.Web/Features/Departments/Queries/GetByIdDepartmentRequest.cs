@@ -11,5 +11,5 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.Departments.Quer
 public sealed record GetByIdDepartmentRequest(ClaimsPrincipal User, Guid Id)
     : GetByIdRequest<Department, ReadDepartmentViewModel>(User, Id);
 
-public sealed class GetByIdDepartmentHandler(IUnitOfWork<ApplicationDbContext> unitOfWork, IMapper mapper)
-    : GetByIdRequestHandler<Department, ReadDepartmentViewModel>(unitOfWork, mapper);
+public sealed class GetByIdDepartmentHandler(ApplicationDbContext dbContext, IMapper mapper)
+    : GetByIdRequestHandler<Department, ReadDepartmentViewModel>(dbContext, mapper);

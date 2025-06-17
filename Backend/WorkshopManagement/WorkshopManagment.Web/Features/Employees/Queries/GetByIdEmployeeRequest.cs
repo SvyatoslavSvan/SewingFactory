@@ -10,6 +10,9 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.Employees.Querie
 
 public sealed record GetByIdEmployeeRequest(ClaimsPrincipal User, Guid Id) : GetByIdRequest<Employee, EmployeeReadViewModel>(User, Id);
 
-public sealed class GetByIdRequestEmployeeHandler(IUnitOfWork<ApplicationDbContext> unitOfWork, IMapper mapper) : GetByIdRequestHandler<Employee, EmployeeReadViewModel>(unitOfWork, mapper)
+public sealed class GetByIdRequestEmployeeHandler(
+    ApplicationDbContext dbContext,
+    IMapper mapper) : GetByIdRequestHandler<Employee, EmployeeReadViewModel>(dbContext,
+    mapper)
 {
 }

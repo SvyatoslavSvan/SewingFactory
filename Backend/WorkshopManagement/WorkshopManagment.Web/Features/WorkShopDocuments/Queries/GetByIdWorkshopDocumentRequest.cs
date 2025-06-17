@@ -16,27 +16,24 @@ public sealed record GetByIdWorkshopDocumentRequest(
     : GetByIdRequest<WorkshopDocument, DetailsReadWorkshopDocumentViewModel>(User, Id);
 
 public sealed class GetByIdWorkshopDocumentHandler(
-    IUnitOfWork<ApplicationDbContext> unitOfWork,
-    IMapper mapper) : GetByIdRequestHandler<WorkshopDocument, DetailsReadWorkshopDocumentViewModel>(unitOfWork, mapper)
+    ApplicationDbContext dbContext,
+    IMapper mapper) : GetByIdRequestHandler<WorkshopDocument, DetailsReadWorkshopDocumentViewModel>(dbContext, mapper)
 {
     private readonly IMapper _mapper = mapper;
-    private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork = unitOfWork;
+    private readonly ApplicationDbContext _dbContext = dbContext;
 
     public override async Task<OperationResult<DetailsReadWorkshopDocumentViewModel>> Handle(
         GetByIdRequest<WorkshopDocument, DetailsReadWorkshopDocumentViewModel> request, CancellationToken cancellationToken)
     {
         var result = OperationResult.CreateResult<DetailsReadWorkshopDocumentViewModel>();
-        var document = await _unitOfWork
-            .GetRepository<WorkshopDocument>()
-            .GetFirstOrDefaultAsync(
-                predicate: d => d.Id == request.Id,
-                include: q => q
-                    .Include(navigationPropertyPath: d => d.Tasks)
-                    .ThenInclude(navigationPropertyPath: t => t.EmployeeTaskRepeats)
-                    .ThenInclude(navigationPropertyPath: r => r.WorkShopEmployee)
-                    .Include(navigationPropertyPath: d => d.Tasks)
-                    .ThenInclude(navigationPropertyPath: t => t.Process));
-
+        var document = await _dbContext.WorkshopDocuments.Include(x => x.Tasks)
+            .ThenInclude(x => x.EmployeeTaskRepeats)
+            .ThenInclude(x => x.WorkShopEmployee)
+            .Include(x => x.Tasks)
+            .ThenInclude(x => x.Process)
+            .FirstOrDefaultAsync(x => x.Id == request.Id,
+                cancellationToken: cancellationToken);
+        
         if (document is null)
         {
             result.AddError($"The entity {nameof(WorkshopDocument)} was not found with key {request.Id}");

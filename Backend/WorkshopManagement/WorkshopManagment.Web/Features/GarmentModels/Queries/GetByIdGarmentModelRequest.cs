@@ -11,7 +11,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Qu
 public sealed record GetByIdGarmentModelRequest(ClaimsPrincipal User, Guid Id)
     : GetByIdRequest<GarmentModel, DetailsReadGarmentModelViewModel>(User, Id);
 
-public sealed class GetByIdGarmentModelHandler(IUnitOfWork<ApplicationDbContext> unitOfWork, IMapper mapper)
-    : GetByIdRequestHandler<GarmentModel, DetailsReadGarmentModelViewModel>(unitOfWork, mapper)
+public sealed class GetByIdGarmentModelHandler(ApplicationDbContext dbContext, IMapper mapper)
+    : GetByIdRequestHandler<GarmentModel, DetailsReadGarmentModelViewModel>(dbContext, mapper)
 {
 }

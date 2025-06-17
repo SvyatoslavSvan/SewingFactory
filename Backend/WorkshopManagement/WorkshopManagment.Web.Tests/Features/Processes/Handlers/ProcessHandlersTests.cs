@@ -78,7 +78,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Tests.Features.Processes.Hand
             var procs = SeedProcs(uow, dept);
 
             var existing = procs.First();
-            var handler = new GetByIdProcessHandler(uow, mapper);
+            var handler = new GetByIdProcessHandler(uow.DbContext, mapper);
             var request = new GetByIdProcessRequest(_claimsPrincipal, existing.Id);
 
             // Act

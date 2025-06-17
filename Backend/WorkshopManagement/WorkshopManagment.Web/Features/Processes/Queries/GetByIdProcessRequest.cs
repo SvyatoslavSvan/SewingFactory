@@ -11,7 +11,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.Processes.Querie
 public sealed record GetByIdProcessRequest(ClaimsPrincipal User, Guid Id)
     : GetByIdRequest<Process, ReadProcessViewModel>(User, Id);
 
-public sealed class GetByIdProcessHandler(IUnitOfWork<ApplicationDbContext> unitOfWork, IMapper mapper)
-    : GetByIdRequestHandler<Process, ReadProcessViewModel>(unitOfWork, mapper)
+public sealed class GetByIdProcessHandler(ApplicationDbContext dbContext, IMapper mapper)
+    : GetByIdRequestHandler<Process, ReadProcessViewModel>(dbContext, mapper)
 {
 }

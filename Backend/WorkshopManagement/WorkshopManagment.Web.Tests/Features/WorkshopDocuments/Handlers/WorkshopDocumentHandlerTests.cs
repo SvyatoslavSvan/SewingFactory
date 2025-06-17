@@ -102,7 +102,7 @@ public sealed class WorkshopDocumentHandlerTests
     {
         // Arrange
         var doc = TestHelpers.SeedWorkshopDocument(_unitOfWork, "Single‑Doc");
-        var handler = new GetByIdWorkshopDocumentHandler(_unitOfWork, _mapper);
+        var handler = new GetByIdWorkshopDocumentHandler(_unitOfWork.DbContext, _mapper);
         var request = new GetByIdWorkshopDocumentRequest(new ClaimsPrincipal(), doc.Id);
 
         // Act
@@ -111,6 +111,10 @@ public sealed class WorkshopDocumentHandlerTests
         // Assert
         Assert.True(result.Ok);
         Assert.Equal(doc.Id, result.Result!.Id);
+        Assert.Equal(doc.Name, result.Result!.Name);
+        Assert.Equal(doc.Date, result.Result!.Date);
+        Assert.Equal(doc.CountOfModelsInvolved, result.Result!.CountOfModelsInvolved);
+        Assert.Equal(doc.Tasks.Count(), result.Result!.WorkshopTasks.Count());
     }
 
     [Theory]

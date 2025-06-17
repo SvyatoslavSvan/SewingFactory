@@ -98,7 +98,7 @@ public sealed class GarmentCategoryHandlersTests
         Assert.NotNull(existing);
 
         var request = new GetByIdGarmentCategoryRequest(_user, existing!.Id);
-        var handler = new GetByIdGarmentCategoryHandler(uow, mapper);
+        var handler = new GetByIdGarmentCategoryHandler(uow.DbContext, mapper);
 
         var result = await handler.Handle(request, CancellationToken.None);
 
