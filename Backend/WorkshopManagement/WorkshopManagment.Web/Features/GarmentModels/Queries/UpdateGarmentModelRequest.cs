@@ -29,23 +29,39 @@ public sealed class UpdateGarmentModelHandler(
 
         if (garmentModel is null)
         {
-            operation.AddError(new SewingFactoryNotFoundException($"GarmentModel {request.Model.Id} not found"));
-
-            return operation;
+            return AddGarmentModelNotFoundError(request, operation);
         }
         
+        await UpdateGarmentModel(request, garmentModel);
+        if (unitOfWork.Result.Ok)
+        {
+            return await Publish(request, garmentModel, operation);
+        }
+        return AddDatabaseSaveError(operation, garmentModel);
+    }
+
+    private static OperationResult<UpdateGarmentModelViewModel> AddGarmentModelNotFoundError(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, OperationResult<UpdateGarmentModelViewModel> operation)
+    {
+        operation.AddError(new SewingFactoryNotFoundException($"GarmentModel {request.Model.Id} not found"));
+
+        return operation;
+    }
+
+    private OperationResult<UpdateGarmentModelViewModel> AddDatabaseSaveError(OperationResult<UpdateGarmentModelViewModel> operation, GarmentModel garmentModel)
+    {
+        operation.AddError($"An error occurred while updating {nameof(GarmentModel)} with Id {garmentModel.Id}.",
+            unitOfWork.Result.Exception ?? new Exception("Unknown error"));
+
+        return operation;
+    }
+
+    private async Task UpdateGarmentModel(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel)
+    {
         _mapper.Map(request.Model, garmentModel);
         await UpdateCategory(request, garmentModel);
         await UpdateProcesses(request, garmentModel);
         
         await unitOfWork.SaveChangesAsync();
-        if (unitOfWork.Result.Ok)
-        {
-            return await Publish(request, garmentModel, operation);
-        }
-        operation.AddError($"An error occurred while updating {nameof(GarmentModel)} with Id {garmentModel.Id}.");
-
-        return operation;
     }
 
     private async Task<GarmentModel?> LoadGarmentModel(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request) => await unitOfWork.GetRepository<GarmentModel>()

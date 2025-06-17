@@ -33,33 +33,19 @@ public sealed class UpdateWorkshopDocumentHandler(
         CancellationToken cancellationToken)
     {
         var operationResult = OperationResult.CreateResult<UpdateWorkshopDocumentViewModel>();
-        var errorMessage = string.Format(_errorMessageFormat,
-            nameof(WorkshopDocument),
-            request.Model.Id);
 
-        var document = await unitOfWork.GetRepository<WorkshopDocument>()
-            .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.Id,
-                include: queryable => queryable
-                    .Include(navigationPropertyPath: workshopDocument => workshopDocument.Tasks)
-                    .ThenInclude(navigationPropertyPath: task => task.EmployeeTaskRepeats)
-                    .ThenInclude(navigationPropertyPath: x => x.WorkShopEmployee).Include(navigationPropertyPath: x => x.Employees),
-                trackingType: TrackingType.Tracking);
+        var document = await LoadDocument(request);
 
         if (document is null)
         {
-            operationResult.AddError(new SewingFactoryNotFoundException(errorMessage + $"The entity {nameof(WorkshopDocument)} was not found"));
-
+            operationResult.AddError(new SewingFactoryNotFoundException(
+                $"WorkshopDocument with Id {request.Model.Id} not found"));
             return operationResult;
         }
 
         var employeeDictionary = await GetEmployeeDictionaryFromWorkshopTasks(request);
 
-        _mapper.Map(request.Model,
-            document,
-            opts: opts
-                => opts.Items[WorkshopDocumentMappingProfile.EmployeeDictionaryKey] = employeeDictionary);
-
-        await unitOfWork.SaveChangesAsync();
+        await UpdateWorkshopDocument(request, document, employeeDictionary);
         if (!unitOfWork.Result.Ok)
         {
             operationResult.AddError(unitOfWork.Result.Exception);
@@ -71,6 +57,24 @@ public sealed class UpdateWorkshopDocumentHandler(
 
         return operationResult;
     }
+
+    private async Task UpdateWorkshopDocument(UpdateRequest<UpdateWorkshopDocumentViewModel, WorkshopDocument> request, WorkshopDocument document,
+        Dictionary<Guid, Employee> employeeDictionary)
+    {
+        _mapper.Map(request.Model,
+            document,
+            opts: opts
+                => opts.Items[WorkshopDocumentMappingProfile.EmployeeDictionaryKey] = employeeDictionary);
+        await unitOfWork.SaveChangesAsync();
+    }
+
+    private async Task<WorkshopDocument?> LoadDocument(UpdateRequest<UpdateWorkshopDocumentViewModel, WorkshopDocument> request) => await unitOfWork.GetRepository<WorkshopDocument>()
+        .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.Id,
+            include: queryable => queryable
+                .Include(navigationPropertyPath: workshopDocument => workshopDocument.Tasks)
+                .ThenInclude(navigationPropertyPath: task => task.EmployeeTaskRepeats)
+                .ThenInclude(navigationPropertyPath: x => x.WorkShopEmployee).Include(navigationPropertyPath: x => x.Employees),
+            trackingType: TrackingType.Tracking);
 
     private async Task<Dictionary<Guid, Employee>> GetEmployeeDictionaryFromWorkshopTasks( // materialize IDs before an EF query—EF Core can’t translate complex nested LINQ to SQL
         UpdateRequest<UpdateWorkshopDocumentViewModel, WorkshopDocument> request)

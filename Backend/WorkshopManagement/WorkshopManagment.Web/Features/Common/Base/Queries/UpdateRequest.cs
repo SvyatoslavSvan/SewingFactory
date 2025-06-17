@@ -17,7 +17,7 @@ public abstract class UpdateRequestHandler<TViewModel, TEntity>(
     where TEntity : Identity
     where TViewModel : IIdentityViewModel
 {
-    protected const string _errorMessageFormat = "An error occurred while updating {0} with Id {1}.";
+    private const string _errorMessageFormat = "An error occurred while updating {0} with Id {1}.";
 
     protected virtual Task AfterEntityUpdatedAsync(TEntity entity) => Task.CompletedTask;
     
@@ -25,27 +25,44 @@ public abstract class UpdateRequestHandler<TViewModel, TEntity>(
     {
         var operation = OperationResult.CreateResult<TViewModel>();
         var errorMessage = string.Format(_errorMessageFormat, nameof(TEntity), request.Model.Id);
-        var repository = unitOfWork.GetRepository<TEntity>();
-        var entity = await repository.GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.Id, trackingType: TrackingType.Tracking);
+        var entity = await LoadEntity(request);
         if (entity is null)
         {
-            operation.AddError(new SewingFactoryNotFoundException(errorMessage + $"The entity {nameof(TEntity)} was not found"));
-
-            return operation;
+            return AddEntityNotFoundError(operation, errorMessage);
         }
 
-        mapper.Map(request.Model, entity);
-        repository.Update(entity);
-        await unitOfWork.SaveChangesAsync();
+        await UpdateEntity(request, entity);
         if (!unitOfWork.Result.Ok)
         {
-            operation.AddError(new SewingFactoryDatabaseSaveException(errorMessage));
-
-            return operation;
+            return AddDatabaseSaveError(operation, errorMessage);
         }
         await AfterEntityUpdatedAsync(entity);
         operation.Result = request.Model;
 
         return operation;
     }
+
+    private static OperationResult<TViewModel> AddEntityNotFoundError(OperationResult<TViewModel> operation, string errorMessage)
+    {
+        operation.AddError(new SewingFactoryNotFoundException(errorMessage + $"The entity {nameof(TEntity)} was not found"));
+
+        return operation;
+    }
+
+    private static OperationResult<TViewModel> AddDatabaseSaveError(OperationResult<TViewModel> operation, string errorMessage)
+    {
+        operation.AddError(new SewingFactoryDatabaseSaveException(errorMessage));
+
+        return operation;
+    }
+
+    private async Task UpdateEntity(UpdateRequest<TViewModel, TEntity> request, TEntity entity)
+    {
+        mapper.Map(request.Model, entity);
+        await unitOfWork.SaveChangesAsync();
+    }
+
+    private async Task<TEntity?> LoadEntity(UpdateRequest<TViewModel, TEntity> request) => await unitOfWork.GetRepository<TEntity>()
+        .GetFirstOrDefaultAsync(predicate: x => x.Id == request.Model.Id,
+            trackingType: TrackingType.Tracking);
 }
