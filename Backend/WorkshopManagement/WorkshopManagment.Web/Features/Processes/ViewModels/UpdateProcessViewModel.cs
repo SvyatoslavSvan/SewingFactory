@@ -6,4 +6,5 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.Processes.ViewMo
 public sealed class UpdateProcessViewModel : ProcessViewModel, IIdentityViewModel
 {
     public Guid Id { get; set; }
+    public Guid DepartmentId { get; set; }
 }

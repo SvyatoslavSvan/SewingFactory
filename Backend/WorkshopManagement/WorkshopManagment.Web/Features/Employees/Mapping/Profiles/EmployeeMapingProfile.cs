@@ -14,11 +14,16 @@ public sealed class EmployeeMappingProfile : Profile
     {
         CreateMap<Employee, EmployeeReadViewModel>()
             .ForMember(destinationMember: d => d.DepartmentViewModel,
-                memberOptions: o => o.MapFrom(mapExpression: s => new ReadDepartmentViewModel { Id = s.Department.Id, Name = s.Department.Name }));
+                memberOptions: o => o.MapFrom(mapExpression: s => new ReadDepartmentViewModel
+                {
+                    Id = s.Department.Id,
+                    Name = s.Department.Name
+                }));
 
         CreateMap<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
-            .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => s.Premium.Value));
+            .ForMember(destinationMember: d => d.Premium,
+                memberOptions: o => o.MapFrom(mapExpression: s => s.Premium.Value));
 
         CreateMap<RateBasedEmployee, RateEmployeeReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
@@ -50,7 +55,7 @@ public sealed class EmployeeMappingProfile : Profile
                 new ProcessBasedEmployee(
                     src.Name,
                     src.InternalId,
-                    ctx.Mapper.Map<Department>(src.DepartmentId),
+                    (Department)ctx.Items[nameof(Department)],
                     new Percent(src.Premium)))
             .ForAllMembers(memberOptions: o => o.Ignore());
 
@@ -60,7 +65,7 @@ public sealed class EmployeeMappingProfile : Profile
                     src.Name,
                     src.InternalId,
                     new Money(src.Rate),
-                    ctx.Mapper.Map<Department>(src.DepartmentId),
+                    (Department)ctx.Items[nameof(Department)],
                     (int)src.Premium))
             .ForAllMembers(memberOptions: o => o.Ignore());
 
@@ -70,23 +75,17 @@ public sealed class EmployeeMappingProfile : Profile
                     src.Name,
                     src.InternalId,
                     new Percent(src.SalaryPercentage),
-                    ctx.Mapper.Map<Department>(src.DepartmentId)))
+                    (Department)ctx.Items[nameof(Department)]))
             .ForAllMembers(memberOptions: o => o.Ignore());
 
         CreateMap<EmployeeUpdateViewModel, Employee>()
             .ForMember(destinationMember: d => d.InternalId, memberOptions: o => o.MapFrom(mapExpression: s => s.InternalId))
-            .ForMember(destinationMember: dest => dest.Department,
-                memberOptions: opt => opt.MapFrom(mappingFunction: (
-                        src,
-                        dest,
-                        destMember,
-                        ctx) =>
-                    ctx.Mapper.Map<Department>(src.DepartmentId)
-                )).ForMember(destinationMember: x => x.Documents, memberOptions: o => o.Ignore());
+            .ForMember(destinationMember: x => x.Documents, memberOptions: o => o.Ignore());
 
         CreateMap<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
             .IncludeBase<EmployeeUpdateViewModel, Employee>()
-            .ForMember(destinationMember: d => d.Premium, memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.Premium)));
+            .ForMember(destinationMember: d => d.Premium,
+                memberOptions: o => o.MapFrom(mapExpression: s => new Percent(s.Premium)));
 
         CreateMap<RateEmployeeUpdateViewModel, RateBasedEmployee>()
             .IncludeBase<EmployeeUpdateViewModel, Employee>()

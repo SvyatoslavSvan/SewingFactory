@@ -140,14 +140,14 @@ namespace SewingFactory.Backend.WorkshopManagement.Tests.Features.Processes.Hand
             var mapper = GetMapper();
             var dept = SeedDept(uow);
             var proc = SeedProcs(uow, dept).First();
-
-            // Detach to simulate no-tracking fetch
+            
             uow.DbContext.ChangeTracker.Clear();
 
             var updateModel = new UpdateProcessViewModel
             {
                 Id = proc.Id,
                 Name = "Cutting Updated",
+                DepartmentId = dept.Id,
                 Price = 9m
             };
             var handler = new UpdateProcessHandler(uow, mapper);

@@ -4,7 +4,7 @@ using SewingFactory.Common.Domain.ValueObjects;
 
 namespace SewingFactory.Backend.WorkshopManagement.Domain.SalaryReport;
 
-public class Salary(
+public sealed class Salary(
     Money payment,
     Money premium,
     Employee employee,

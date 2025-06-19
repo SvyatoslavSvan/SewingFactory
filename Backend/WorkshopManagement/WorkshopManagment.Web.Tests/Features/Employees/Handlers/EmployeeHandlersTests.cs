@@ -134,7 +134,7 @@ public sealed class EmployeeHandlersTests
         var mapper = _sp.GetRequiredService<IMapper>();
         var dep = SeedDepartment(uow);
         SeedEmployees(uow, dep);
-
+        var departmentToUpdate = SeedDepartment(uow, "Updated Department");
         var repo = uow.GetRepository<Employee>();
         var employee = await repo.GetFirstOrDefaultAsync(predicate: e => e.InternalId == "E-001",
             trackingType: TrackingType.NoTracking);
@@ -146,13 +146,13 @@ public sealed class EmployeeHandlersTests
             Id = employee!.Id,
             Name = "Alice Updated",
             InternalId = employee.InternalId,
-            DepartmentId = dep.Id,
+            DepartmentId = departmentToUpdate.Id,
             Premium = 20m
         };
 
         uow.DbContext.ChangeTracker.Clear();
-        var req = new UpdateProcessBasedEmployeeRequest(updateVm, _user);
-        var handler = new UpdateRequestProcessBasedEmployeeHandler(uow, mapper);
+        var req = new UpdateEmployeeRequest(updateVm, _user);
+        var handler = new UpdateEmployeeRequestHandler(uow, mapper);
 
         await handler.Handle(req, CancellationToken.None);
 

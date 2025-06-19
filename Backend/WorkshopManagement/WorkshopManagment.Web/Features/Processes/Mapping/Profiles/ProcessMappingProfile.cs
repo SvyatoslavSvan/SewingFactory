@@ -17,7 +17,7 @@ public sealed class ProcessProfile : Profile
                 src,
                 ctx) => new Process(
                 src.Name,
-                ctx.Mapper.Map<Department>(src.DepartmentId),
+                (Department)ctx.Items[nameof(Department)],
                 new Money(src.Price)
             ))
             .ForMember(destinationMember: dest => dest.Department,

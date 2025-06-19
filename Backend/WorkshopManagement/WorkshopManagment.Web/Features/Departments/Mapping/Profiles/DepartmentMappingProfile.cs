@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
-using SewingFactory.Backend.WorkshopManagement.Web.Features.Departments.Mapping.Converters;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Departments.ViewModels;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.Departments.Mapping.Profiles;
@@ -9,9 +8,7 @@ public sealed class DepartmentMappingProfile : Profile
 {
     public DepartmentMappingProfile()
     {
-        CreateMap<Guid, Department>()
-            .ConvertUsing<DepartmentStubConverter>();
-
+        
         CreateMap<Department, ReadDepartmentViewModel>();
 
         CreateMap<CreateDepartmentViewModel, Department>()
