@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees;
 using SewingFactory.Backend.WorkshopManagement.Domain.Entities.Employees.Base;
+using SewingFactory.Backend.WorkshopManagement.Web.Extensions;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Departments.ViewModels;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Employees.ViewModels;
 using SewingFactory.Common.Domain.Exceptions;
@@ -14,11 +15,7 @@ public sealed class EmployeeMappingProfile : Profile
     {
         CreateMap<Employee, EmployeeReadViewModel>()
             .ForMember(destinationMember: d => d.DepartmentViewModel,
-                memberOptions: o => o.MapFrom(mapExpression: s => new ReadDepartmentViewModel
-                {
-                    Id = s.Department.Id,
-                    Name = s.Department.Name
-                }));
+                memberOptions: o => o.MapFrom(mapExpression: s => new ReadDepartmentViewModel { Id = s.Department.Id, Name = s.Department.Name }));
 
         CreateMap<ProcessBasedEmployee, ProcessEmployeeReadViewModel>()
             .IncludeBase<Employee, EmployeeReadViewModel>()
@@ -57,7 +54,7 @@ public sealed class EmployeeMappingProfile : Profile
                     src.InternalId,
                     (Department)ctx.Items[nameof(Department)],
                     new Percent(src.Premium)))
-            .ForAllMembers(memberOptions: o => o.Ignore());
+            .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<RateEmployeeCreateViewModel, RateBasedEmployee>()
             .ConstructUsing(ctor: (src, ctx) =>
@@ -67,7 +64,7 @@ public sealed class EmployeeMappingProfile : Profile
                     new Money(src.Rate),
                     (Department)ctx.Items[nameof(Department)],
                     (int)src.Premium))
-            .ForAllMembers(memberOptions: o => o.Ignore());
+            .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<TechnologistCreateViewModel, Technologist>()
             .ConstructUsing(ctor: (src, ctx) =>
@@ -76,11 +73,12 @@ public sealed class EmployeeMappingProfile : Profile
                     src.InternalId,
                     new Percent(src.SalaryPercentage),
                     (Department)ctx.Items[nameof(Department)]))
-            .ForAllMembers(memberOptions: o => o.Ignore());
+            .ForAllOtherMembers(memberOptions: o => o.Ignore());
 
         CreateMap<EmployeeUpdateViewModel, Employee>()
             .ForMember(destinationMember: d => d.InternalId, memberOptions: o => o.MapFrom(mapExpression: s => s.InternalId))
-            .ForMember(destinationMember: x => x.Documents, memberOptions: o => o.Ignore());
+            .ForMember(destinationMember: x => x.Documents, memberOptions: o => o.Ignore())
+            .ForMember(x => x.Department, memberOptions: o => o.Ignore());
 
         CreateMap<ProcessEmployeeUpdateViewModel, ProcessBasedEmployee>()
             .IncludeBase<EmployeeUpdateViewModel, Employee>()

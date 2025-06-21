@@ -22,13 +22,7 @@ public sealed class CreateGarmentModelHandler(IUnitOfWork<ApplicationDbContext> 
 
     public override async Task<OperationResult<DetailsReadGarmentModelViewModel>> Handle(
         CreateRequest<CreateGarmentModelViewModel, GarmentModel, DetailsReadGarmentModelViewModel> request, CancellationToken cancellationToken)
-    {
-        var operation = OperationResult.CreateResult<DetailsReadGarmentModelViewModel>();
-        var processes = await LoadProcesses(request);
-        var garmentCategory = await LoadGarmentCategory(request);
-        var garmentModel = await CreateGarmentModel(request, processes, garmentCategory, cancellationToken);
-        return await EnsureCreated(garmentModel, operation);
-    }
+        => EnsureCreated(await CreateGarmentModel(request, cancellationToken));
 
     private async Task<IList<Process>> LoadProcesses(CreateRequest<CreateGarmentModelViewModel, GarmentModel, DetailsReadGarmentModelViewModel> request)
     {
@@ -52,32 +46,28 @@ public sealed class CreateGarmentModelHandler(IUnitOfWork<ApplicationDbContext> 
         return garmentCategory;
     }
 
-    private async Task<OperationResult<DetailsReadGarmentModelViewModel>> EnsureCreated(GarmentModel garmentModel, OperationResult<DetailsReadGarmentModelViewModel> operation)
-    {
-        if (unitOfWork.Result.Ok)
-        {
-            return await PublishAndMap(garmentModel, operation);
-        }
-
-        operation.AddError($"An error occurred while creating {nameof(GarmentModel)} with Id {garmentModel.Id}.");
-
-        return operation;
-    }
-
-    private async Task<OperationResult<DetailsReadGarmentModelViewModel>> PublishAndMap(GarmentModel garmentModel, OperationResult<DetailsReadGarmentModelViewModel> operation)
-    {
-        await publisher.PublishCreatedAsync(garmentModel);
-        operation.Result = _mapper.Map<DetailsReadGarmentModelViewModel>(garmentModel);
-
-        return operation;
-    }
-
     private async Task<GarmentModel> CreateGarmentModel(
         CreateRequest<CreateGarmentModelViewModel, GarmentModel, DetailsReadGarmentModelViewModel> request,
-        IList<Process> processes,
-        GarmentCategory category,
         CancellationToken cancellationToken)
     {
+        var garmentModel = await MapToEntity(request);
+
+        await InsertAndPublish(cancellationToken, garmentModel);
+
+        return garmentModel;
+    }
+
+    private async Task InsertAndPublish(CancellationToken cancellationToken, GarmentModel garmentModel)
+    {
+        await unitOfWork.GetRepository<GarmentModel>().InsertAsync(garmentModel, cancellationToken);
+        await publisher.PublishCreatedAsync(garmentModel);
+        await unitOfWork.SaveChangesAsync();
+    }
+
+    private async Task<GarmentModel> MapToEntity(CreateRequest<CreateGarmentModelViewModel, GarmentModel, DetailsReadGarmentModelViewModel> request)
+    {
+        var processes = await LoadProcesses(request);
+        var category = await LoadGarmentCategory(request);
         var garmentModel = _mapper.Map<GarmentModel>(
             request.Model,
             opts: opts =>
@@ -85,9 +75,6 @@ public sealed class CreateGarmentModelHandler(IUnitOfWork<ApplicationDbContext> 
                 opts.Items["Processes"] = processes;
                 opts.Items["Category"] = category;
             });
-
-        await unitOfWork.GetRepository<GarmentModel>().InsertAsync(garmentModel, cancellationToken);
-        await unitOfWork.SaveChangesAsync();
 
         return garmentModel;
     }

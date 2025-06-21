@@ -31,6 +31,22 @@ public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
         Image = image;
     }
 
+    public GarmentModel(
+        string name,
+        string description,
+        List<Process> processes,
+        GarmentCategory category,
+        Money price,
+        Guid id,
+        byte[]? image = null) : base(name, id)
+    {
+        Description = description;
+        _processes = processes;
+        Category = category;
+        Price = price;
+        Image = image;
+    }
+
     public IReadOnlyList<Process> Processes => _processes;
 
     public string Description
@@ -54,7 +70,7 @@ public sealed class GarmentModel : NamedIdentity, IPrototype<GarmentModel>
     }
 
     public Money Price { get; set; }
-    
+
     public byte[]? Image { get; set; }
 
     public GarmentModel Clone() => new(Name, Description, _processes.ToList(), Category, Price, Image);

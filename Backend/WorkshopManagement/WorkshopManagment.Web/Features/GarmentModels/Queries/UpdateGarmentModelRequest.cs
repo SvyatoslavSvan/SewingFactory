@@ -18,49 +18,29 @@ public sealed record UpdateGarmentModelRequest(UpdateGarmentModelViewModel Model
 
 public sealed class UpdateGarmentModelHandler(
     IUnitOfWork<ApplicationDbContext> unitOfWork,
-    IMapper mapper, IGarmentModelPublisher publisher) : UpdateRequestHandler<UpdateGarmentModelViewModel, GarmentModel>(unitOfWork, mapper)
+    IMapper mapper,
+    IGarmentModelPublisher publisher) : UpdateRequestHandler<UpdateGarmentModelViewModel, GarmentModel>(unitOfWork, mapper)
 {
     private readonly IMapper _mapper = mapper;
 
     public override async Task<OperationResult<UpdateGarmentModelViewModel>> Handle(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, CancellationToken cancellationToken)
     {
-        var operation = OperationResult.CreateResult<UpdateGarmentModelViewModel>();
-        var garmentModel = await LoadGarmentModel(request);
-
-        if (garmentModel is null)
+        if (await LoadGarmentModel(request) is not { } garmentModel)
         {
-            return AddGarmentModelNotFoundError(request, operation);
+            return AddEntityNotFoundError(request.Model.Id);
         }
-        
-        await UpdateGarmentModel(request, garmentModel);
-        if (unitOfWork.Result.Ok)
-        {
-            return await Publish(request, garmentModel, operation);
-        }
-        return AddDatabaseSaveError(operation, garmentModel);
+
+        await UpdateAndPublish(request, garmentModel);
+
+        return EnsureUpdated(request);
     }
 
-    private static OperationResult<UpdateGarmentModelViewModel> AddGarmentModelNotFoundError(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, OperationResult<UpdateGarmentModelViewModel> operation)
-    {
-        operation.AddError(new SewingFactoryNotFoundException($"GarmentModel {request.Model.Id} not found"));
-
-        return operation;
-    }
-
-    private OperationResult<UpdateGarmentModelViewModel> AddDatabaseSaveError(OperationResult<UpdateGarmentModelViewModel> operation, GarmentModel garmentModel)
-    {
-        operation.AddError($"An error occurred while updating {nameof(GarmentModel)} with Id {garmentModel.Id}.",
-            unitOfWork.Result.Exception ?? new Exception("Unknown error"));
-
-        return operation;
-    }
-
-    private async Task UpdateGarmentModel(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel)
+    private async Task UpdateAndPublish(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel)
     {
         _mapper.Map(request.Model, garmentModel);
         await UpdateCategory(request, garmentModel);
         await UpdateProcesses(request, garmentModel);
-        
+        await publisher.PublishUpdatedAsync(garmentModel);
         await unitOfWork.SaveChangesAsync();
     }
 
@@ -70,13 +50,6 @@ public sealed class UpdateGarmentModelHandler(
             include: queryable => queryable.Include(navigationPropertyPath: garmentModel => garmentModel.Processes)
                 .Include(garmentModel => garmentModel.Category),
             trackingType: TrackingType.Tracking);
-
-    private async Task<OperationResult<UpdateGarmentModelViewModel>> Publish(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel, OperationResult<UpdateGarmentModelViewModel> operation)
-    {
-        await publisher.PublishUpdatedAsync(garmentModel);
-        operation.Result = request.Model;
-        return operation;
-    }
 
     private async Task UpdateProcesses(UpdateRequest<UpdateGarmentModelViewModel, GarmentModel> request, GarmentModel garmentModel)
     {

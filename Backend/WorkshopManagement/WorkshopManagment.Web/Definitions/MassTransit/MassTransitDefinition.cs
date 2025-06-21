@@ -1,5 +1,6 @@
 ﻿using Calabonga.AspNetCore.AppDefinitions;
 using MassTransit;
+using SewingFactory.Backend.WorkshopManagement.Infrastructure;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentCategories.Publisher;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.GarmentModels.Publisher;
 
@@ -13,6 +14,13 @@ public sealed class MassTransitDefinition : AppDefinition
         builder.Services.AddScoped<IGarmentModelPublisher, GarmentModelPublisher>();
         builder.Services.AddMassTransit(x =>
         {
+            x.AddEntityFrameworkOutbox<ApplicationDbContext>(o =>
+            {
+                o.QueryDelay = TimeSpan.FromSeconds(10);
+                o.UsePostgres();
+                o.UseBusOutbox();
+            });
+
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host("localhost", "/", h =>
@@ -20,7 +28,9 @@ public sealed class MassTransitDefinition : AppDefinition
                     h.Username("guest");
                     h.Password("guest");
                 });
-            });;
+            });
+
+            ;
         });
     }
 }

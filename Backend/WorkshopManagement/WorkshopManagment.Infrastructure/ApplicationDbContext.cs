@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -71,6 +72,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<ProcessBasedEmployee>().ToTable("ProcessBasedEmployees");
         builder.Entity<RateBasedEmployee>().ToTable("RateBasedEmployees");
         builder.Entity<Technologist>().ToTable("Technologists");
+        builder.AddOutboxMessageEntity();
+        builder.AddOutboxStateEntity();
     }
 }
 

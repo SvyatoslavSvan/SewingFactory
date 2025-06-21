@@ -15,6 +15,10 @@ public sealed class GarmentCategory : NamedIdentity
     {
     }
 
+    public GarmentCategory(string name, Guid id) : base(name, id)
+    {
+    }
+
     public GarmentCategory(string name, List<GarmentModel> garmentModels) : base(name) => _garmentModels = garmentModels;
 
     public IReadOnlyList<GarmentModel> GarmentModels => _garmentModels;
