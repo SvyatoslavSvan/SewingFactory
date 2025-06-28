@@ -5,19 +5,22 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Common.Base.Queries;
 using SewingFactory.Common.Domain.Base;
+using SewingFactory.Common.Domain.Exceptions;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.Common.Base.Routers;
 
 public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel> : AppDefinition where TEntity : Identity
 {
-    protected static readonly string _featureGroupName = typeof(TEntity).Name;
-    protected string Prefix => "/api/" + _featureGroupName;
+    private static readonly string _featureGroupName = typeof(TEntity).Name;
+    private string Prefix => "/api/" + _featureGroupName;
+    protected virtual string? PolicyName => null;
+
+    protected static RouteGroupBuilder? _group;
 
     public override void ConfigureApplication(WebApplication app)
     {
-        app.MapGet(Prefix + "/getAll", GetAll).WithTags(_featureGroupName);
-        app.MapGet(Prefix + "/getPaged/{pageIndex:int}/{pageSize:int}", GetPaged).WithTags(_featureGroupName);
-        app.MapGet(Prefix + "/getById/{id:guid}", GetById).WithTags(_featureGroupName);
+        ConfigureGroup(app);
+        MapQueryRoutes();
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -49,4 +52,25 @@ public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel
         => await mediator.Send(new GetByIdRequest<TEntity, TDetailsReadViewModel>(
                 context.User, id),
             context.RequestAborted);
+
+    private void MapQueryRoutes()
+    {
+        if (_group == null)
+        {
+            throw new SewingFactoryInvalidOperationException("Cannot configure routes. Group is null.");
+        }
+
+        _group.MapGet("/getAll", GetAll);
+        _group.MapGet("/getPaged/{pageIndex:int}/{pageSize:int}", GetPaged);
+        _group.MapGet("/getById/{id:guid}", GetById);
+    }
+
+    private void ConfigureGroup(WebApplication app)
+    {
+        _group = app.MapGroup(Prefix).WithTags(_featureGroupName);
+        if (!string.IsNullOrWhiteSpace(PolicyName))
+        {
+            _group.RequireAuthorization(PolicyName);
+        }
+    }
 }

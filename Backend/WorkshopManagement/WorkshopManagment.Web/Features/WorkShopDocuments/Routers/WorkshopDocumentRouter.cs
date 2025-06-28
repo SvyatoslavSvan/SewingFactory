@@ -5,6 +5,7 @@ using SewingFactory.Backend.WorkshopManagement.Domain.Entities.DocumentItems;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.Common.Base.Routers;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Queries;
 using SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.ViewModels.Document;
+using SewingFactory.Common.Domain.Base;
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Features.WorkShopDocuments.Routers;
 
@@ -17,17 +18,18 @@ public sealed class WorkshopDocumentRouter : CommandRouter<
     DetailsReadWorkshopDocumentViewModel
 >
 {
+    protected override string PolicyName => AppData.FinanceAccess;
+
     public override void ConfigureApplication(WebApplication app)
     {
         base.ConfigureApplication(app);
-        app.MapGet(Prefix + "/getForCreate", GetForCreate).WithTags(_featureGroupName);
-        app.MapGet(Prefix + "/getForUpdate", GetForUpdate).WithTags(_featureGroupName);
+        _group?.MapGet("/getForCreate", GetForCreate);
+        _group?.MapGet("/getForUpdate", GetForUpdate);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     private async Task<OperationResult<GetForCreateWorkshopDocumentViewModel>> GetForCreate(
         [FromServices] IMediator mediator,
         HttpContext context)
@@ -37,7 +39,6 @@ public sealed class WorkshopDocumentRouter : CommandRouter<
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     private async Task<OperationResult<GetForUpdateWorkshopDocumentViewModel>> GetForUpdate(
         [FromServices] IMediator mediator,
         HttpContext context)

@@ -13,17 +13,6 @@ public sealed class ProfilesEndpointDefinition : AppDefinition
     {
         var group = app.MapGroup("/api/profiles").WithTags("Profiles");
 
-        group.MapGet("roles", handler: async ([FromServices] IMediator mediator, HttpContext context)
-                => await mediator.Send(new GetProfile.Request(), context.RequestAborted))
-            .RequireAuthorization(AppData.PolicyDefaultName)
-            .RequireAuthorization(configurePolicy: x =>
-            {
-                x.RequireClaim("Profiles:Roles:Get");
-            })
-            .Produces(200)
-            .ProducesProblem(401)
-            .WithOpenApi();
-
         group.MapPost("register", handler: async ([FromServices] IMediator mediator, RegisterViewModel model, HttpContext context)
                 => await mediator.Send(new RegisterAccount.Request(model), context.RequestAborted))
             .Produces(200)

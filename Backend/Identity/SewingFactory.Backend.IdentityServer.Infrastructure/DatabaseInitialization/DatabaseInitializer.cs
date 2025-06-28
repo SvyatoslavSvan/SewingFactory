@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SewingFactory.Common.Domain.Base;
+using System.Security.Claims;
 
 namespace SewingFactory.Backend.IdentityServer.Infrastructure.DatabaseInitialization;
 
@@ -19,84 +21,92 @@ public static class DatabaseInitializer
         using var scope = serviceProvider.CreateScope();
         await using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        // ATTENTION!
-        // -----------------------------------------------------------------------------
-        // This is should not be used when UseInMemoryDatabase()
-        // It should be uncomment when using UseSqlServer() settings or any other providers.
-        // -----------------------------------------------------------------------------
-        //await context!.Database.EnsureCreatedAsync();
-        //var pending = await context.Database.GetPendingMigrationsAsync();
-        //if (pending.Any())
-        //{
-        //    await context!.Database.MigrateAsync();
-        //}
+        await context!.Database.EnsureCreatedAsync();
+        var pending = await context.Database.GetPendingMigrationsAsync();
+        if (pending.Any())
+        {
+            await context!.Database.MigrateAsync();
+        }
 
         if (context.Users.Any())
         {
             return;
         }
 
-        var roles = AppData.Roles.ToArray();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        foreach (var role in roles)
+        var users = new[]
         {
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            if (!context!.Roles.Any(predicate: r => r.Name == role))
+            new
             {
-                await roleManager.CreateAsync(new ApplicationRole { Name = role, NormalizedName = role.ToUpper() });
-            }
-        }
-
-        #region developer
-
-        var developer1 = new ApplicationUser
-        {
-            Email = "microservice@yopmail.com",
-            NormalizedEmail = "MICROSERVICE@YOPMAIL.COM",
-            UserName = "microservice@yopmail.com",
-            FirstName = "Microservice",
-            LastName = "Administrator",
-            NormalizedUserName = "MICROSERVICE@YOPMAIL.COM",
-            PhoneNumber = "+79000000000",
-            EmailConfirmed = true,
-            PhoneNumberConfirmed = true,
-            SecurityStamp = Guid.NewGuid().ToString("D"),
-            ApplicationUserProfile = new ApplicationUserProfile
+                User = new ApplicationUser
+                {
+                    UserName = "Designer",
+                    Email = "SewingFactory@gmail.com",
+                    NormalizedUserName = "DESIGNER",
+                    NormalizedEmail = "SEWINGFACTORY@GMAIL.COM",
+                    FirstName = "Clothing",
+                    LastName = "Designer",
+                    PhoneNumber = "+38000000000",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D")
+                },
+                Password = "Designer@123",
+                Permissions = new[] { new AppPermission { PolicyName = AppData.DesignerAccess, Description = "Access policy for working with garment models and categories" } }
+            },
+            new
             {
-                CreatedAt = DateTime.Now,
-                CreatedBy = "SEED",
-                Permissions =
-                [
-                    new AppPermission { CreatedAt = DateTime.Now, CreatedBy = "SEED", PolicyName = "Profiles:Roles:Get", Description = "Access policy for view Roles in user Profiles" }
-                ]
+                User = new ApplicationUser
+                {
+                    UserName = "Owner",
+                    Email = "SewingFactory@gmail.com",
+                    NormalizedUserName = "OWNER",
+                    NormalizedEmail = "SEWINGFACTORY@GMAIL.COM",
+                    FirstName = "Business",
+                    LastName = "Owner",
+                    PhoneNumber = "+38000000000",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D")
+                },
+                Password = "Owner@123",
+                Permissions = new[]
+                {
+                    new AppPermission { PolicyName = AppData.DesignerAccess, Description = "Access policy for working with garment models and categories" },
+                    new AppPermission { PolicyName = AppData.FinanceAccess, Description = "Access policy for working with finance" }
+                }
             }
         };
 
-        if (!context!.Users.Any(predicate: u => u.UserName == developer1.UserName))
+        foreach (var entry in users)
         {
-            var password = new PasswordHasher<ApplicationUser>();
-            var hashed = password.HashPassword(developer1, "123qwe!@#");
-            developer1.PasswordHash = hashed;
-            var userStore = scope.ServiceProvider.GetRequiredService<ApplicationUserStore>();
-            var result = await userStore.CreateAsync(developer1);
-            if (!result.Succeeded)
+            if (await userManager.FindByNameAsync(entry.User.UserName) != null)
             {
-                throw new InvalidOperationException("Cannot create account");
+                continue;
             }
 
-            var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-            foreach (var role in roles)
+            var createResult = await userManager.CreateAsync(entry.User, entry.Password);
+            if (!createResult.Succeeded)
             {
-                var roleAdded = await userManager!.AddToRoleAsync(developer1, role);
-                if (roleAdded.Succeeded)
+                var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
+
+                throw new InvalidOperationException($"Failed to create user {entry.User.UserName}: {errors}");
+            }
+
+            foreach (var perm in entry.Permissions)
+            {
+                var claim = new Claim(perm.PolicyName, "true");
+                var claimResult = await userManager.AddClaimAsync(entry.User, claim);
+                if (!claimResult.Succeeded)
                 {
-                    await context.SaveChangesAsync();
+                    var err = string.Join("; ", claimResult.Errors.Select(e => e.Description));
+
+                    throw new InvalidOperationException($"Failed to add claim {perm.PolicyName} to {entry.User.UserName}: {err}");
                 }
             }
+
+            await context.SaveChangesAsync();
         }
-
-        #endregion
-
-        await context.SaveChangesAsync();
     }
 }

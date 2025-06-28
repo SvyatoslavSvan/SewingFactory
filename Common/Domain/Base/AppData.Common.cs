@@ -31,6 +31,9 @@ public static partial class AppData
     /// </summary>
     public const string ManagerRoleName = "Manager";
 
+    public const string FinanceAccess = "Finance:Access";
+
+    public const string DesignerAccess = "Designer:Access";
 
     /// <summary>
     ///     Default policy name for CORS

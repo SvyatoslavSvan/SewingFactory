@@ -82,6 +82,12 @@ public class AuthorizationDefinition : AppDefinition
 
             options.DefaultPolicy = policy;
             options.FallbackPolicy = policy;
+
+            options.AddPolicy(AppData.DesignerAccess,
+                p => p.Requirements.Add(new PermissionRequirement(AppData.DesignerAccess)));
+
+            options.AddPolicy(AppData.FinanceAccess,
+                p => p.Requirements.Add(new PermissionRequirement(AppData.FinanceAccess)));
         });
 
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();

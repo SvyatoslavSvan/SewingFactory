@@ -8,7 +8,9 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors>enable</WarningsAsErrors>
     </PropertyGroup>
-
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);AD0001</NoWarn>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Automapper" Version="14.0.0"/>
         <PackageReference Include="Calabonga.AspNetCore.AppDefinitions" Version="4.0.0"/>

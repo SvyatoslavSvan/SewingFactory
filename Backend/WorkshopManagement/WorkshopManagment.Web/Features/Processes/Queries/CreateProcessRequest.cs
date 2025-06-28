@@ -22,16 +22,19 @@ public sealed class CreateProcessHandler(IUnitOfWork unitOfWork, IMapper mapper)
     public override async Task<OperationResult<ReadProcessViewModel>> Handle(CreateRequest<CreateProcessViewModel, Process, ReadProcessViewModel> request, CancellationToken cancellationToken)
     {
         var department = await LoadDepartment(request);
-        var process = await SaveDepartment(request, cancellationToken, department);
+        var process = await SaveProcess(request, cancellationToken, department);
+
         return EnsureProcessCreated(process);
     }
 
-    private async Task<Process> SaveDepartment(CreateRequest<CreateProcessViewModel, Process, ReadProcessViewModel> request, CancellationToken cancellationToken, Department department)
+    private async Task<Process> SaveProcess(CreateRequest<CreateProcessViewModel, Process, ReadProcessViewModel> request, CancellationToken cancellationToken, Department department)
     {
         var process = _mapper.Map<Process>(source: request.Model,
             opts: opts => opts.Items[nameof(Department)] = department);
+
         await _unitOfWork.GetRepository<Process>().InsertAsync(process, cancellationToken);
         await _unitOfWork.SaveChangesAsync();
+
         return process;
     }
 
@@ -44,7 +47,9 @@ public sealed class CreateProcessHandler(IUnitOfWork unitOfWork, IMapper mapper)
 
             return operationResult;
         }
+
         operationResult.Result = _mapper.Map<ReadProcessViewModel>(process);
+
         return operationResult;
     }
 
@@ -54,10 +59,12 @@ public sealed class CreateProcessHandler(IUnitOfWork unitOfWork, IMapper mapper)
             .GetFirstOrDefaultAsync(
                 predicate: d => d.Id == request.Model.DepartmentId,
                 trackingType: TrackingType.Tracking);
+
         if (department is null)
         {
             throw new SewingFactoryNotFoundException($"Unable to create process. Department not found {request.Model.DepartmentId}");
         }
+
         return department;
     }
 }
