@@ -2,7 +2,7 @@
 
 namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.OpenIddict;
 
-public class OpenIddictDefinition : AppDefinition
+public sealed class OpenIddictDefinition : AppDefinition
 {
     public override void ConfigureServices(WebApplicationBuilder builder) =>
         builder.Services

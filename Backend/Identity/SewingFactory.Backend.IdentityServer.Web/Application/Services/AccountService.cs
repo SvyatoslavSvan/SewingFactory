@@ -19,7 +19,7 @@ namespace SewingFactory.Backend.IdentityServer.Web.Application.Services;
 /// <summary>
 ///     Account service
 /// </summary>
-public class AccountService : IAccountService
+public sealed class AccountService : IAccountService
 {
     private readonly ApplicationUserClaimsPrincipalFactory _claimsFactory;
     private readonly IHttpContextAccessor _httpContext;

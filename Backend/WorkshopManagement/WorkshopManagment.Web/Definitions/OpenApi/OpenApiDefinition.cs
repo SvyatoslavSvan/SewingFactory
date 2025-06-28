@@ -44,7 +44,7 @@ public class OpenApiDefinition : AppDefinition
 
         var url = app.Services.GetRequiredService<IConfiguration>().GetValue<string>("AuthServer:Url");
 
-        app.MapOpenApi();
+        app.MapOpenApi().AllowAnonymous();
 
         app.UseSwaggerUI(setupAction: settings =>
         {

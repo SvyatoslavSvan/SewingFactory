@@ -7,7 +7,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.OpenIddict;
 /// <summary>
 ///     Permission handler for custom authorization implementations
 /// </summary>
-public class AppPermissionHandler : AuthorizationHandler<PermissionRequirement>
+public sealed class AppPermissionHandler : AuthorizationHandler<PermissionRequirement>
 {
     /// <inheritdoc />
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)

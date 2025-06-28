@@ -31,6 +31,7 @@ public static partial class AppData
     /// </summary>
     public const string ManagerRoleName = "Manager";
 
+
     /// <summary>
     ///     Default policy name for CORS
     /// </summary>

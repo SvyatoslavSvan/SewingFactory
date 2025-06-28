@@ -6,7 +6,7 @@ namespace SewingFactory.Backend.IdentityServer.Infrastructure;
 ///     Default user for application.
 ///     Add profile data for application users by adding properties to the ApplicationUser class
 /// </summary>
-public class ApplicationUser : IdentityUser<Guid>
+public sealed class ApplicationUser : IdentityUser<Guid>
 {
     /// <summary>
     ///     FirstName
@@ -26,5 +26,5 @@ public class ApplicationUser : IdentityUser<Guid>
     /// <summary>
     ///     User Profile
     /// </summary>
-    public virtual ApplicationUserProfile? ApplicationUserProfile { get; set; }
+    public ApplicationUserProfile? ApplicationUserProfile { get; set; }
 }

@@ -6,7 +6,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.OpenIddict;
 /// <summary>
 ///     Policy provider
 /// </summary>
-public class AuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
+public sealed class AuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
 {
     private readonly AuthorizationOptions _options;
 

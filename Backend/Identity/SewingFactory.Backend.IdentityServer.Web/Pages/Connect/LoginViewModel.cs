@@ -2,7 +2,7 @@
 
 namespace SewingFactory.Backend.IdentityServer.Web.Pages.Connect;
 
-public class LoginViewModel
+public sealed class LoginViewModel
 {
     [Required] [EmailAddress] [Display(Name = "User name")] public string UserName { get; set; } = null!;
 

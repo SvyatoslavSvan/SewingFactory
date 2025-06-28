@@ -5,7 +5,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Definitions.OpenIddict;
 /// <summary>
 ///     Permission requirement for user or service authorization
 /// </summary>
-public class PermissionRequirement : IAuthorizationRequirement
+public sealed class PermissionRequirement : IAuthorizationRequirement
 {
     public PermissionRequirement(string permissionName) => PermissionName = permissionName;
 

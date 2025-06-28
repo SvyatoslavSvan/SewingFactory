@@ -10,7 +10,7 @@ namespace SewingFactory.Backend.IdentityServer.Web.Application.Features.Profile.
 /// </summary>
 public static class RegisterAccount
 {
-    public class Request(RegisterViewModel model) : IRequest<Operation<UserProfileViewModel, string>>
+    public sealed class Request(RegisterViewModel model) : IRequest<Operation<UserProfileViewModel, string>>
     {
         public RegisterViewModel Model { get; } = model;
     }

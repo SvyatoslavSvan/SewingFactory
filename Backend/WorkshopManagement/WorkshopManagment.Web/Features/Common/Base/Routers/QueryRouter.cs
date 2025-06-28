@@ -23,7 +23,6 @@ public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     protected async Task<OperationResult<IEnumerable<TReadViewModel>>> GetAll(
         [FromServices] IMediator mediator,
         HttpContext context)
@@ -34,7 +33,6 @@ public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     protected async Task<OperationResult<IPagedList<TReadViewModel>>> GetPaged(
         [FromServices] IMediator mediator,
         HttpContext context, int pageIndex, int pageSize)
@@ -45,7 +43,6 @@ public abstract class QueryRouter<TEntity, TReadViewModel, TDetailsReadViewModel
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     protected async Task<OperationResult<TDetailsReadViewModel>> GetById(
         [FromServices] IMediator mediator,
         HttpContext context, Guid id)

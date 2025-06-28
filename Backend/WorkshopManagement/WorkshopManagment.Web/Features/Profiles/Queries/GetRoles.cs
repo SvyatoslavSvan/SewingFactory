@@ -9,7 +9,7 @@ namespace SewingFactory.Backend.WorkshopManagement.Web.Features.Profiles.Queries
 /// </summary>
 public sealed class GetProfile
 {
-    public record Request : IRequest<string>;
+    public sealed record Request : IRequest<string>;
 
     public class Handler(ILogger<Handler> logger, IHttpContextAccessor httpContextAccessor)
         : IRequestHandler<Request, string>

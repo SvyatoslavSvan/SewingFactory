@@ -30,7 +30,6 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)] //TODO: Uncomment when authentication is ready
     protected async Task<OperationResult<TDetailsReadViewModel>> Create(
         [FromBody] TCreateViewModel model,
         [FromServices] IMediator mediator,
@@ -42,7 +41,6 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     protected async Task<OperationResult<TDeleteViewModel>> Delete(
         [FromBody] TDeleteViewModel model,
         [FromServices] IMediator mediator,
@@ -54,7 +52,6 @@ public abstract class CommandRouter
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[Authorize(AuthenticationSchemes = AuthData.AuthSchemes)]
     protected async Task<OperationResult<TUpdateViewModel>> Update(
         [FromBody] TUpdateViewModel model,
         [FromServices] IMediator mediator,

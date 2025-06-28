@@ -8,17 +8,8 @@ namespace SewingFactory.Backend.IdentityServer.Web.Definitions.OpenApi;
 /// <summary>
 ///     Swagger definition for application
 /// </summary>
-public class OpenApiDefinition : AppDefinition
+public sealed class OpenApiDefinition : AppDefinition
 {
-    // -------------------------------------------------------
-    // ATTENTION!
-    // -------------------------------------------------------
-    // If you use are git repository then you can uncomment line with "ThisAssembly" below for versioning by GIT possibilities.
-    // Otherwise, you can change versions of your API by manually.
-    // If you are not going to use git-versioning, do not forget install package "GitInfo" 
-    // private const string AppVersion = $"{ThisAssembly.Git.SemVer.Major}.{ThisAssembly.Git.SemVer.Minor}.{ThisAssembly.Git.SemVer.Patch}";
-    // -------------------------------------------------------
-
     public const string AppVersion = "9.0.6";
 
     private const string _openApiConfig = "/openapi/v1.json";
@@ -45,10 +36,6 @@ public class OpenApiDefinition : AppDefinition
         app.UseSwaggerUI(setupAction: settings =>
         {
             settings.SwaggerEndpoint(_openApiConfig, $"{AppData.ServiceName} v.{AppVersion}");
-
-            // ATTENTION!
-            // If you use are git repository then you can uncomment line with "ThisAssembly" below for versioning by GIT possibilities.
-            // settings.HeadContent = $"{ThisAssembly.Git.Branch.ToUpper()} {ThisAssembly.Git.Commit.ToUpper()}";
 
             settings.DocumentTitle = $"{AppData.ServiceName}";
             settings.DefaultModelExpandDepth(0);

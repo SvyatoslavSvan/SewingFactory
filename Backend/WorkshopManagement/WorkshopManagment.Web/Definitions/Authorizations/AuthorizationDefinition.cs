@@ -73,7 +73,16 @@ public class AuthorizationDefinition : AppDefinition
                 };
             });
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization(options =>
+        {
+            var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(AuthData.AuthSchemes)
+                .Build();
+
+            options.DefaultPolicy = policy;
+            options.FallbackPolicy = policy;
+        });
 
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
         builder.Services.AddSingleton<IAuthorizationHandler, AppPermissionHandler>();

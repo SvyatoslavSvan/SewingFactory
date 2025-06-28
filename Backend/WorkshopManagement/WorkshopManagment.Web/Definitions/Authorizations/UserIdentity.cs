@@ -32,18 +32,7 @@ public sealed class UserIdentity
         }
     }
 
-    public IEnumerable<Claim> Claims
-    {
-        get
-        {
-            if (User != null)
-            {
-                return ContextAccessor.HttpContext!.User.Claims;
-            }
-
-            return Enumerable.Empty<Claim>();
-        }
-    }
+    public IEnumerable<Claim> Claims => User != null ? ContextAccessor.HttpContext!.User.Claims : [];
 
     private bool IsInitialized { get; set; }
 

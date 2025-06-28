@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SewingFactory.Backend.IdentityServer.Infrastructure.Base;
 
@@ -52,16 +53,13 @@ public class ApplicationDbContext : DbContextBase
     }
 }
 
-///// <summary>
-///// ATTENTION!
-///// It should uncomment two line below when using real Database (not in memory mode). Don't forget update connection string.
-///// </summary>
-//public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
-//{
-//    public ApplicationDbContext CreateDbContext(string[] args)
-//    {
-//        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-//        optionsBuilder.UseNpgsql("Server=<SQL>;Database=<DatabaseName>;User ID=<UserName>;Password=<Password>");
-//        return new ApplicationDbContext(optionsBuilder.Options);
-//    }
-//}
+public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+{
+    public ApplicationDbContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=Auth;Username=postgres;Password=1234;Include Error Detail=true");
+
+        return new ApplicationDbContext(optionsBuilder.Options);
+    }
+}

@@ -65,10 +65,10 @@ public static class DatabaseInitializer
             {
                 CreatedAt = DateTime.Now,
                 CreatedBy = "SEED",
-                Permissions = new List<AppPermission>
-                {
-                    new() { CreatedAt = DateTime.Now, CreatedBy = "SEED", PolicyName = "Profiles:Roles:Get", Description = "Access policy for view Roles in user Profiles" }
-                }
+                Permissions =
+                [
+                    new AppPermission { CreatedAt = DateTime.Now, CreatedBy = "SEED", PolicyName = "Profiles:Roles:Get", Description = "Access policy for view Roles in user Profiles" }
+                ]
             }
         };
 

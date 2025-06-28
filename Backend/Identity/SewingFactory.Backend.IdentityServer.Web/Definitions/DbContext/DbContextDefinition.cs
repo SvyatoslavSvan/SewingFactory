@@ -20,16 +20,7 @@ public class DbContextDefinition : AppDefinition
     {
         builder.Services.AddDbContext<ApplicationDbContext>(optionsAction: config =>
         {
-            // UseInMemoryDatabase - This for demo purposes only!
-            // Should uninstall package "Microsoft.EntityFrameworkCore.InMemory" and install what you need.
-            // For example: "Microsoft.EntityFrameworkCore.SqlServer"
-            config.UseInMemoryDatabase("DEMO-PURPOSES-ONLY");
-
-            // uncomment line below to use UseNpgsql() or UseSqlServer(). Don't forget setup connection string in appSettings.json
-            //config.UseNpgsql(builder.Configuration.GetConnectionString(nameof(ApplicationDbContext)));
-
-            // Register the entity sets needed by OpenIddict.
-            // Note: use the generic overload if you need to replace the default OpenIddict entities.
+            config.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
             config.UseOpenIddict<Guid>();
         });
 

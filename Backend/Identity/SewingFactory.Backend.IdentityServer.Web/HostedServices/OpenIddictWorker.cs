@@ -54,6 +54,7 @@ public sealed class OpenIddictWorker(IServiceProvider serviceProvider) : IHosted
                     new Uri("https://www.thunderclient.com/oauth/callback"), // https://www.thunderclient.com/
                     new Uri($"{url}/swagger/oauth2-redirect.html"), // https://swagger.io/ for IdentityModule as Example
                     new Uri("https://localhost:20001/swagger/oauth2-redirect.html"), // https://swagger.io/ for Module as Example
+                    new Uri("https://localhost:20002/swagger/oauth2-redirect.html"),
                     new Uri("https://localhost:7207/signin-oidc") // Calabonga.BlazorApp see folder ClientSamples in repository
                 },
                 PostLogoutRedirectUris =
