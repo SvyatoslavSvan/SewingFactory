@@ -75,13 +75,18 @@ public class AuthorizationDefinition : AppDefinition
 
         builder.Services.AddAuthorization(options =>
         {
-            var policy = new AuthorizationPolicyBuilder()
+            options.AddPolicy(AppData.FinanceAccess, policy => policy
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(AuthData.AuthSchemes)
-                .Build();
+                .AddRequirements(new PermissionRequirement(AppData.FinanceAccess))
+            );
 
-            options.DefaultPolicy = policy;
-            options.FallbackPolicy = policy;
+            var financePolicy = options.GetPolicy(AppData.FinanceAccess);
+            if (financePolicy != null)
+            {
+                options.DefaultPolicy = financePolicy;
+                options.FallbackPolicy = financePolicy;
+            }
         });
 
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
