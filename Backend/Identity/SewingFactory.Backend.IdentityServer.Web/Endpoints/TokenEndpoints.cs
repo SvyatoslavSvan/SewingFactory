@@ -48,51 +48,6 @@ public sealed class TokenEndpoints : AppDefinition
                     return Results.SignIn(claimsPrincipal, new AuthenticationProperties(), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 }
 
-                if (request.IsPasswordGrantType())
-                {
-                    if (request.Username != null)
-                    {
-                        var user = await userManager.FindByNameAsync(request.Username);
-                        if (user == null)
-                        {
-                            return Results.Problem("Invalid operation");
-                        }
-
-                        // Ensure the user is allowed to sign in
-                        if (!await signInManager.CanSignInAsync(user))
-                        {
-                            return Results.Problem("Invalid operation");
-                        }
-
-                        // Ensure the user is not already locked out
-                        if (userManager.SupportsUserLockout && await userManager.IsLockedOutAsync(user))
-                        {
-                            return Results.Problem("Invalid operation");
-                        }
-
-                        // Ensure the password is valid
-                        if (request.Password != null && !await userManager.CheckPasswordAsync(user, request.Password))
-                        {
-                            if (userManager.SupportsUserLockout)
-                            {
-                                await userManager.AccessFailedAsync(user);
-                            }
-
-                            return Results.Problem("Invalid operation");
-                        }
-
-                        // Reset the lockout count
-                        if (userManager.SupportsUserLockout)
-                        {
-                            await userManager.ResetAccessFailedCountAsync(user);
-                        }
-
-                        var principal = await accountService.GetPrincipalForUserAsync(user);
-
-                        return Results.SignIn(principal, null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-                    }
-                }
-
                 if (request.IsAuthorizationCodeGrantType())
                 {
                     var authenticateResult = await httpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);

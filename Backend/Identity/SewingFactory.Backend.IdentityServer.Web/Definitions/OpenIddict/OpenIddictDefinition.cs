@@ -34,7 +34,6 @@ public class OpenIddictDefinition : AppDefinition
                 //  => Refresh token flow
                 options
                     .AllowAuthorizationCodeFlow().RequireProofKeyForCodeExchange()
-                    .AllowPasswordFlow()
                     .AllowClientCredentialsFlow()
                     .AllowRefreshTokenFlow();
 
