@@ -1,33 +1,34 @@
 ﻿@page
 @model SewingFactory.Backend.IdentityServer.Web.Pages.Connect.LoginModel
-@{
-    ViewData["Title"] = "Log in";
-}
 
-<div class="col-md-4 offset-4">
+<div class="gradient-card">
+    <h1 class="text-center mb-4">Sign In</h1>
+
     @if (Model.Input != null)
     {
         <form method="post">
+            <input type="hidden" asp-for="Input.ReturnUrl"/>
 
-            <input type="hidden" asp-for="@Model.Input.ReturnUrl"/>
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-            <div asp-validation-summary="All" class="text-danger"></div>
-
-            <div class="mb-3 row">
-                <label class="form-label" asp-for="@Model.Input.UserName"></label>
-                <input type="text" class="form-control" asp-for="@Model.Input.UserName">
-
+            <div class="mb-3">
+                <label asp-for="Input.UserName" class="form-label"></label>
+                <input asp-for="Input.UserName"
+                       class="form-control"
+                       placeholder="Enter username"/>
             </div>
 
-            <div class="mb-3 row">
-                <label class="form-label" asp-for="@Model.Input.Password"></label>
-                <input class="form-control" type="password" asp-for="@Model.Input.Password"/>
-
+            <div class="mb-4">
+                <label asp-for="Input.Password" class="form-label"></label>
+                <input asp-for="Input.Password"
+                       type="password"
+                       class="form-control"
+                       placeholder="Enter password"/>
             </div>
+
             <div class="text-center">
-                <button class="btn btn-primary" type="submit">Log in</button>
+                <button class="gradient-btn" type="submit">Log in</button>
             </div>
-
         </form>
     }
 </div>

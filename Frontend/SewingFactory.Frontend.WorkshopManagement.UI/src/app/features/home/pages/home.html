@@ -1,0 +1,23 @@
+<div class="home-hero text-center text-white d-flex align-items-center">
+  <div class="w-100 py-5">
+    <h1 class="display-4 fw-bold mb-3">Ласкаво просимо до Workshop Management</h1>
+    <p class="lead mb-0">Керуйте відділами, співробітниками та процесами в одному місці</p>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    <ng-container *ngFor="let item of navItems">
+      <div class="col">
+        <a [routerLink]="item.link" class="card-link h-100 d-block">
+          <div class="card h-100 text-center">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <i [class]="item.iconClass + ' icon mb-3'"></i>
+              <h5 class="card-title">{{ item.title }}</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -100,7 +100,7 @@ public sealed class OpenIddictWorker(IServiceProvider serviceProvider) : IHosted
                         ConsentType = OpenIddictConstants.ConsentTypes.Implicit,
                         Requirements = { OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange },
                         RedirectUris = { new Uri($"{angularUrl}/auth/callback") },
-                        PostLogoutRedirectUris = { new Uri(angularUrl) },
+                        PostLogoutRedirectUris = { new Uri($"{angularUrl}/auth/signout-callback-oidc") },
                         Permissions =
                         {
                             OpenIddictConstants.Permissions.Endpoints.Authorization,
@@ -109,6 +109,8 @@ public sealed class OpenIddictWorker(IServiceProvider serviceProvider) : IHosted
                             OpenIddictConstants.Permissions.ResponseTypes.Code,
                             OpenIddictConstants.Permissions.Scopes.Profile,
                             OpenIddictConstants.Permissions.Scopes.Email,
+                            OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
+                            OpenIddictConstants.Permissions.Endpoints.EndSession,
                             OpenIddictConstants.Permissions.Prefixes.Scope + "api"
                         }
                     }, cancellationToken);

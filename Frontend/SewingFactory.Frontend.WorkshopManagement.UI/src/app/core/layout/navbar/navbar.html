@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary"
+     style="background: linear-gradient(135deg, #0066cc 0%, #00cc99 100%);">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/"><img style="max-height: 48px" src="/logo.ico" alt="Workshop Management"></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a routerLink="/departments" routerLinkActive="active" class="nav-link">Відділи</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/employees" routerLinkActive="active" class="nav-link">Працівники</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/categories" routerLinkActive="active" class="nav-link">Категорії одежи</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/garment-models" routerLinkActive="active" class="nav-link">Моделі одежи</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/documents" routerLinkActive="active" class="nav-link">Документи</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/timesheet" routerLinkActive="active" class="nav-link">Табель</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/process" routerLinkActive="active" class="nav-link">Процеси</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item">
+          <a routerLink="/profile"
+             routerLinkActive="active"
+             class="nav-link">Профіль</a>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-light btn-sm ms-2"
+                  (click)="logout()">Вийти</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

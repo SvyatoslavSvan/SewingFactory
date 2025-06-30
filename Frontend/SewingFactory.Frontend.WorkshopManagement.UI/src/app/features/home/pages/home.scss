@@ -1,0 +1,41 @@
+.home-hero {
+  background: linear-gradient(135deg, #0066cc, #00cc99);
+  height: 300px;
+  clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+}
+
+.card-link {
+  text-decoration: none;
+}
+
+.card {
+  border: none;
+  border-radius: .75rem;
+  box-shadow: 0 1rem 2rem rgba(#000, .1);
+  transition: transform .3s, box-shadow .3s;
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 2rem 3rem rgba(#000, .15);
+  }
+}
+
+.icon {
+  font-size: 3rem;
+  color: #0066cc;
+  transition: color .3s;
+}
+
+.card:hover .icon {
+  color: #00cc99;
+}
+
+.card-title {
+  margin-top: auto;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.container {
+  max-width: 1140px;
+}

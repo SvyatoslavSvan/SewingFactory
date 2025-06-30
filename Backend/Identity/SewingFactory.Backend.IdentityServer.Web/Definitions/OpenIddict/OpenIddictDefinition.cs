@@ -69,7 +69,8 @@ public class OpenIddictDefinition : AppDefinition
                     OpenIddictConstants.Scopes.Profile,
                     OpenIddictConstants.Scopes.Roles,
                     "api",
-                    "custom");
+                    "custom",
+                    OpenIddictConstants.Scopes.OfflineAccess);
 
                 // Register the signing and encryption credentials.
                 options

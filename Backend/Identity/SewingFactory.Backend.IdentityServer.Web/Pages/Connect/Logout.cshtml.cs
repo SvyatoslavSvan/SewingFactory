@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OpenIddict.Client.AspNetCore;
@@ -30,7 +31,7 @@ public class LogoutModel : PageModel
         //
         // For scenarios where the default sign-out handler configured in the ASP.NET Core
         // authentication options shouldn't be used, a specific scheme can be specified here.
-        await HttpContext.SignOutAsync();
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         var properties = new AuthenticationProperties(new Dictionary<string, string>
         {
@@ -44,6 +45,6 @@ public class LogoutModel : PageModel
         };
 
         // Ask the OpenIddict client middleware to redirect the user agent to the identity provider.
-        return SignOut(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        return SignOut(properties, CookieAuthenticationDefaults.AuthenticationScheme, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 }

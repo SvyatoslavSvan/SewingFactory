@@ -49,6 +49,8 @@ try
     // create application
     var app = builder.Build();
 
+    app.UseStaticFiles();
+
     // using definition for application
     app.UseDefinitions();
 

@@ -1,0 +1,14 @@
+.scroll-container {
+  max-height: 300px;
+}
+.gradient-header {
+  background: linear-gradient(135deg, #0066cc 0%, #00cc99 100%);
+  padding: 0.75rem 1rem;
+}
+.list-group-item {
+  transition: background-color .2s, transform .2s;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transform: translateX(2px);
+  }
+}
