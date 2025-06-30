@@ -85,6 +85,34 @@ public sealed class OpenIddictWorker(IServiceProvider serviceProvider) : IHosted
                     OpenIddictConstants.Permissions.ResponseTypes.IdToken
                 }
             }, cancellationToken);
+
+            const string clientIdAngular = "client-id-angular";
+            if (await manager.FindByClientIdAsync(clientIdAngular, cancellationToken) is null)
+            {
+                var angularUrl = "http://localhost:4200";
+
+                await manager.CreateAsync(
+                    new OpenIddictApplicationDescriptor
+                    {
+                        ClientId = clientIdAngular,
+                        DisplayName = "Angular SPA Client",
+                        ClientType = OpenIddictConstants.ClientTypes.Public,
+                        ConsentType = OpenIddictConstants.ConsentTypes.Implicit,
+                        Requirements = { OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange },
+                        RedirectUris = { new Uri($"{angularUrl}/auth/callback") },
+                        PostLogoutRedirectUris = { new Uri(angularUrl) },
+                        Permissions =
+                        {
+                            OpenIddictConstants.Permissions.Endpoints.Authorization,
+                            OpenIddictConstants.Permissions.Endpoints.Token,
+                            OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+                            OpenIddictConstants.Permissions.ResponseTypes.Code,
+                            OpenIddictConstants.Permissions.Scopes.Profile,
+                            OpenIddictConstants.Permissions.Scopes.Email,
+                            OpenIddictConstants.Permissions.Prefixes.Scope + "api"
+                        }
+                    }, cancellationToken);
+            }
         }
     }
 
